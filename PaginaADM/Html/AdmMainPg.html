@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Estoque - LogBook - ADM</title>
+    <link rel="stylesheet" href="/PaginaADM/Estilos/EstiloADM.css">
+    <link rel="shortcut icon" href="/PaginaPrincipal/Imagens/Icone.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="header">
+        <img class="bpk" src="/PaginaADM/Imagens/bpklogo.png" alt="biopark">
+    </div>
+    <div class="filtro">
+        <div class="topo"></div>
+        <p class="textoF">Filtrar Respostas </p>
+        <div class="filtrar">
+            <input id="pesquisar" placeholder="Digite aqui..." type="text">
+            <img id="calendario" src="/PaginaADM/Imagens/calendario.png" alt="Filtrar por Data">
+        </div>
+        <hr>
+        <select name="filtro" id="tipoFiltro">
+            <option value="ID">ID</option>
+            <option value="Nome">Nome do Responsável</option>
+            <option value="Code">Codigo do Reagente</option>
+            <option value="Reagente">Nome do Reagente</option>
+        </select>
+        <div class="linha"></div>
+    </div>
+    <div class="respostas">
+        <table class="respsotasEnv">
+            <tr>
+                <th class="thId">ID</th>
+                <th class="thNome">Nome</th>
+                <th class="thCodR">Cod Reag</th>
+                <th class="thReag">Reagente</th>
+                <th class="thQtd">Quantidade</th>
+                <th class="thObs">Observação</th>
+                <th class="thData">Data</th>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,118 @@
+:root {
+    --branco: #FFFFFF;
+    --preto: #000000;
+    --azul: #283444;
+    --vermelho: #FF1C4C;
+}
+
+html, body{
+    padding:0;
+    margin: 0;
+    box-sizing: border-box;
+    background-color: var(--azul);
+}
+
+.header{
+    text-align: center;
+}
+
+.bpk{
+    height: 150px;
+    flex-shrink: 0;
+}
+
+.filtro, .topo{
+    width: 430px;
+    height: 780px;
+    flex-shrink: 0;
+    background: var(--branco);
+    margin-left: 2%;
+    margin-bottom: 4%;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+}
+
+.topo{
+    height: 50px;
+    background: var(--vermelho);
+    margin-bottom: 0;
+    left: -2%;
+}
+
+.textoF{
+    padding: 0;
+    margin: 0;
+    font-size: 40px;
+    font-weight: 400;
+}
+
+.filtrar{
+    display: flex;
+    border: 1px solid var(--preto);
+    border-radius: 5px;
+    overflow: hidden;
+    width: 410px;
+    height: 38px;
+    position: absolute;
+    top: 25%;
+    left: 2.5%;
+    stroke-width: 2px;
+    stroke: var(--preto);
+}
+
+#pesquisar{
+    border: transparent;
+    border-right: 1px solid var(--preto);
+    width: 310px;
+    height: 38px;
+    font-size: 32px;
+}
+
+#pesquisar:focus{
+    outline: none;
+    border-right: 1px solid var(--preto);
+}
+
+#calendario{
+    width: 42px;
+    height: 38px;
+    position: absolute;
+    left: 85%;
+    align-self: center;
+}
+
+#tipoFiltro{
+    padding: 5px;
+    font-size: 20px;
+    position: absolute;
+    top: 31%;
+    left: 23%;
+}
+
+.respostas{
+    position: absolute;
+    width: 1010px;
+    height: 780px;
+    background: var(--branco);
+    top: 21%;
+    left: 32%;
+    
+}
+
+th{
+    font-size: 26px;
+    padding: 26px;
+    border: 1px solid;
+}
+
+hr{
+    border: 1px solid;
+}
+
+.linha{
+    width: 100%;
+    border: 1px solid;
+    position: absolute;
+    bottom: 60%;
+}
