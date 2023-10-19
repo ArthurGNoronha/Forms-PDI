@@ -29,11 +29,11 @@ app.use(bodyParser.json());
 
 // Manipular EJS
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'PaginaADM', 'Html'));
+app.set('views', path.join(__dirname, '../PaginaADM', 'Html'));
 
 // Favicon
 app.get('/favicon.ico', (req, res) => {
-  res.sendFile(path.join(__dirname, '../PaginaPrincipal/Imagens/Icone.ico'));
+  res.sendFile(path.join(__dirname, '../Imagens/Icone.ico'));
 });  
 
 // Pagina Inicial
@@ -48,31 +48,26 @@ app.get('/EnvioPag.html', (req, res) => {
 
 // Receber as informações
 app.post('/salvar', async (req, res) => {
-
   try {
-    // Conectar ao banco de dados
-    await client.connect();
-    
     // Selecionar o banco de dados e a coleção
     const database = client.db('forms');
     const collection = database.collection('Respostas');
 
     // Definir o ID
-    const maxIdDoc = await collection.findOne({}, {sort: {id: -1}});
-
+    const maxIdDoc = await collection.findOne({}, { sort: { id: -1 } });
     const nextId = maxIdDoc ? maxIdDoc.id + 1 : 1;
-    
+
     // Criar um novo documento para inserção
     const novaResposta = {
       id: nextId,
       Responsavel: req.body.nomeResponsavel,
-      codigoReagente: req.body.codigoReagente,
+      CodigoReagente: req.body.codigoReagente,
       Reagente: req.body.nomeReagente,
-      quantidade: req.body.quantidade,
-      medida: req.body.medida,
-      outros: req.body.outros,
-      observacao: req.body.observacao,
-      dataHora: moment().tz('America/Sao_Paulo').format('DD-MM-YYYY HH:mm'),
+      Quantidade: req.body.quantidade,
+      Medida: req.body.medida,
+      Outros: req.body.outros,
+      Observacao: req.body.observacao,
+      DataHora: moment().tz('America/Sao_Paulo').format('DD-MM-YYYY HH:mm'),
     };
 
     // Inserir o documento no MongoDB
@@ -86,11 +81,9 @@ app.post('/salvar', async (req, res) => {
   } catch (error) {
     console.error('Erro ao salvar os dados no MongoDB', error);
     res.status(500).send('Erro interno do servidor');
-  } finally {
-    // Fechar a conexão com o MongoDB
-    await client.close();
   }
 });
+
 
 // Login do email
 function enviarEmail(novaResposta) {
@@ -155,7 +148,7 @@ app.get('/ADM', async (req, res) => {
     const respostas = await collection.find({}).toArray();
 
     // Renderizar a página de respostas com os dados
-    res.render('AdmMainPg.ejs', { respostas });
+    res.render('AdmMainPg', { respostas });
   } catch (error) {
     console.error('Erro ao ver os dados: ', error);
     res.status(500).send('Erro interno do servidor');

@@ -126,3 +126,13 @@ hr{
     padding: 26px;
     border: 1px solid;
 }
+
+.respMongo{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-collapse: collapse;
+    overflow: hidden;
+    font-size: 20px;
+    padding: 20px;
+    border: 1px solid;
+}

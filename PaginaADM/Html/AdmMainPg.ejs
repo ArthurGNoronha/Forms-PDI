@@ -41,13 +41,13 @@
 
             <% respostas.forEach(function(data) { %>
                 <tr>
-                    <td><%= data.id %></td>
-                    <td><%= data.Responsavel %></td>
-                    <td><%= data.codigoReagente %></td>
-                    <td><%= data.Reagente %></td>
-                    <td><%= data.quantidade %></td>
-                    <td><%= data.observacao %></td>
-                    <td><%= data.dataHora %></td>
+                    <td class="respMongo"><%= data.id %></td>
+                    <td class="respMongo"><%= data.Responsavel %></td>
+                    <td class="respMongo"><%= data.CodigoReagente %></td>
+                    <td class="respMongo"><%= data.Reagente %></td>
+                    <td class="respMongo"><%= data.Quantidade + ' ' + data.Medida + ' ' + data.Outros %></td>
+                    <td class="respMongo"><%= data.Observacao %></td>
+                    <td class="respMongo"><%= data.DataHora %></td>
                 </tr>
             <% }); %>
 
