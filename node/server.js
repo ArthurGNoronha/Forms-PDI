@@ -7,6 +7,7 @@ const path = require('path');
 const moment = require('moment-timezone');
 const nodemailer = require('nodemailer');
 const { MongoClient } = require('mongodb');
+const ejs = require('ejs');
 
 const app = express();
 const port = 3000;
@@ -17,11 +18,18 @@ const client = new MongoClient(uri);
 // Configurar o middleware para servir arquivos estáticos (CSS, JavaScript, imagens)
 app.use('/PaginaPrincipal/Estilos', express.static(path.join(__dirname, '../PaginaPrincipal/Estilos')));
 app.use('/PaginaPrincipal/Scripts', express.static(path.join(__dirname, '../PaginaPrincipal/Scripts')));
-app.use('/PaginaPrincipal/Imagens', express.static(path.join(__dirname, '../PaginaPrincipal/Imagens')));
+app.use('/Imagens', express.static(path.join(__dirname, '../Imagens')));
+app.use('/PaginaADM/Estilos', express.static(path.join(__dirname, '../PaginaADM/Estilos')));
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Manipular arquivos JSON
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+// Manipular EJS
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'PaginaADM', 'Html'));
 
 // Favicon
 app.get('/favicon.ico', (req, res) => {
@@ -135,6 +143,24 @@ function enviarEmail(novaResposta) {
     console.error('Erro geral ao enviar o email', error);
   }
 }
+
+// Enviar para a pagina de ADM
+app.get('/ADM', async (req, res) => {
+  try {
+    // Selecionar o banco de dados e a coleção
+    const database = client.db('forms');
+    const collection = database.collection('Respostas');
+
+    // Buscar todas as respostas
+    const respostas = await collection.find({}).toArray();
+
+    // Renderizar a página de respostas com os dados
+    res.render('AdmMainPg.ejs', { respostas });
+  } catch (error) {
+    console.error('Erro ao ver os dados: ', error);
+    res.status(500).send('Erro interno do servidor');
+  }
+});
 
 //Ligar o servidor
 app.listen(port, async () => {

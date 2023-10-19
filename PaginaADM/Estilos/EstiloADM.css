@@ -55,7 +55,7 @@ html, body{
     width: 410px;
     height: 38px;
     position: absolute;
-    top: 25%;
+    top: 20%;
     left: 2.5%;
     stroke-width: 2px;
     stroke: var(--preto);
@@ -86,7 +86,7 @@ html, body{
     padding: 5px;
     font-size: 20px;
     position: absolute;
-    top: 31%;
+    top: 28%;
     left: 23%;
 }
 
@@ -97,10 +97,9 @@ html, body{
     background: var(--branco);
     top: 21%;
     left: 32%;
-    
 }
 
-th{
+.thResp{
     font-size: 26px;
     padding: 26px;
     border: 1px solid;
@@ -115,4 +114,15 @@ hr{
     border: 1px solid;
     position: absolute;
     bottom: 60%;
+}
+
+.respostasEnv{
+    margin: 1%;
+    border-collapse: collapse;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 26px;
+    padding: 26px;
+    border: 1px solid;
 }

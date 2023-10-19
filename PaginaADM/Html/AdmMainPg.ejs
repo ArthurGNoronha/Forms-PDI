@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Estoque - LogBook - ADM</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/PaginaADM/Estilos/EstiloADM.css">
+</head>
+<body>
+    <div class="header">
+        <img class="bpk" src="/Imagens/bpklogo.png" alt="biopark">
+    </div>
+    <div class="filtro">
+        <div class="topo"></div>
+        <p class="textoF">Filtrar Respostas </p>
+        <hr>
+        <div class="filtrar">
+            <input id="pesquisar" placeholder="Digite aqui..." type="text">
+            <img id="calendario" src="/Imagens/calendario.png" alt="Filtrar por Data">
+        </div>
+        <select name="filtro" id="tipoFiltro">
+            <option value="ID">ID</option>
+            <option value="Nome">Nome do Responsável</option>
+            <option value="Code">Codigo do Reagente</option>
+            <option value="Reagente">Nome do Reagente</option>
+        </select>
+        <div class="linha"></div>
+    </div>
+    <div class="respostas">
+        <table class="respostasEnv">
+            <tr>
+                <th class="thResp" id="thId">ID</th>
+                <th class="thResp" id="thNome">Nome</th>
+                <th class="thResp" id="thCodR">Cod Reag</th>
+                <th class="thResp" id="thReag">Reagente</th>
+                <th class="thResp" id="thQtd">Quantidade</th>
+                <th class="thResp" id="thObs">Observação</th>
+                <th class="thResp" id="thData">Data</th>
+            </tr>
+
+            <% respostas.forEach(function(data) { %>
+                <tr>
+                    <td><%= data.id %></td>
+                    <td><%= data.Responsavel %></td>
+                    <td><%= data.codigoReagente %></td>
+                    <td><%= data.Reagente %></td>
+                    <td><%= data.quantidade %></td>
+                    <td><%= data.observacao %></td>
+                    <td><%= data.dataHora %></td>
+                </tr>
+            <% }); %>
+
+        </table>
+    </div>
+</body>
+</html>
