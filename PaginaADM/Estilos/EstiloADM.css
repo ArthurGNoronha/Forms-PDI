@@ -97,11 +97,12 @@ html, body{
     background: var(--branco);
     top: 21%;
     left: 32%;
+    overflow: auto;
 }
 
 .thResp{
-    font-size: 26px;
-    padding: 26px;
+    font-size: 25px;
+    padding: 20px;
     border: 1px solid;
 }
 
@@ -116,23 +117,29 @@ hr{
     bottom: 60%;
 }
 
-.respostasEnv{
+.respostasEnv {
     margin: 1%;
     border-collapse: collapse;
+    overflow-x: auto;
+}
+
+.respMongo {
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    font-size: 26px;
-    padding: 26px;
+    font-size: 16px;
+    padding: 2px;
     border: 1px solid;
 }
 
-.respMongo{
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    border-collapse: collapse;
+.respReag {
+    max-width: 90px;
     overflow: hidden;
-    font-size: 20px;
-    padding: 20px;
-    border: 1px solid;
+    text-overflow: ellipsis;
+}
+
+#thCodR {
+    padding: 5px;
+}
+
+#thId {
+    padding: 2px;
 }
