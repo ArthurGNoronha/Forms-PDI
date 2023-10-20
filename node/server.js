@@ -74,7 +74,7 @@ app.post('/salvar', async (req, res) => {
     await collection.insertOne(novaResposta);
 
     // Enviar e-mail
-    enviarEmail(novaResposta);
+    // enviarEmail(novaResposta);
 
     console.log('Dados salvos com sucesso no MongoDB');
     res.redirect('/EnvioPag.html');
@@ -86,56 +86,56 @@ app.post('/salvar', async (req, res) => {
 
 
 // Login do email
-function enviarEmail(novaResposta) {
-  try{
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-        console.error('Erro: As variáveis estão incorretas');
-        return;
-    }
+// function enviarEmail(novaResposta) {
+//   try{
+//     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+//         console.error('Erro: As variáveis estão incorretas');
+//         return;
+//     }
 
-    const transporter = nodemailer.createTransport({
-        service: 'outlook',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
+//     const transporter = nodemailer.createTransport({
+//         service: 'outlook',
+//         auth: {
+//             user: process.env.EMAIL_USER,
+//             pass: process.env.EMAIL_PASS,
+//         },
+//     });
 
-    // Informações do Email
-    const emailHTML = `
-    <html>
-      <body>
-        <h1 style="color: #000; font-family: Arial;">Olá, uma nova resposta foi registrada!</h1>
-        <p style="color: black;"><b>ID:</b> ${novaResposta.id}</p>
-        <p style="color: black;"><b>Nome:</b> ${novaResposta.Responsavel}</p>
-        <p style="color: black;"><b>Código do reagente:</b> ${novaResposta.codigoReagente}</p>
-        <p style="color: black;"><b>Reagente:</b> ${novaResposta.Reagente}</p>
-        <p style="color: black;"><b>Quantidade Utilizada:</b> ${novaResposta.quantidade} - ${novaResposta.medida} ${novaResposta.outros}</p>
-        <p style="color: black;"><b>Observação:</b> ${novaResposta.observacao}</p>
-        <p style="color: black;"><b>Data e Hora:</b> ${novaResposta.dataHora}</p>
-      </body>
-    </html>
-    `;
+//     // Informações do Email
+//     const emailHTML = `
+//     <html>
+//       <body>
+//         <h1 style="color: #000; font-family: Arial;">Olá, uma nova resposta foi registrada!</h1>
+//         <p style="color: black;"><b>ID:</b> ${novaResposta.id}</p>
+//         <p style="color: black;"><b>Nome:</b> ${novaResposta.Responsavel}</p>
+//         <p style="color: black;"><b>Código do reagente:</b> ${novaResposta.CodigoReagente}</p>
+//         <p style="color: black;"><b>Reagente:</b> ${novaResposta.Reagente}</p>
+//         <p style="color: black;"><b>Quantidade Utilizada:</b> ${novaResposta.Quantidade} - ${novaResposta.Medida} ${novaResposta.Outros}</p>
+//         <p style="color: black;"><b>Observação:</b> ${novaResposta.Observacao}</p>
+//         <p style="color: black;"><b>Data e Hora:</b> ${novaResposta.DataHora}</p>
+//       </body>
+//     </html>
+//     `;
 
-    // Como o Email deve ser enviado
-    const mailOptions = {
-        from: 'Formulário PDI <' + process.env.EMAIL_USER + '>',
-        to: 'testeandoarthur@gmail.com',
-        subject: 'Novas respostas registradas no Formulário',
-        html: emailHTML,
-    };
+//     // Como o Email deve ser enviado
+//     const mailOptions = {
+//         from: 'Formulário PDI <' + process.env.EMAIL_USER + '>',
+//         to: 'testeandoarthur@gmail.com',
+//         subject: 'Novas respostas registradas no Formulário',
+//         html: emailHTML,
+//     };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.error('Erro ao enviar o email',error);
-        } else {
-            console.log('Email enviado com sucesso! ' + info.response);
-        }
-    });
-  } catch(error){
-    console.error('Erro geral ao enviar o email', error);
-  }
-}
+//     transporter.sendMail(mailOptions, function (error, info) {
+//         if (error) {
+//             console.error('Erro ao enviar o email',error);
+//         } else {
+//             console.log('Email enviado com sucesso! ' + info.response);
+//         }
+//     });
+//   } catch(error){
+//     console.error('Erro geral ao enviar o email', error);
+//   }
+// }
 
 // Enviar para a pagina de ADM
 app.get('/ADM', async (req, res) => {
