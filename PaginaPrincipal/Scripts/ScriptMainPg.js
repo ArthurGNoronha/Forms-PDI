@@ -208,16 +208,17 @@ document.getElementById("btnEnviar").addEventListener("click", function () {
       },
       body: JSON.stringify(dados),
     })
-    .then((response) => {
-      if (response.ok) {
-        window.location.href = '/EnvioPag.html';
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        // Redireciona para "/envio" após o sucesso
+        window.location.href = data.redirectUrl;
       } else {
-        console.error('Erro ao enviar os dados para o servidor:', response.status, response.statusText);
+        console.error('Erro ao enviar os dados para o servidor:', data.error);
       }
-      return response.json();
     })
-      .catch((error) => {
-        console.error('Erro ao enviar os dados para o servidor', error);
-      });    
+    .catch((error) => {
+      console.error('Erro ao enviar os dados para o servidor', error);
+    }); 
   }
 });

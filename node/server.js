@@ -8,12 +8,28 @@ const moment = require('moment-timezone');
 const nodemailer = require('nodemailer');
 const { MongoClient } = require('mongodb');
 const ejs = require('ejs');
+const { google } = require('googleapis');
 
 const app = express();
 const port = 3000;
 
+const key = require('../FormsPDI.json');
+
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
+
+const sheetClient = new google.auth.JWT(
+  key.client_email,
+  null,
+  key.private_key,
+  ['https://www.googleapis.com/auth/spreadsheets']
+);
+
+const sheets = google.sheets({ version: 'v4', auth: sheetClient });
+
+const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
+const SHEET_NAME = 'Controle';
+
 
 // Configurar o middleware para servir arquivos estáticos (CSS, JavaScript, imagens)
 app.use('/PaginaPrincipal/Estilos', express.static(path.join(__dirname, '../PaginaPrincipal/Estilos')));
@@ -42,7 +58,7 @@ app.get('/', (req, res) => {
 });
 
 // Pagina de Envio
-app.get('/EnvioPag.html', (req, res) => {
+app.get('/Envio', (req, res) => {
   res.sendFile(path.join(__dirname, '../PaginaPrincipal/Html/EnvioPag.html'));
 });
 
@@ -73,17 +89,19 @@ app.post('/salvar', async (req, res) => {
     // Inserir o documento no MongoDB
     await collection.insertOne(novaResposta);
 
+    // Enviar para a planilha
+    await enviarParaGoogleSheets(novaResposta);
+
     // Enviar e-mail
     // enviarEmail(novaResposta);
 
-    console.log('Dados salvos com sucesso no MongoDB');
-    res.redirect('/EnvioPag.html');
+    console.log('Dados salvos com sucesso no MongoDB e enviados para a planilha');
+    res.status(200).json({ success: true, redirectUrl: '/envio' });
   } catch (error) {
     console.error('Erro ao salvar os dados no MongoDB', error);
-    res.status(500).send('Erro interno do servidor');
+    res.status(500).json({ success: false, error: 'Erro interno do servidor' });
   }
 });
-
 
 // Login do email
 // function enviarEmail(novaResposta) {
@@ -136,6 +154,58 @@ app.post('/salvar', async (req, res) => {
 //     console.error('Erro geral ao enviar o email', error);
 //   }
 // }
+
+async function enviarParaGoogleSheets(novaResposta) {
+  try {
+    const auth = sheetClient;
+
+    // Verifica se há dados na planilha
+    const sheetData = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId: SPREADSHEET_ID,
+      range: SHEET_NAME,
+    });
+
+    let values = [];
+
+    // Se não houver dados, adiciona os títulos das colunas
+    if (!sheetData.data.values) {
+      values.push(['ID', 'Responsavel', 'CodigoReagente', 'Reagente', 'Quantidade', 'Observacao', 'DataHora']);
+    }
+
+    // Adiciona apenas dados que não estão na planilha
+    const dados = [
+      novaResposta.id,
+      novaResposta.Responsavel,
+      novaResposta.CodigoReagente,
+      novaResposta.Reagente,
+      `${novaResposta.Quantidade} - ${novaResposta.Medida} ${novaResposta.Outros}`,
+      novaResposta.Observacao,
+      novaResposta.DataHora,
+    ];
+
+    const row = dados.map(item => item.toString());
+
+    const exists = sheetData.data.values && sheetData.data.values.some(existingRow => JSON.stringify(existingRow) === JSON.stringify(row));
+
+    if (!exists) {
+      values.push(row);
+    }
+
+    // Adiciona os novos dados à planilha
+    await sheets.spreadsheets.values.append({
+      auth,
+      spreadsheetId: SPREADSHEET_ID,
+      range: SHEET_NAME,
+      valueInputOption: 'RAW',
+      resource: { values },
+    });
+
+    console.log('Dados enviados para o Google Sheets com sucesso!');
+  } catch (error) {
+    console.error('Erro ao enviar dados para o Google Sheets:', error);
+  }
+}
 
 // Enviar para a pagina de ADM
 app.get('/ADM', async (req, res) => {
