@@ -27,46 +27,28 @@ html, body{
     flex-shrink: 0;
     background: var(--branco);
     margin-left: 2%;
-    margin-bottom: 4%;
     position: relative;
     text-align: center;
-    z-index: 1;
 }
 
 .topo{
     height: 50px;
     background: var(--vermelho);
-    margin-bottom: 0;
-    left: -2%;
+    margin-left: 0%;
 }
 
 .textoF{
-    padding: 0;
     margin: 0;
     font-size: 40px;
     font-weight: 400;
 }
 
-.filtrar{
-    display: flex;
-    border: 1px solid var(--preto);
-    border-radius: 5px;
-    overflow: hidden;
-    width: 410px;
-    height: 38px;
-    position: absolute;
-    top: 20%;
-    left: 2.5%;
-    stroke-width: 2px;
-    stroke: var(--preto);
-}
-
 #pesquisar{
-    border: transparent;
-    border-right: 1px solid var(--preto);
+    border: 1px solid var(--preto);
     width: 310px;
     height: 38px;
     font-size: 32px;
+    margin-top: 5%;
 }
 
 #pesquisar:focus{
@@ -74,20 +56,21 @@ html, body{
     border-right: 1px solid var(--preto);
 }
 
-#calendario{
-    width: 42px;
-    height: 38px;
-    position: absolute;
-    left: 85%;
-    align-self: center;
+.btnF {
+    height: 200px;
+    width: 100%;
+}
+
+#botaoFiltrar {
+    width: 80px;
+    height: 25px;
+    margin-top: 5%;
 }
 
 #tipoFiltro{
     padding: 5px;
     font-size: 20px;
-    position: absolute;
-    top: 28%;
-    left: 23%;
+    margin-top: 5%;
 }
 
 .respostas{
@@ -120,7 +103,7 @@ hr{
     width: 100%;
     border: 1px solid;
     position: absolute;
-    bottom: 60%;
+    margin-top: -25%;
 }
 
 .respostasEnv {
@@ -136,12 +119,6 @@ hr{
     border: 1px solid;
 }
 
-.respReag {
-    max-width: 90px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 #thCodR {
     padding: 5px;
 }
@@ -155,8 +132,8 @@ hr{
     height: 30px;
     border-radius: 10px;
     position: inherit;
-    left: 75%;
-    bottom: 3%;
+    margin-left: 75%;
+    margin-top: 1%;
     background-color:lightgrey;
 }
 

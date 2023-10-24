@@ -225,6 +225,17 @@ app.get('/ADM', async (req, res) => {
   }
 });
 
+app.get('/DadosPorData', (req, res) => {
+  const { dataInicial, dataFinal } = req.query;
+
+  db.collection('respostas').find({
+    data: {$gte: new Date(dataInicial), $lte: new Date(dataFinal)}
+  }).toArray((err, result) => {
+    if(err) throw err;
+    res.json(result);
+  });
+});
+
 //Ligar o servidor
 app.listen(port, async () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
