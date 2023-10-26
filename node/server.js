@@ -8,7 +8,7 @@ const moment = require('moment-timezone');
 const nodemailer = require('nodemailer');
 const { MongoClient } = require('mongodb');
 const ejs = require('ejs');
-const { google } = require('googleapis');
+const { google, appengine_v1beta } = require('googleapis');
 
 const app = express();
 const port = 3000;
@@ -36,8 +36,10 @@ app.use('/PaginaPrincipal/Estilos', express.static(path.join(__dirname, '../Pagi
 app.use('/PaginaPrincipal/Scripts', express.static(path.join(__dirname, '../PaginaPrincipal/Scripts')));
 app.use('/Imagens', express.static(path.join(__dirname, '../Imagens')));
 app.use('/PaginaADM/Estilos', express.static(path.join(__dirname, '../PaginaADM/Estilos')));
+app.use('/PaginaADM/Scripts', express.static(path.join(__dirname, '../PaginaADM/Scripts')));
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Permite utilizar o "moment" em outros arquivod(EJS)
+app.locals.moment = require('moment-timezone');
 
 // Manipular arquivos JSON
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -83,7 +85,7 @@ app.post('/salvar', async (req, res) => {
       Medida: req.body.medida,
       Outros: req.body.outros,
       Observacao: req.body.observacao,
-      DataHora: moment().tz('America/Sao_Paulo').format('DD-MM-YYYY HH:mm'),
+      DataHora: new Date()
     };
 
     // Inserir o documento no MongoDB
@@ -95,7 +97,7 @@ app.post('/salvar', async (req, res) => {
     // Enviar e-mail
     // enviarEmail(novaResposta);
 
-    console.log('Dados salvos com sucesso no MongoDB e enviados para a planilha');
+    console.log('Dados salvos com sucesso no MongoDB');
     res.status(200).json({ success: true, redirectUrl: '/envio' });
   } catch (error) {
     console.error('Erro ao salvar os dados no MongoDB', error);
@@ -130,7 +132,7 @@ app.post('/salvar', async (req, res) => {
 //         <p style="color: black;"><b>Reagente:</b> ${novaResposta.Reagente}</p>
 //         <p style="color: black;"><b>Quantidade Utilizada:</b> ${novaResposta.Quantidade} - ${novaResposta.Medida} ${novaResposta.Outros}</p>
 //         <p style="color: black;"><b>Observação:</b> ${novaResposta.Observacao}</p>
-//         <p style="color: black;"><b>Data e Hora:</b> ${novaResposta.DataHora}</p>
+//         <p style="color: black;"><b>Data e Hora:</b> ${moment(novaResposta.DataHora).format('DD/MM/YYYY HH:mm')}</p>
 //       </body>
 //     </html>
 //     `;
@@ -174,6 +176,7 @@ async function enviarParaGoogleSheets(novaResposta) {
     }
 
     // Adiciona apenas dados que não estão na planilha
+    novaResposta.DataHora = moment(novaResposta.dataHora).format('DD/MM/YYYY HH:mm');
     const dados = [
       novaResposta.id,
       novaResposta.Responsavel,
@@ -225,15 +228,46 @@ app.get('/ADM', async (req, res) => {
   }
 });
 
-app.get('/DadosPorData', (req, res) => {
-  const { dataInicial, dataFinal } = req.query;
+app.get('/DadosPorData', async (req, res) => {
+  try{
+    const { dataInicial, dataFinal } = req.query;
 
-  db.collection('respostas').find({
-    data: {$gte: new Date(dataInicial), $lte: new Date(dataFinal)}
-  }).toArray((err, result) => {
-    if(err) throw err;
-    res.json(result);
-  });
+    console.log('Recebendo requisição para /DadosPorData: ', req.query);
+    console.log('Data Inicial: ', dataInicial);
+    console.log('Data Final: ', dataFinal);
+
+    const dataInicialDate = moment(dataInicial, 'DD/MM/YYYY', true).startOf('day').toDate();
+    const dataFinalDate = moment(dataFinal, 'DD/MM/YYYY', true).endOf('day').toDate();
+
+    const database = client.db('forms');
+    const collection = database.collection('Respostas');
+
+    const result = await collection.find({
+      DataHora: {
+        $gte: dataInicialDate,
+        $lte: dataFinalDate,
+      },
+    }).toArray();
+
+    console.log('Resultado da consulta: ', result);
+
+    const resultadosFormatados = result.map(item => ({
+      id: item.id,
+      Responsavel: item.Responsavel,
+      CodigoReagente: item.CodigoReagente,
+      Reagente: item.Reagente,
+      Quantidade: item.Quantidade,
+      Medida: item.Medida,
+      Outros: item.Outros,
+      Observacao: item.Observacao,
+      DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
+    }));
+    
+    res.json(resultadosFormatados);
+  } catch (error) {
+    console.error('Erro ao buscar os dados por data: ', error);
+    res.status(500).json({error: 'Erro interno do servidor'});
+  }
 });
 
 //Ligar o servidor

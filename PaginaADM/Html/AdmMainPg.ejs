@@ -21,7 +21,7 @@
             <option value="Nome">Nome do Responsável</option>
             <option value="Code">Codigo do Reagente</option>
             <option value="Reagente">Nome do Reagente</option>
-            <option value="Reagente">Data</option>
+            <option value="Data">Data</option>
         </select>
         <div class="btnF"><button id="botaoFiltrar">Filtrar</button></div>
         <div class="linha"></div>
@@ -38,7 +38,6 @@
                 <th class="thResp" id="thObs">Observação</th>
                 <th class="thResp" id="thData">Data</th>
             </tr>
-
             <% respostas.forEach(function(data) { %>
                 <tr>
                     <td class="respMongo"><%= data.id %></td>
@@ -47,7 +46,7 @@
                     <td class="respMongo"><%= data.Reagente %></td>
                     <td class="respMongo"><%= data.Quantidade + ' ' + data.Medida + ' ' + data.Outros %></td>
                     <td class="respMongo"><%= data.Observacao %></td>
-                    <td class="respMongo"><%= data.DataHora %></td>
+                    <td class="respMongo"><%= moment(data.DataHora).format('DD/MM/YYYY HH:mm') %></td>
                 </tr>
             <% }); %>
         </table>
@@ -57,5 +56,6 @@
             <a href="https://docs.google.com/spreadsheets/d/1RNCNXsqR2xSqnosi33V9Uu2s_o0EbxjWB3CckXLKMBA/edit#gid=0" target="_blank">Abrir no aplicativo Google Planilhas</a>
         </button>
     </div>
+    <script src="/PaginaADM/Scripts/ScriptADM.js"></script>
 </body>
 </html>

@@ -107,6 +107,7 @@ hr{
 }
 
 .respostasEnv {
+    width: 98%;
     margin: 1%;
     border-collapse: collapse;
     overflow-x: auto;
