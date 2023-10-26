@@ -45,9 +45,9 @@ html, body{
 
 #pesquisar{
     border: 1px solid var(--preto);
-    width: 310px;
+    width: 355px;
     height: 38px;
-    font-size: 32px;
+    font-size: 24px;
     margin-top: 5%;
 }
 

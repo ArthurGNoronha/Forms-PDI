@@ -236,12 +236,12 @@ app.get('/DadosPorData', async (req, res) => {
     console.log('Data Inicial: ', dataInicial);
     console.log('Data Final: ', dataFinal);
 
-    const dataInicialDate = moment(dataInicial, 'DD/MM/YYYY', true).startOf('day').toDate();
-    const dataFinalDate = moment(dataFinal, 'DD/MM/YYYY', true).endOf('day').toDate();
-
     const database = client.db('forms');
     const collection = database.collection('Respostas');
 
+    const dataInicialDate = moment(dataInicial, 'DD/MM/YYYY', true).startOf('day').toDate();
+    const dataFinalDate = moment(dataFinal, 'DD/MM/YYYY', true).endOf('day').toDate();
+    
     const result = await collection.find({
       DataHora: {
         $gte: dataInicialDate,
@@ -249,20 +249,21 @@ app.get('/DadosPorData', async (req, res) => {
       },
     }).toArray();
 
-    console.log('Resultado da consulta: ', result);
-
-    const resultadosFormatados = result.map(item => ({
-      id: item.id,
-      Responsavel: item.Responsavel,
-      CodigoReagente: item.CodigoReagente,
-      Reagente: item.Reagente,
-      Quantidade: item.Quantidade,
-      Medida: item.Medida,
-      Outros: item.Outros,
-      Observacao: item.Observacao,
-      DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
-    }));
+    const resultadosFormatados = result.map(item => {
+      return {
+        id: item.id,
+        Responsavel: item.Responsavel,
+        CodigoReagente: item.CodigoReagente,
+        Reagente: item.Reagente,
+        Quantidade: item.Quantidade,
+        Medida: item.Medida,
+        Outros: item.Outros,
+        Observacao: item.Observacao,
+        DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
+      };
+    });
     
+    console.log('Resultados formatados: ', resultadosFormatados);
     res.json(resultadosFormatados);
   } catch (error) {
     console.error('Erro ao buscar os dados por data: ', error);

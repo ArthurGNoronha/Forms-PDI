@@ -40,3 +40,23 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
             console.error('Tipo de filtro não reconhecido');
     }
 });
+
+document.getElementById('tipoFiltro').addEventListener('change', function(){
+    const campo = document.getElementById('pesquisar');
+    const tipoFiltro = document.getElementById('tipoFiltro').value;
+
+    if(tipoFiltro === 'ID'){
+        campo.placeholder = 'Digite o ID da resposta'
+    } else if (tipoFiltro === 'Nome') {
+        campo.placeholder = 'Digite o nome do Responsável'
+    } else if (tipoFiltro === 'Code') {
+        campo.placeholder = 'Digite o Código do Reagente'
+    } else if (tipoFiltro === 'Reagente') {
+        campo.placeholder = 'Digite o Reagente utilizado'
+    } else if (tipoFiltro === 'Data' ) {
+        campo.placeholder = 'Formato: Inicio - Fim(12/07/2023)'
+    } else {
+        console.error('Tipo de filtro não reconhecido');
+        campo.placeholder = 'Verifique a opção escolhida!'
+    }
+})
