@@ -13,10 +13,29 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
             fetch(urlId)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Resultados do filtro por ID: ', data);
+                    const tabelasRespostas = document.querySelector('.respostasEnv');
+
+                    // Remover todas as linhas, exceto o cabeçalho
+                    const linhasAntigas = document.querySelectorAll('.respostasEnv tr:not(:first-child)');
+                    linhasAntigas.forEach(linha => linha.remove());
+
+                    data.forEach(item => {
+                        const novaLinha = document.createElement('tr');
+                        novaLinha.innerHTML = `
+                            <td class="respMongo">${item.id}</td>
+                            <td class="respMongo">${item.Responsavel}</td>
+                            <td class="respMongo">${item.CodigoReagente}</td>
+                            <td class="respMongo">${item.Reagente}</td>
+                            <td class="respMongo">${item.Quantidade + ' ' + item.Medida + ' ' + item.Outros}</td>
+                            <td class="respMongo">${item.Observacao}</td>
+                            <td class="respMongo">${moment(item.DataHora, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY HH:mm')}</td>
+                        `;
+
+                        tabelasRespostas.appendChild(novaLinha);
+                    })
                 })
                 .catch(error => {
-                    console.error('Erro ao buscar dados por data: ', error);
+                    console.error('Erro ao buscar dados por ID: ', error);
                 });
             break;
 
@@ -61,7 +80,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
                     console.log('Resultados do filtro por Reagente ', data);
                 })
                 .catch(error => {
-                    console.error('Erro ao buscar dados por : ', error);
+                    console.error('Erro ao buscar dados por Reagente : ', error);
                 });
             break;
 

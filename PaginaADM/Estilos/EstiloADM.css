@@ -62,9 +62,14 @@ html, body{
 }
 
 #botaoFiltrar {
-    width: 80px;
+    width: 90px;
     height: 25px;
     margin-top: 5%;
+}
+
+#removeFiltro {
+    width: 110px;
+    height: 25px;
 }
 
 #tipoFiltro{
@@ -146,4 +151,11 @@ hr{
 a {
     color: inherit;
     text-decoration: none;
+}
+
+.respfiltradas {
+    width: 100%;
+    height: 55%;
+    background: green;
+    margin-top: -22%;
 }

@@ -6,6 +6,7 @@
     <title>Controle de Estoque - LogBook - ADM</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="/PaginaADM/Estilos/EstiloADM.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 </head>
 <body>
     <div class="header">
@@ -23,8 +24,10 @@
             <option value="Reagente">Nome do Reagente</option>
             <option value="Data">Data</option>
         </select>
-        <div class="btnF"><button id="botaoFiltrar">Filtrar</button></div>
+        <div class="btnF"><button id="botaoFiltrar">Filtrar</button>
+        <button id="removeFiltro">Remover Filtros</button></div>
         <div class="linha"></div>
+        <div class="respfiltradas"></div>
     </div>
     <div class="respostas">
         <div class="tabela">
