@@ -351,8 +351,76 @@ app.get('/buscaNome', async (req, res) => {
     console.log('Resultados formatados: ', resultadosFormatados);
     res.json(resultadosFormatados);
   } catch (error) {
-    console.error('Erro ao buscar os dados: ', error);
+    console.error('Erro ao buscar os dados por nome: ', error);
     res.status(500).json({ error: 'Erro interno no servidor' });
+  }
+});
+
+// Busca por código
+app.get('/buscaCode', async (req,res) => {
+  try{
+    const { code } = req.query;
+    
+    console.log('Recebendo requisição para /buscaCode: ', req.query);
+    console.log('Código: ', code);
+
+    const result = await collection.find({
+      CodigoReagente: { $regex: new RegExp (`${code}`, 'i') }
+    }).toArray();
+
+    const resultadosFormatados = result.map(item => {
+      return {
+        id: item.id,
+        Responsavel: item.Responsavel,
+        CodigoReagente: item.CodigoReagente,
+        Reagente: item.Reagente,
+        Quantidade: item.Quantidade,
+        Medida: item.Medida,
+        Outros: item.Outros,
+        Observacao: item.Observacao,
+        DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
+      };
+    });
+
+    console.log('Resultados formatados: ', resultadosFormatados)
+    res.json(resultadosFormatados);
+  } catch (error) {
+    console.error('Erro ao buscar os dados pelo Código: ', error);
+    res.status(500).json({ error: 'Erro interno do servidor'});
+  }
+});
+
+//Busca por Reagente
+app.get('/buscaReag', async (req, res) => {
+  try{
+    const { reag } = req.query;
+    
+    console.log('Recebendo requisição para /buscaReag');
+    console.log('Reagente: ', reag);
+
+    const result = await collection.find({
+      Reagente: { $regex: new RegExp (`${reag}`, 'i') }
+    }).toArray();
+
+    const resultadosFormatados = result.map(item => {
+      return {
+        id: item.id,
+        Responsavel: item.Responsavel,
+        CodigoReagente: item.CodigoReagente,
+        Reagente: item.Reagente,
+        Quantidade: item.Quantidade,
+        Medida: item.Medida,
+        Outros: item.Outros,
+        Observacao: item.Observacao,
+        DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
+      };
+    });
+
+    console.log('Resultados formatados: ', resultadosFormatados);
+    res.json(resultadosFormatados);
+  } catch (error) {
+    console.error('Erro ao buscar por Reagente: ', error);
+    res.status(500).json({error: 'Erro interno no servidor'});
   }
 });
 
