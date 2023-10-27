@@ -17,6 +17,8 @@ const key = require('../FormsPDI.json');
 
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
+database = client.db('forms');
+collection = database.collection('Respostas');
 
 const sheetClient = new google.auth.JWT(
   key.client_email,
@@ -29,7 +31,6 @@ const sheets = google.sheets({ version: 'v4', auth: sheetClient });
 
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
 const SHEET_NAME = 'Controle';
-
 
 // Configurar o middleware para servir arquivos estáticos (CSS, JavaScript, imagens)
 app.use('/PaginaPrincipal/Estilos', express.static(path.join(__dirname, '../PaginaPrincipal/Estilos')));
@@ -67,10 +68,6 @@ app.get('/Envio', (req, res) => {
 // Receber as informações
 app.post('/salvar', async (req, res) => {
   try {
-    // Selecionar o banco de dados e a coleção
-    const database = client.db('forms');
-    const collection = database.collection('Respostas');
-
     // Definir o ID
     const maxIdDoc = await collection.findOne({}, { sort: { id: -1 } });
     const nextId = maxIdDoc ? maxIdDoc.id + 1 : 1;
@@ -168,7 +165,7 @@ async function enviarParaGoogleSheets(novaResposta) {
       range: SHEET_NAME,
     });
 
-    let values = [];
+    const values = [];
 
     // Se não houver dados, adiciona os títulos das colunas
     if (!sheetData.data.values) {
@@ -189,7 +186,7 @@ async function enviarParaGoogleSheets(novaResposta) {
 
     const row = dados.map(item => item.toString());
 
-    const exists = sheetData.data.values && sheetData.data.values.some(existingRow => JSON.stringify(existingRow) === JSON.stringify(row));
+    const exists = sheetData.data.values && sheetData.data.values.some(existingRow => isEqual(existingRow, row));
 
     if (!exists) {
       values.push(row);
@@ -210,12 +207,25 @@ async function enviarParaGoogleSheets(novaResposta) {
   }
 }
 
+// Função para comparar arrays
+function isEqual(array1, array2) {
+  if (array1.length !== array2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < array1.length; i++) {
+    if (array1[i] !== array2[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+
 // Enviar para a pagina de ADM
 app.get('/ADM', async (req, res) => {
   try {
-    // Selecionar o banco de dados e a coleção
-    const database = client.db('forms');
-    const collection = database.collection('Respostas');
 
     // Buscar todas as respostas
     const respostas = await collection.find({}).toArray();
@@ -228,20 +238,60 @@ app.get('/ADM', async (req, res) => {
   }
 });
 
-app.get('/DadosPorData', async (req, res) => {
+// Fazer a busca de dados por ID
+app.get('/buscarDadosID', async (req, res) => {
+  try{
+    const { id1, id2 } = req.query;
+
+    console.log('Recebendo requisição para /buscarDadosId: ', req.query);
+
+    console.log('Id 1: ', id1);
+    console.log('Id 2: ', id2);
+
+    const result = await collection.find({
+      id: {
+        $gte: parseInt(id1),
+        $lte: parseInt(id2),
+      },
+    }).toArray();
+
+    const resultadosFormatados = result.map(item => {
+      return {
+        id: item.id,
+        Responsavel: item.Responsavel,
+        CodigoReagente: item.CodigoReagente,
+        Reagente: item.Reagente,
+        Quantidade: item.Quantidade,
+        Medida: item.Medida,
+        Outros: item.Outros,
+        Observacao: item.Observacao,
+        DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
+      };
+    });
+    console.log('Resultados formatados: ', resultadosFormatados);
+    res.json(resultadosFormatados);
+  } catch (error) {
+    console.error('Erro ao buscar os dados por Id: ', error);
+    res.status(500).json({erorr: 'Erro interno no servidor'});
+  }
+});
+
+// Fazer a busca de dados por data
+app.get('/buscarDadosDT', async (req, res) => {
   try{
     const { dataInicial, dataFinal } = req.query;
 
-    console.log('Recebendo requisição para /DadosPorData: ', req.query);
+    // Logs para informação
+    console.log('Recebendo requisição para /buscarDadosDT: ', req.query);
+
     console.log('Data Inicial: ', dataInicial);
     console.log('Data Final: ', dataFinal);
 
-    const database = client.db('forms');
-    const collection = database.collection('Respostas');
+    // Formatar as Datas para o formato "Date"
+    const dataInicialDate = moment(dataInicial.trim(), 'DD/MM/YYYY', true).startOf('day').toDate();
+    const dataFinalDate = moment(dataFinal.trim(), 'DD/MM/YYYY', true).endOf('day').toDate();
 
-    const dataInicialDate = moment(dataInicial, 'DD/MM/YYYY', true).startOf('day').toDate();
-    const dataFinalDate = moment(dataFinal, 'DD/MM/YYYY', true).endOf('day').toDate();
-    
+    // Fazer a busca entre as datas inseridas
     const result = await collection.find({
       DataHora: {
         $gte: dataInicialDate,
@@ -249,6 +299,7 @@ app.get('/DadosPorData', async (req, res) => {
       },
     }).toArray();
 
+    // Array de Objetos com os dados encontrados (formatados)
     const resultadosFormatados = result.map(item => {
       return {
         id: item.id,

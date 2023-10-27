@@ -4,7 +4,20 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
 
     switch (tipoFiltro) {
         case 'ID':
-            // Lógica para filtro por ID
+            const ids = valorPesquisa.split('-');
+            const id1 = ids[0];
+            const id2 = ids[1] || id1;
+
+            const urlId = `/buscarDadosId?id1=${id1}&id2=${id2}`;
+
+            fetch(urlId)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Resultados do filtro por ID: ', data);
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar dados por data: ', error);
+                });
             break;
 
         case 'Nome':
@@ -24,9 +37,9 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
             const dataInicial = datas[0];
             const dataFinal = datas[1] || dataInicial;
 
-            const url = `/DadosPorData?dataInicial=${dataInicial}&dataFinal=${dataFinal}`;
+            const urlDT = `/buscarDadosDT?dataInicial=${dataInicial}&dataFinal=${dataFinal}`;
 
-            fetch(url)
+            fetch(urlDT)
                 .then(response => response.json())
                 .then(data => {
                     console.log('Resultados do filtro por data: ', data);
@@ -41,6 +54,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
     }
 });
 
+// Mudar o placeholder com base no tipo de filtro
 document.getElementById('tipoFiltro').addEventListener('change', function(){
     const campo = document.getElementById('pesquisar');
     const tipoFiltro = document.getElementById('tipoFiltro').value;
@@ -59,4 +73,4 @@ document.getElementById('tipoFiltro').addEventListener('change', function(){
         console.error('Tipo de filtro não reconhecido');
         campo.placeholder = 'Verifique a opção escolhida!'
     }
-})
+});
