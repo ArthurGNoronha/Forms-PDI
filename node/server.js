@@ -322,6 +322,40 @@ app.get('/buscarDadosDT', async (req, res) => {
   }
 });
 
+// Buscar por nome
+app.get('/buscaNome', async (req, res) => {
+  try {
+    const { nome } = req.query;
+
+    console.log('Recebendo requisição para /buscaNome: ', req.query);
+    console.log('Nome: ', nome);
+
+    const result = await collection.find({
+      Responsavel: { $regex: new RegExp(`${nome}`, 'i') }
+    }).toArray();    
+
+    const resultadosFormatados = result.map(item => {
+      return {
+        id: item.id,
+        Responsavel: item.Responsavel,
+        CodigoReagente: item.CodigoReagente,
+        Reagente: item.Reagente,
+        Quantidade: item.Quantidade,
+        Medida: item.Medida,
+        Outros: item.Outros,
+        Observacao: item.Observacao,
+        DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
+      };
+    });
+
+    console.log('Resultados formatados: ', resultadosFormatados);
+    res.json(resultadosFormatados);
+  } catch (error) {
+    console.error('Erro ao buscar os dados: ', error);
+    res.status(500).json({ error: 'Erro interno no servidor' });
+  }
+});
+
 //Ligar o servidor
 app.listen(port, async () => {
   console.log(`Servidor rodando em http://localhost:${port}`);

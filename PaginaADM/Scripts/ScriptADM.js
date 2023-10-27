@@ -21,15 +21,48 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
             break;
 
         case 'Nome':
-            // Lógica para filtro por Nome
+            const nome = valorPesquisa;
+
+            const urlNome = `/buscaNome?nome=${nome}`;
+
+            fetch(urlNome)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Resultados do filtro do Nome: ', data);
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar dados por nome: ', error);
+                });
             break;
 
         case 'Code':
-            // Lógica para filtro por Code
+            const code = valorPesquisa;
+
+            const urlCode = `/buscaCode?code=${code}`;
+
+            fetch(urlCode)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Resultados do filtro por código: ', data);
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar dados por código: ', error);
+                });
             break;
 
         case 'Reagente':
-            // Lógica para filtro por Reagente
+            const reag = valorPesquisa;
+
+            const urlReag = `/buscaReag?reag=${reag}`;
+
+            fetch(urlReag)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Resultados do filtro por Reagente ', data);
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar dados por : ', error);
+                });
             break;
 
         case 'Data':
