@@ -15,7 +15,6 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
                 .then(data => {
                     const tabelasRespostas = document.querySelector('.respostasEnv');
 
-                    // Remover todas as linhas, exceto o cabeçalho
                     const linhasAntigas = document.querySelectorAll('.respostasEnv tr:not(:first-child)');
                     linhasAntigas.forEach(linha => linha.remove());
 
@@ -125,4 +124,42 @@ document.getElementById('tipoFiltro').addEventListener('change', function(){
         console.error('Tipo de filtro não reconhecido');
         campo.placeholder = 'Verifique a opção escolhida!'
     }
+});
+
+
+
+// No evento de clique para remover filtros
+document.getElementById('removeFiltro').addEventListener('click', function(){
+    const pesquisar = document.getElementById('pesquisar');
+    pesquisar.value = '';
+    pesquisar.focus();
+
+    const tabelasRespostas = document.querySelector('.respostasEnv');
+
+    // Remova todas as linhas da tabela, exceto a primeira (cabeçalho)
+    const linhas = document.querySelectorAll('.respostasEnv tr:not(:first-child)');
+    linhas.forEach(linha => linha.remove());
+
+    // Faça uma nova solicitação ao servidor para obter os dados originais
+    fetch('/ADM/data')
+        .then(response => response.json())
+        .then(data => {
+            // Recrie as linhas usando os dados originais
+            data.forEach(item => {
+                const novaLinha = document.createElement('tr');
+                novaLinha.innerHTML = `
+                    <td class="respMongo">${item.id}</td>
+                    <td class="respMongo">${item.Responsavel}</td>
+                    <td class="respMongo">${item.CodigoReagente}</td>
+                    <td class="respMongo">${item.Reagente}</td>
+                    <td class="respMongo">${item.Quantidade + ' ' + item.Medida + ' ' + item.Outros}</td>
+                    <td class="respMongo">${item.Observacao}</td>
+                    <td class="respMongo">${moment(item.DataHora).format('DD/MM/YYYY HH:mm')}</td>
+                `;
+                tabelasRespostas.appendChild(novaLinha);
+            });
+        })
+        .catch(error => {
+            console.error('Erro na requisição: ', error);
+        });
 });

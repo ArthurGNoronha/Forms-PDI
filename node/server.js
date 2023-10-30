@@ -238,6 +238,19 @@ app.get('/ADM', async (req, res) => {
   }
 });
 
+app.get('/ADM/data', async (req, res) => {
+  try {
+    // Buscar todas as respostas
+    const respostas = await collection.find({}).toArray();
+
+    // Enviar os dados como JSON
+    res.json(respostas);
+  } catch (error) {
+    console.error('Erro ao obter os dados: ', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
 // Fazer a busca de dados por ID
 app.get('/buscarDadosID', async (req, res) => {
   try{
