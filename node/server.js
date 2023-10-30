@@ -228,7 +228,7 @@ app.get('/ADM', async (req, res) => {
   try {
 
     // Buscar todas as respostas
-    const respostas = await collection.find({}).toArray();
+    const respostas = await collection.find({}).sort({id: -1}).toArray();
 
     // Renderizar a página de respostas com os dados
     res.render('AdmMainPg', { respostas });
@@ -241,7 +241,7 @@ app.get('/ADM', async (req, res) => {
 app.get('/ADM/data', async (req, res) => {
   try {
     // Buscar todas as respostas
-    const respostas = await collection.find({}).toArray();
+    const respostas = await collection.find({}).sort({id: -1}).toArray();
 
     // Enviar os dados como JSON
     res.json(respostas);

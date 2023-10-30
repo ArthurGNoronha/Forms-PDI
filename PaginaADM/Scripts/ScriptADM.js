@@ -2,6 +2,30 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
     const tipoFiltro = document.getElementById('tipoFiltro').value;
     const valorPesquisa = document.getElementById('pesquisar').value;
 
+    function adicionarLinhasTabela(data) {
+        const tabelasRespostas = document.querySelector('.respostasEnv');
+    
+        // Remover linhas antigas
+        const linhasAntigas = document.querySelectorAll('.respostasEnv tr:not(:first-child)');
+        linhasAntigas.forEach(linha => linha.remove());
+    
+        // Adicionar novas linhas com os dados
+        data.forEach(item => {
+            const novaLinha = document.createElement('tr');
+            novaLinha.innerHTML = `
+                <td class="respMongo">${item.id}</td>
+                <td class="respMongo">${item.Responsavel}</td>
+                <td class="respMongo">${item.CodigoReagente}</td>
+                <td class="respMongo">${item.Reagente}</td>
+                <td class="respMongo">${item.Quantidade + ' ' + item.Medida + ' ' + item.Outros}</td>
+                <td class="respMongo">${item.Observacao}</td>
+                <td class="respMongo">${moment(item.DataHora, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY HH:mm')}</td>
+            `;
+    
+            tabelasRespostas.appendChild(novaLinha);
+        });
+    }
+
     switch (tipoFiltro) {
         case 'ID':
             const ids = valorPesquisa.split('-');
@@ -13,25 +37,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
             fetch(urlId)
                 .then(response => response.json())
                 .then(data => {
-                    const tabelasRespostas = document.querySelector('.respostasEnv');
-
-                    const linhasAntigas = document.querySelectorAll('.respostasEnv tr:not(:first-child)');
-                    linhasAntigas.forEach(linha => linha.remove());
-
-                    data.forEach(item => {
-                        const novaLinha = document.createElement('tr');
-                        novaLinha.innerHTML = `
-                            <td class="respMongo">${item.id}</td>
-                            <td class="respMongo">${item.Responsavel}</td>
-                            <td class="respMongo">${item.CodigoReagente}</td>
-                            <td class="respMongo">${item.Reagente}</td>
-                            <td class="respMongo">${item.Quantidade + ' ' + item.Medida + ' ' + item.Outros}</td>
-                            <td class="respMongo">${item.Observacao}</td>
-                            <td class="respMongo">${moment(item.DataHora, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY HH:mm')}</td>
-                        `;
-
-                        tabelasRespostas.appendChild(novaLinha);
-                    })
+                    adicionarLinhasTabela(data);
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por ID: ', error);
@@ -46,7 +52,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
             fetch(urlNome)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Resultados do filtro do Nome: ', data);
+                    adicionarLinhasTabela(data);
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por nome: ', error);
@@ -61,7 +67,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
             fetch(urlCode)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Resultados do filtro por código: ', data);
+                   adicionarLinhasTabela(data);
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por código: ', error);
@@ -76,7 +82,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
             fetch(urlReag)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Resultados do filtro por Reagente ', data);
+                    adicionarLinhasTabela(data);
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por Reagente : ', error);
@@ -93,7 +99,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
             fetch(urlDT)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Resultados do filtro por data: ', data);
+                    adicionarLinhasTabela(data);
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por data: ', error);
@@ -126,9 +132,7 @@ document.getElementById('tipoFiltro').addEventListener('change', function(){
     }
 });
 
-
-
-// No evento de clique para remover filtros
+// Remover Filtros
 document.getElementById('removeFiltro').addEventListener('click', function(){
     const pesquisar = document.getElementById('pesquisar');
     pesquisar.value = '';
