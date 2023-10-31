@@ -79,12 +79,12 @@ html, body{
 }
 
 .respostas{
-    position: absolute;
+    position: inherit;
     width: 1010px;
     height: 780px;
     background: var(--branco);
-    top: 21%;
-    left: 32%;
+    margin-top: -51.5%;
+    margin-left: 32%;
     overflow: auto;
 }
 
@@ -131,6 +131,15 @@ hr{
 
 #thId {
     padding: 2px;
+}
+
+#btnProximo {
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    background-color: red;
+    cursor: pointer;
+    margin-left: 88%;
 }
 
 #baixar {

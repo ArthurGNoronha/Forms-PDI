@@ -89,7 +89,7 @@ app.post('/salvar', async (req, res) => {
     await collection.insertOne(novaResposta);
 
     // Enviar para a planilha
-    await enviarParaGoogleSheets(novaResposta);
+    // await enviarParaGoogleSheets(novaResposta);
 
     // Enviar e-mail
     // enviarEmail(novaResposta);
@@ -228,7 +228,7 @@ app.get('/ADM', async (req, res) => {
   try {
 
     // Buscar todas as respostas
-    const respostas = await collection.find({}).sort({id: -1}).toArray();
+    const respostas = await collection.find({}).sort({id: -1}).limit(15).toArray();
 
     // Renderizar a página de respostas com os dados
     res.render('AdmMainPg', { respostas });
@@ -240,11 +240,30 @@ app.get('/ADM', async (req, res) => {
 
 app.get('/ADM/data', async (req, res) => {
   try {
-    // Buscar todas as respostas
-    const respostas = await collection.find({}).sort({id: -1}).toArray();
+    const page = parseInt(req.query.page) || 1;
+    const itensPerPage = 15;
+    const skip = (page - 1) * itensPerPage;
 
-    // Enviar os dados como JSON
-    res.json(respostas);
+    // Buscar as respostas com limite e paginação
+    const respostas = await collection
+      .find({})
+      .sort({ id: -1 })
+      .skip(skip)
+      .limit(itensPerPage)
+      .toArray();
+
+    // Formatar a data no formato desejado
+    const respostasFormatadas = respostas.map(item => ({
+      ...item,
+      DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm')
+    }));
+
+    // Enviar os dados como JSON, incluindo informações de página
+    res.json({
+      respostas: respostasFormatadas,
+      currentPage: page,
+      totalPages: Math.ceil(await collection.countDocuments() / itensPerPage)
+    });
   } catch (error) {
     console.error('Erro ao obter os dados: ', error);
     res.status(500).json({ error: 'Erro interno do servidor' });

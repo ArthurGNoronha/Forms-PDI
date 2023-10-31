@@ -1,30 +1,37 @@
+var currentPage = 1;
+
+function atualizarVisibilidadeBotaoProximo(data) {
+    const nextPageButton = document.getElementById('btnProximo');
+    nextPageButton.style.display = (data.currentPage < data.totalPages) ? 'block' : 'none';
+}
+
+function adicionarLinhasTabela(data) {
+    const tabelasRespostas = document.querySelector('.respostasEnv');
+
+    // Remover linhas antigas
+    const linhasAntigas = document.querySelectorAll('.respostasEnv tr:not(:first-child)');
+    linhasAntigas.forEach(linha => linha.remove());
+
+    // Adicionar novas linhas com os dados
+    data.forEach(item => {
+        const novaLinha = document.createElement('tr');
+        novaLinha.innerHTML = `
+            <td class="respMongo">${item.id}</td>
+            <td class="respMongo">${item.Responsavel}</td>
+            <td class="respMongo">${item.CodigoReagente}</td>
+            <td class="respMongo">${item.Reagente}</td>
+            <td class="respMongo">${item.Quantidade + ' ' + item.Medida + ' ' + item.Outros}</td>
+            <td class="respMongo">${item.Observacao}</td>
+            <td class="respMongo">${moment(item.DataHora, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY HH:mm')}</td>
+        `;
+
+        tabelasRespostas.appendChild(novaLinha);
+    });
+}
+
 document.getElementById('botaoFiltrar').addEventListener('click', function () {
     const tipoFiltro = document.getElementById('tipoFiltro').value;
     const valorPesquisa = document.getElementById('pesquisar').value;
-
-    function adicionarLinhasTabela(data) {
-        const tabelasRespostas = document.querySelector('.respostasEnv');
-    
-        // Remover linhas antigas
-        const linhasAntigas = document.querySelectorAll('.respostasEnv tr:not(:first-child)');
-        linhasAntigas.forEach(linha => linha.remove());
-    
-        // Adicionar novas linhas com os dados
-        data.forEach(item => {
-            const novaLinha = document.createElement('tr');
-            novaLinha.innerHTML = `
-                <td class="respMongo">${item.id}</td>
-                <td class="respMongo">${item.Responsavel}</td>
-                <td class="respMongo">${item.CodigoReagente}</td>
-                <td class="respMongo">${item.Reagente}</td>
-                <td class="respMongo">${item.Quantidade + ' ' + item.Medida + ' ' + item.Outros}</td>
-                <td class="respMongo">${item.Observacao}</td>
-                <td class="respMongo">${moment(item.DataHora, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY HH:mm')}</td>
-            `;
-    
-            tabelasRespostas.appendChild(novaLinha);
-        });
-    }
 
     switch (tipoFiltro) {
         case 'ID':
@@ -116,7 +123,7 @@ document.getElementById('tipoFiltro').addEventListener('change', function(){
     const campo = document.getElementById('pesquisar');
     const tipoFiltro = document.getElementById('tipoFiltro').value;
 
-    if(tipoFiltro === 'ID'){
+    if (tipoFiltro === 'ID'){
         campo.placeholder = 'Digite o ID da resposta'
     } else if (tipoFiltro === 'Nome') {
         campo.placeholder = 'Digite o nome do Responsável'
@@ -138,32 +145,40 @@ document.getElementById('removeFiltro').addEventListener('click', function(){
     pesquisar.value = '';
     pesquisar.focus();
 
-    const tabelasRespostas = document.querySelector('.respostasEnv');
-
     // Remova todas as linhas da tabela, exceto a primeira (cabeçalho)
     const linhas = document.querySelectorAll('.respostasEnv tr:not(:first-child)');
     linhas.forEach(linha => linha.remove());
+
+    // Resetar a variável currentPage para 1
+    currentPage = 1;
 
     // Faça uma nova solicitação ao servidor para obter os dados originais
     fetch('/ADM/data')
         .then(response => response.json())
         .then(data => {
-            // Recrie as linhas usando os dados originais
-            data.forEach(item => {
-                const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `
-                    <td class="respMongo">${item.id}</td>
-                    <td class="respMongo">${item.Responsavel}</td>
-                    <td class="respMongo">${item.CodigoReagente}</td>
-                    <td class="respMongo">${item.Reagente}</td>
-                    <td class="respMongo">${item.Quantidade + ' ' + item.Medida + ' ' + item.Outros}</td>
-                    <td class="respMongo">${item.Observacao}</td>
-                    <td class="respMongo">${moment(item.DataHora).format('DD/MM/YYYY HH:mm')}</td>
-                `;
-                tabelasRespostas.appendChild(novaLinha);
-            });
+            adicionarLinhasTabela(data.respostas);
+            atualizarVisibilidadeBotaoProximo(data);
         })
         .catch(error => {
             console.error('Erro na requisição: ', error);
         });
+});
+
+function proximaPaginaDados() {
+    const urlPag = `/ADM/data?page=${currentPage}`;
+
+    fetch(urlPag)
+        .then(response => response.json())
+        .then(data => {
+            adicionarLinhasTabela(data.respostas);
+            atualizarVisibilidadeBotaoProximo(data);
+        })
+        .catch(error => {
+            console.error('Erro ao ir para próxima página: ', error);
+        });
+}
+
+document.getElementById('btnProximo').addEventListener('click', function(){
+    currentPage ++;
+    proximaPaginaDados();
 });
