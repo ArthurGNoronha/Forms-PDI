@@ -228,7 +228,11 @@ app.get('/ADM', async (req, res) => {
   try {
 
     // Buscar todas as respostas
-    const respostas = await collection.find({}).sort({id: -1}).limit(14).toArray();
+    const respostas = await collection
+      .find({})
+      .sort({id: -1})
+      .limit(14)
+       .toArray();
 
     // Renderizar a página de respostas com os dados
     res.render('AdmMainPg', { respostas });

@@ -193,3 +193,4 @@ document.getElementById('btnAnterior').addEventListener('click', function(){
     currentPage --;
     proximaPaginaDados();
 });
+
