@@ -12,6 +12,7 @@
     <div class="header">
         <img class="bpk" src="/Imagens/bpklogo.png" alt="biopark">
     </div>
+    <div class="containerGeral">
     <div class="filtro">
         <div class="topo"></div>
         <p class="textoF">Filtrar Respostas </p>
@@ -24,8 +25,10 @@
             <option value="Reagente">Nome do Reagente</option>
             <option value="Data">Data</option>
         </select>
-        <div class="btnF"><button id="botaoFiltrar">Filtrar</button>
-        <button id="removeFiltro">Remover Filtros</button></div>
+        <div class="btnF">
+            <button id="botaoFiltrar">Filtrar</button>
+            <button id="removeFiltro">Remover Filtros</button>
+        </div>
         <div class="linha"></div>
         <div class="respfiltradas"></div>
     </div>
@@ -53,13 +56,19 @@
                 </tr>
             <% }); %>
         </table>
-        <button id="btnProximo">Próxima Página</button>
+        <div class="containerBtns">
+            <button id="btnAnterior">Página Anterior</button>
+            <button id="btnProximo">Próxima Página</button>
         </div>
-        <hr>
+    </div>
+    <hr>
+    <div class="googlesheet">
         <button id="baixar">
             <a href="https://docs.google.com/spreadsheets/d/1RNCNXsqR2xSqnosi33V9Uu2s_o0EbxjWB3CckXLKMBA/edit#gid=0" target="_blank">Abrir no aplicativo Google Planilhas</a>
         </button>
+        </div>
     </div>
+</div>
     <script src="/PaginaADM/Scripts/ScriptADM.js"></script>
 </body>
 </html>

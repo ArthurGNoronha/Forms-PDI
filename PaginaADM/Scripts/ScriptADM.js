@@ -1,8 +1,14 @@
+document.addEventListener('DOMContentLoaded', function () {
+    proximaPaginaDados();
+});
+
 var currentPage = 1;
 
-function atualizarVisibilidadeBotaoProximo(data) {
+function atualizarVisibilidadeBotao(data) {
     const nextPageButton = document.getElementById('btnProximo');
-    nextPageButton.style.display = (data.currentPage < data.totalPages) ? 'block' : 'none';
+    const priorPageButton = document.getElementById('btnAnterior');
+    nextPageButton.disabled = (data.currentPage >= data.totalPages);
+    priorPageButton.disabled = (data.currentPage <= 1);
 }
 
 function adicionarLinhasTabela(data) {
@@ -157,7 +163,7 @@ document.getElementById('removeFiltro').addEventListener('click', function(){
         .then(response => response.json())
         .then(data => {
             adicionarLinhasTabela(data.respostas);
-            atualizarVisibilidadeBotaoProximo(data);
+            atualizarVisibilidadeBotao(data);
         })
         .catch(error => {
             console.error('Erro na requisição: ', error);
@@ -171,7 +177,7 @@ function proximaPaginaDados() {
         .then(response => response.json())
         .then(data => {
             adicionarLinhasTabela(data.respostas);
-            atualizarVisibilidadeBotaoProximo(data);
+            atualizarVisibilidadeBotao(data);
         })
         .catch(error => {
             console.error('Erro ao ir para próxima página: ', error);
@@ -180,5 +186,10 @@ function proximaPaginaDados() {
 
 document.getElementById('btnProximo').addEventListener('click', function(){
     currentPage ++;
+    proximaPaginaDados();
+});
+
+document.getElementById('btnAnterior').addEventListener('click', function(){
+    currentPage --;
     proximaPaginaDados();
 });

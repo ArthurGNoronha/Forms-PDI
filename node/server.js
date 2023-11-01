@@ -228,7 +228,7 @@ app.get('/ADM', async (req, res) => {
   try {
 
     // Buscar todas as respostas
-    const respostas = await collection.find({}).sort({id: -1}).limit(15).toArray();
+    const respostas = await collection.find({}).sort({id: -1}).limit(14).toArray();
 
     // Renderizar a página de respostas com os dados
     res.render('AdmMainPg', { respostas });
@@ -241,7 +241,7 @@ app.get('/ADM', async (req, res) => {
 app.get('/ADM/data', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const itensPerPage = 15;
+    const itensPerPage = 14;
     const skip = (page - 1) * itensPerPage;
 
     // Buscar as respostas com limite e paginação
