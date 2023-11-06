@@ -183,19 +183,73 @@ a {
     display: flex;
     width: 100%;
     height: 58%;
-    background: green;
     margin-top: -22%;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.btnsF {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 7%;
     justify-content: flex-end;
-    align-items: end;
+}
+
+.novaResposta {
+    border: solid 1px var(--vermelho);
+    background-color: var(--azul);
+    border-left: solid 4px var(--vermelho);
+    width: 95%;
+    margin-left: 2.5%;
+    margin-bottom: 1%;
+    display: flex;
+    flex-direction: row;
+}
+
+.nomeFiltro, .idFiltro, .dataFiltro {
+    display: flex;
+    color: white;
+    margin-left: 8%;
+}
+
+.nomeFiltro {
+    font-size: 24px;
+}
+
+.containerTextos {
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    margin-right: 10%;
 }
 
 .antF, .proxF {
     height: 25px;
+    margin-top: 2%;
     margin-bottom: 1%;
     border-radius: 15px;
+    cursor: pointer;
 }
 
 .antF {
     margin-left: 1%;
-    margin-right: 0.5%;
+    margin-right: 2.5%;
+}
+
+.deletar, .coment {
+    width: 45px;
+    height: 45px;
+    position: relative;
+    cursor: pointer;
+}
+
+.deletar {
+    right: 5%;
+    top: 15%;
+}
+
+.coment {
+    right: 8%;
+    top: 15%;
 }

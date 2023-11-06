@@ -31,9 +31,23 @@
         </div>
         <div class="linha"></div>
         <div class="respfiltradas">
-            <button class="proxF"> Proximo </button>
-            <button class="antF"> Anterior </button>
+            <% respostas.slice(0,6).forEach(function(data){ %>
+                <div class="novaResposta">
+                    <div class="containerTextos">
+                    <div class="nomeFiltro">Nome: <%= data.Responsavel %></div>
+                    <div class="dataFiltro">Data: <%= moment(data.DataHora).format('DD/MM/YYYY HH:mm') %></div>
+                    <div class="idFiltro">ID: <%= data.id %></div>
+                </div>
+                    <img class="coment" src="/Imagens/Comentario.png" alt="Comentar">
+                    <img class="deletar" src="/Imagens/trash-2-512.png" alt="Deletar">
+                </div>
+            <% }); %> 
+            <div class="btnsF">
+                <button class="proxF"> Proximo </button>
+                <button class="antF"> Anterior </button>
+            </div>
         </div>
+        
     </div>
     <div class="respostas">
         <div class="tabela">

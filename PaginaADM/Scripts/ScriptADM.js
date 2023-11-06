@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     proximaPaginaDados();
 });
 
-var currentPage = 1;
-
 function atualizarVisibilidadeBotao(data) {
     const nextPageButton = document.getElementById('btnProximo');
     const priorPageButton = document.getElementById('btnAnterior');
@@ -169,6 +167,8 @@ document.getElementById('removeFiltro').addEventListener('click', function(){
             console.error('Erro na requisição: ', error);
         });
 });
+
+var currentPage = 1;
 
 function proximaPaginaDados() {
     const urlPag = `/ADM/data?page=${currentPage}`;
