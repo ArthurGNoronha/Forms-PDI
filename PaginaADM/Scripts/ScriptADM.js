@@ -9,6 +9,11 @@ function atualizarVisibilidadeBotao(data) {
     priorPageButton.disabled = (data.currentPage <= 1);
 }
 
+function desabilitarBotao() {
+    document.getElementById('btnProximo').style.display = 'none';
+    document.getElementById('btnAnterior').style.display = 'none';
+}
+
 function adicionarDivsFiltros(respostas, limite = respostas.length) {
     const respFiltradas = document.querySelector('.respfiltradas');
 
@@ -75,6 +80,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
                 .then(data => {
                     adicionarLinhasTabela(data);
                     adicionarDivsFiltros(data);
+                    desabilitarBotao();
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por ID: ', error);
@@ -192,7 +198,9 @@ document.getElementById('removeFiltro').addEventListener('click', function(){
         .then(data => {
             adicionarLinhasTabela(data.respostas);
             atualizarVisibilidadeBotao(data);
-            adicionarDivsFiltros(data.respostas, 6)
+            adicionarDivsFiltros(data.respostas, 6);
+            document.getElementById('btnAnterior').style.display = 'block';
+            document.getElementById('btnProximo').style.display = 'block';
         })
         .catch(error => {
             console.error('Erro na requisição: ', error);
