@@ -280,11 +280,6 @@ app.get('/buscarDadosID', async (req, res) => {
   try{
     const { id1, id2 } = req.query;
 
-    console.log('Recebendo requisição para /buscarDadosId: ', req.query);
-
-    console.log('Id 1: ', id1);
-    console.log('Id 2: ', id2);
-
     const result = await collection.find({
       id: {
         $gte: parseInt(id1),
@@ -305,7 +300,6 @@ app.get('/buscarDadosID', async (req, res) => {
         DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
       };
     });
-    console.log('Resultados formatados: ', resultadosFormatados);
     res.json(resultadosFormatados);
   } catch (error) {
     console.error('Erro ao buscar os dados por Id: ', error);
@@ -317,12 +311,6 @@ app.get('/buscarDadosID', async (req, res) => {
 app.get('/buscarDadosDT', async (req, res) => {
   try{
     const { dataInicial, dataFinal } = req.query;
-
-    // Logs para informação
-    console.log('Recebendo requisição para /buscarDadosDT: ', req.query);
-
-    console.log('Data Inicial: ', dataInicial);
-    console.log('Data Final: ', dataFinal);
 
     // Formatar as Datas para o formato "Date"
     const dataInicialDate = moment(dataInicial.trim(), ['DD/M/YYYY', 'D/M/YYYY', 'DD/MM/YYYY', 'D/MM/YYYY'], true).startOf('day').toDate();
@@ -351,7 +339,6 @@ app.get('/buscarDadosDT', async (req, res) => {
       };
     });
     
-    console.log('Resultados formatados: ', resultadosFormatados);
     res.json(resultadosFormatados);
   } catch (error) {
     console.error('Erro ao buscar os dados por data: ', error);
@@ -363,9 +350,6 @@ app.get('/buscarDadosDT', async (req, res) => {
 app.get('/buscaNome', async (req, res) => {
   try {
     const { nome } = req.query;
-
-    console.log('Recebendo requisição para /buscaNome: ', req.query);
-    console.log('Nome: ', nome);
 
     const result = await collection.find({
       Responsavel: { $regex: new RegExp(`${nome}`, 'i') }
@@ -385,7 +369,6 @@ app.get('/buscaNome', async (req, res) => {
       };
     });
 
-    console.log('Resultados formatados: ', resultadosFormatados);
     res.json(resultadosFormatados);
   } catch (error) {
     console.error('Erro ao buscar os dados por nome: ', error);
@@ -397,9 +380,6 @@ app.get('/buscaNome', async (req, res) => {
 app.get('/buscaCode', async (req,res) => {
   try{
     const { code } = req.query;
-    
-    console.log('Recebendo requisição para /buscaCode: ', req.query);
-    console.log('Código: ', code);
 
     const result = await collection.find({
       CodigoReagente: { $regex: new RegExp (`${code}`, 'i') }
@@ -419,7 +399,6 @@ app.get('/buscaCode', async (req,res) => {
       };
     });
 
-    console.log('Resultados formatados: ', resultadosFormatados)
     res.json(resultadosFormatados);
   } catch (error) {
     console.error('Erro ao buscar os dados pelo Código: ', error);
@@ -431,9 +410,6 @@ app.get('/buscaCode', async (req,res) => {
 app.get('/buscaReag', async (req, res) => {
   try{
     const { reag } = req.query;
-    
-    console.log('Recebendo requisição para /buscaReag');
-    console.log('Reagente: ', reag);
 
     const result = await collection.find({
       Reagente: { $regex: new RegExp (`${reag}`, 'i') }
@@ -453,7 +429,6 @@ app.get('/buscaReag', async (req, res) => {
       };
     });
 
-    console.log('Resultados formatados: ', resultadosFormatados);
     res.json(resultadosFormatados);
   } catch (error) {
     console.error('Erro ao buscar por Reagente: ', error);

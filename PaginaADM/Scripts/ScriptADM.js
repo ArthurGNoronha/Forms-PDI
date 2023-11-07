@@ -70,8 +70,13 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
     switch (tipoFiltro) {
         case 'ID':
             const ids = valorPesquisa.split('-');
-            const id1 = ids[0];
-            const id2 = ids[1] || id1;
+            let id1 = ids[0];
+            let id2 = ids[1] || id1;
+
+            if (!id1) {
+                id1 = '1';
+                id2 = '99999999';
+            }
 
             const urlId = `/buscarDadosId?id1=${id1}&id2=${id2}`;
 
@@ -97,6 +102,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
                 .then(data => {
                     adicionarLinhasTabela(data);
                     adicionarDivsFiltros(data);
+                    desabilitarBotao();
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por nome: ', error);
@@ -113,6 +119,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
                 .then(data => {
                    adicionarLinhasTabela(data);
                    adicionarDivsFiltros(data);
+                   desabilitarBotao();
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por código: ', error);
@@ -129,6 +136,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
                 .then(data => {
                     adicionarLinhasTabela(data);
                     adicionarDivsFiltros(data);
+                    desabilitarBotao();
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por Reagente : ', error);
@@ -137,8 +145,13 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
 
         case 'Data':
             const datas = valorPesquisa.split('-');
-            const dataInicial = datas[0];
-            const dataFinal = datas[1] || dataInicial;
+            let dataInicial = datas[0];
+            let dataFinal = datas[1] || dataInicial;
+
+            if (!dataInicial) {
+                dataInicial = '01/01/1970';
+                dataFinal = '01/01/3000';
+              }
 
             const urlDT = `/buscarDadosDT?dataInicial=${dataInicial}&dataFinal=${dataFinal}`;
 
@@ -147,6 +160,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
                 .then(data => {
                     adicionarLinhasTabela(data);
                     adicionarDivsFiltros(data);
+                    desabilitarBotao();
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por data: ', error);
