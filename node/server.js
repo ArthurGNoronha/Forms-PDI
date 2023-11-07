@@ -325,8 +325,8 @@ app.get('/buscarDadosDT', async (req, res) => {
     console.log('Data Final: ', dataFinal);
 
     // Formatar as Datas para o formato "Date"
-    const dataInicialDate = moment(dataInicial.trim(), 'DD/MM/YYYY', true).startOf('day').toDate();
-    const dataFinalDate = moment(dataFinal.trim(), 'DD/MM/YYYY', true).endOf('day').toDate();
+    const dataInicialDate = moment(dataInicial.trim(), ['DD/M/YYYY', 'D/M/YYYY', 'DD/MM/YYYY', 'D/MM/YYYY'], true).startOf('day').toDate();
+    const dataFinalDate = moment(dataFinal.trim(), ['DD/M/YYYY', 'D/M/YYYY', 'DD/MM/YYYY', 'D/MM/YYYY'], true).endOf('day').toDate();
 
     // Fazer a busca entre as datas inseridas
     const result = await collection.find({

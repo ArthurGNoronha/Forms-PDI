@@ -186,14 +186,7 @@ a {
     margin-top: -22%;
     flex-direction: column;
     align-items: flex-start;
-}
-
-.btnsF {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 7%;
-    justify-content: flex-end;
+    overflow-y: auto;
 }
 
 .novaResposta {
@@ -222,19 +215,6 @@ a {
     display: flex;
     flex-direction: column;
     margin-right: 10%;
-}
-
-.antF, .proxF {
-    height: 25px;
-    margin-top: 2%;
-    margin-bottom: 1%;
-    border-radius: 15px;
-    cursor: pointer;
-}
-
-.antF {
-    margin-left: 1%;
-    margin-right: 2.5%;
 }
 
 .deletar, .coment {

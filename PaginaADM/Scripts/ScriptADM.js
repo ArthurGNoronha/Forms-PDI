@@ -9,6 +9,31 @@ function atualizarVisibilidadeBotao(data) {
     priorPageButton.disabled = (data.currentPage <= 1);
 }
 
+function adicionarDivsFiltros(respostas, limite = respostas.length) {
+    const respFiltradas = document.querySelector('.respfiltradas');
+
+    // Remover divs antigas
+    const divsAntigas = document.querySelectorAll('.novaResposta');
+    divsAntigas.forEach(div => div.remove());
+
+    // Adicionar novas divs com os dados
+    respostas.slice(0, limite).forEach(data => {
+        const novaDiv = document.createElement('div');
+        novaDiv.className = 'novaResposta';
+        novaDiv.innerHTML = `
+            <div class="containerTextos">
+                <div class="nomeFiltro">Nome: ${data.Responsavel}</div>
+                <div class="dataFiltro">Data: ${moment(moment(data.DataHora, 'DD/MM/YYYY HH:mm')).format('DD/MM/YYYY HH:mm')}</div>
+                <div class="idFiltro">ID: ${data.id}</div>
+            </div>
+            <img class="coment" src="/Imagens/Comentario.png" alt="Comentar">
+            <img class="deletar" onclick="excluir('${data._id}')" src="/Imagens/trash-2-512.png" alt="Deletar">
+        `;
+
+        respFiltradas.appendChild(novaDiv);
+    });
+}
+
 function adicionarLinhasTabela(data) {
     const tabelasRespostas = document.querySelector('.respostasEnv');
 
@@ -49,6 +74,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
                 .then(response => response.json())
                 .then(data => {
                     adicionarLinhasTabela(data);
+                    adicionarDivsFiltros(data);
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por ID: ', error);
@@ -64,6 +90,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
                 .then(response => response.json())
                 .then(data => {
                     adicionarLinhasTabela(data);
+                    adicionarDivsFiltros(data);
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por nome: ', error);
@@ -79,6 +106,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
                 .then(response => response.json())
                 .then(data => {
                    adicionarLinhasTabela(data);
+                   adicionarDivsFiltros(data);
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por código: ', error);
@@ -94,6 +122,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
                 .then(response => response.json())
                 .then(data => {
                     adicionarLinhasTabela(data);
+                    adicionarDivsFiltros(data);
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por Reagente : ', error);
@@ -111,6 +140,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
                 .then(response => response.json())
                 .then(data => {
                     adicionarLinhasTabela(data);
+                    adicionarDivsFiltros(data);
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados por data: ', error);
@@ -136,7 +166,7 @@ document.getElementById('tipoFiltro').addEventListener('change', function(){
     } else if (tipoFiltro === 'Reagente') {
         campo.placeholder = 'Digite o Reagente utilizado'
     } else if (tipoFiltro === 'Data' ) {
-        campo.placeholder = 'Formato: Inicio - Fim(12/07/2023)'
+        campo.placeholder = 'Formato:(12/07/2023) Inicio - Fim'
     } else {
         console.error('Tipo de filtro não reconhecido');
         campo.placeholder = 'Verifique a opção escolhida!'
@@ -162,6 +192,7 @@ document.getElementById('removeFiltro').addEventListener('click', function(){
         .then(data => {
             adicionarLinhasTabela(data.respostas);
             atualizarVisibilidadeBotao(data);
+            adicionarDivsFiltros(data.respostas, 6)
         })
         .catch(error => {
             console.error('Erro na requisição: ', error);
