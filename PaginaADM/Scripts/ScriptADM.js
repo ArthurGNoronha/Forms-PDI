@@ -194,3 +194,21 @@ document.getElementById('btnAnterior').addEventListener('click', function(){
     proximaPaginaDados();
 });
 
+async function excluir(id){
+    const resposta = confirm('Tem certeza que quer deletar essa resposta?');
+
+    if (resposta) {
+        const respostaServidor = await fetch('/excluir', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/x-www-form-urlencoded',
+            },
+            body: `id=${id}`,
+        });
+
+        const mensagem = await respostaServidor.text();
+        alert(mensagem);
+
+        location.reload();
+    }
+}

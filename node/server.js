@@ -7,6 +7,7 @@ const path = require('path');
 const moment = require('moment-timezone');
 const nodemailer = require('nodemailer');
 const { MongoClient } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
 const ejs = require('ejs');
 const { google } = require('googleapis');
 
@@ -457,6 +458,28 @@ app.get('/buscaReag', async (req, res) => {
   } catch (error) {
     console.error('Erro ao buscar por Reagente: ', error);
     res.status(500).json({error: 'Erro interno no servidor'});
+  }
+});
+
+app.post('/excluir', async (req, res) => {
+  const idExcluir = req.body.id;
+
+  if (!idExcluir) {
+    res.send('Id não encontrado');
+    return;
+  }
+
+  try {
+    const result = await collection.deleteOne({ _id: new ObjectId(idExcluir) });
+
+    if (result.deletedCount === 1) {
+      res.send('Documento excluído com sucesso');
+    } else {
+      res.send('Documento não encontrado');
+    }
+  } catch (error) {
+    console.error('Erro ao excluir o documento: ', error);
+    res.status(500).send('Erro interno no Servidor');
   }
 });
 
