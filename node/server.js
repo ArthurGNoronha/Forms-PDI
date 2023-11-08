@@ -437,15 +437,15 @@ app.get('/buscaReag', async (req, res) => {
 });
 
 app.post('/excluir', async (req, res) => {
-  const idExcluir = req.body.id;
+  const idExcluir = parseInt(req.body.id, 10);
 
-  if (!idExcluir) {
-    res.send('Id não encontrado');
+  if (!idExcluir || isNaN(idExcluir)) {
+    res.status(400).send('ID inválido');
     return;
   }
 
   try {
-    const result = await collection.deleteOne({ _id: new ObjectId(idExcluir) });
+    const result = await collection.deleteOne({ id: idExcluir }); // use o campo correto do seu modelo
 
     if (result.deletedCount === 1) {
       res.send('Documento excluído com sucesso');

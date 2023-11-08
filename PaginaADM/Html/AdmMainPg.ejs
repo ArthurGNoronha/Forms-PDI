@@ -31,18 +31,23 @@
         </div>
         <div class="linha"></div>
         <div class="respfiltradas">
-            <% respostas.slice(0,6).forEach(function(data){ %>
+            <% respostas.slice(0, 6).forEach(function(data){ %>
                 <div class="novaResposta">
                     <div class="containerTextos">
-                    <div class="nomeFiltro">Nome: <%= data.Responsavel %></div>
-                    <div class="dataFiltro">Data: <%= moment(data.DataHora).format('DD/MM/YYYY HH:mm') %></div>
-                    <div class="idFiltro">ID: <%= data.id %></div>
-                </div>
+                        <div class="nomeFiltro">Nome: <%= data.Responsavel %></div>
+                        <div class="dataFiltro">Data: <%= moment(data.DataHora).format('DD/MM/YYYY HH:mm') %></div>
+                        <div class="idFiltro">ID: <%= data.id %></div>
+                    </div>
                     <img class="coment" src="/Imagens/Comentario.png" alt="Comentar">
-                    <img class="deletar" onclick="excluir('<%= data._id %>')" src="/Imagens/trash-2-512.png" alt="Deletar">
+                    <img class="deletar"
+                        data-id="<%= data.id %>"
+                        data-Responsavel="<%= data.Responsavel %>"
+                        data-DataHora="<%= data.DataHora %>"
+                        src="/Imagens/trash-2-512.png" alt="Deletar"
+                        onclick="abrirConfirmacaoExclusao(event)">
                 </div>
-            <% }); %>
-        </div>
+            <% }); %>            
+        </div>        
     </div>
     <div class="respostas">
         <div class="tabela">
@@ -72,6 +77,12 @@
             <button id="btnAnterior">Página Anterior</button>
             <button id="btnProximo">Próxima Página</button>
         </div>
+    </div>
+    <div id="overlay"></div>
+    <div id="confirmar">
+        <p id="confirmacao">Tem certeza que deseja excluir essa resposta?</p>
+        <button id="sim">Sim, Deletar</button>
+        <button id="nao">Não</button>
     </div>
     <hr>
     <div class="googlesheet">

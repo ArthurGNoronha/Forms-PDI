@@ -25,14 +25,25 @@ function adicionarDivsFiltros(respostas, limite = respostas.length) {
     respostas.slice(0, limite).forEach(data => {
         const novaDiv = document.createElement('div');
         novaDiv.className = 'novaResposta';
+
+        const dataFormatada = moment(data.DataHora, ['DD/MM/YYYY HH:mm', 'YYYY-MM-DDTHH:mm:ss.SSSZ', 'YYYY-MM-DD HH:mm:ss'], true);
+
+        const nomeFiltro = `Nome: ${data.Responsavel}`;
+        const dataFiltro = dataFormatada.isValid() ? `Data: ${dataFormatada.format('DD/MM/YYYY HH:mm')}` : 'Data inválida';
+
         novaDiv.innerHTML = `
             <div class="containerTextos">
-                <div class="nomeFiltro">Nome: ${data.Responsavel}</div>
-                <div class="dataFiltro">Data: ${moment(moment(data.DataHora, 'DD/MM/YYYY HH:mm')).format('DD/MM/YYYY HH:mm')}</div>
+                <div class="nomeFiltro">${nomeFiltro}</div>
+                <div class="dataFiltro">${dataFiltro}</div>
                 <div class="idFiltro">ID: ${data.id}</div>
             </div>
             <img class="coment" src="/Imagens/Comentario.png" alt="Comentar">
-            <img class="deletar" onclick="excluir('${data._id}')" src="/Imagens/trash-2-512.png" alt="Deletar">
+            <img class="deletar"
+                data-id="${data.id}"
+                data-Responsavel="${data.Responsavel}"
+                data-DataHora="${data.DataHora}"
+                src="/Imagens/trash-2-512.png" alt="Deletar"
+                onclick="abrirConfirmacaoExclusao(event)">
         `;
 
         respFiltradas.appendChild(novaDiv);
@@ -247,21 +258,70 @@ document.getElementById('btnAnterior').addEventListener('click', function(){
     proximaPaginaDados();
 });
 
-async function excluir(id){
-    const resposta = confirm('Tem certeza que quer deletar essa resposta?');
+const overlay = document.getElementById('overlay');
+const confirmar = document.getElementById('confirmar');
+const btnConfirmar = document.getElementById('sim');
+const btnCancelar = document.getElementById('nao');
 
-    if (resposta) {
-        const respostaServidor = await fetch('/excluir', {
-            method: 'POST',
-            headers: {
-                'Content-Type' : 'application/x-www-form-urlencoded',
-            },
-            body: `id=${id}`,
-        });
+let currentIdDelete;
+let currentResponsavelDelete;
+let currentDateDelete;
 
-        const mensagem = await respostaServidor.text();
-        alert(mensagem);
+function abrirConfirmacaoExclusao(event) {
+    currentIdDelete = event.target.dataset.id;
+    currentResponsavelDelete = event.target.dataset.responsavel;
 
-        location.reload();
+    const dataBruta = moment(event.target.dataset.datahora, 'DD/MM/YYYY HH:mm').toDate();
+
+    const formatosDeData = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+
+    let dataFormatada;
+    try {
+        dataFormatada = dataBruta.toLocaleString('pt-BR', formatosDeData);
+    } catch (error) {
+        console.error('Erro ao formatar a data:', dataBruta, error);
+        dataFormatada = 'Data inválida';
     }
+
+    currentDateDelete = dataFormatada;
+
+    const confirmacao = `Deseja mesmo excluir essa resposta?\n ID: ${currentIdDelete}\n Responsavel: ${currentResponsavelDelete}\n Data: ${currentDateDelete}`;
+    document.getElementById('confirmacao').innerText = confirmacao;
+
+    overlay.style.display = 'block';
+    confirmar.style.display = 'block';
+}
+
+btnCancelar.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    confirmar.style.display = 'none';
+})
+
+btnConfirmar.addEventListener('click', excluirResposta);
+
+function excluirResposta() {
+    overlay.style.display = 'none';
+    confirmar.style.display = 'none';
+
+    const params = new URLSearchParams();
+    params.append('id', currentIdDelete);
+    params.append('Responsavel', currentResponsavelDelete);
+    params.append('Data', currentDateDelete);
+
+    fetch('/excluir', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
+    })
+    .then(response => response.text())
+    .then(mensagem => {
+        alert(mensagem);
+        location.reload();
+    })
+    .catch(error => {
+        console.error('Erro ao excluir resposta:', error);
+        alert('Erro ao excluir resposta. Por favor, tente novamente.');
+    });
 }
