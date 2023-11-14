@@ -38,7 +38,17 @@
                         <div class="dataFiltro">Data: <%= moment(data.DataHora).format('DD/MM/YYYY HH:mm') %></div>
                         <div class="idFiltro">ID: <%= data.id %></div>
                     </div>
-                    <img class="coment" src="/Imagens/Comentario.png" alt="Comentar">
+                    <img class="editar" 
+                        data-id="<%= data.id %>"
+                        data-resp="<%= data.Responsavel %>"
+                        data-code="<%= data.CodigoReagente %>"
+                        data-reag="<%= data.Reagente %>"
+                        data-qtd="<%= data.Quantidade %>"
+                        data-medida="<%= data.Medida %>"
+                        data-outros="<%= data.Outros %>"
+                        data-obs="<%= data.Observacao %>"
+                        data-coment="<%= data.Comentario %>"
+                        src="/Imagens/edit.png" alt="Editar">
                     <img class="deletar"
                         data-id="<%= data.id %>"
                         data-Responsavel="<%= data.Responsavel %>"
@@ -78,12 +88,6 @@
             <button id="btnProximo">Próxima Página</button>
         </div>
     </div>
-    <div id="overlay"></div>
-    <div id="confirmar">
-        <p id="confirmacao">Tem certeza que deseja excluir essa resposta?</p>
-        <button id="sim">Sim, Deletar</button>
-        <button id="nao">Não</button>
-    </div>
     <hr>
     <div class="googlesheet">
         <button id="baixar">
@@ -91,6 +95,42 @@
         </button>
         </div>
     </div>
+</div>
+<div id="overlay"></div>
+<div id="confirmar">
+    <p id="confirmacao">Tem certeza que deseja excluir essa resposta?</p>
+    <button id="sim">Sim, Deletar</button>
+    <button id="nao">Não</button>
+</div>
+<div id="divComment">
+    <h1>Atualizar Informações </h1>
+    <label for="Responsavel">Atualizar o nome do Responsavel</label>
+    <input type="text" id="Responsavel" placeholder="Digite aqui...">
+    <label for="Codigo">Atualizar o Código do Reagente</label>
+    <input type="text" id="Codigo" placeholder="Digite aqui...">
+    <label for="Reagente">Atualizar o nome do Reagente</label>
+    <input type="text" id="Reagente" placeholder="Digite aqui...">
+    <label for="Quantidade">Atualizar a Quantidade</label>
+    <input type="text" id="Quantidade" placeholder="Digite aqui...">
+    <label for="Medida">Atualizar a Medida</label>
+    <input type="text" id="Medida" placeholder="Digite aqui...">
+    <label for="Outros">Atualizar Outros</label>
+    <input type="text" id="Outros" placeholder="Digite aqui...">
+    <label for="Observacao">Atualizar a Observação do Responsável</label>
+    <input type="text" id="Observacao" placeholder="Digite aqui...">
+
+    <h2>Adicionar um Comentário para a Resposta</h2>
+    <input type="text" id="addComent" placeholder="Digite aqui...">
+
+    <!-- <div class="comentarios">
+        <h2>Comentários:</h2>
+        <% respostas.forEach(function(data) { %>
+            <li class="commentResposta"><%= data.Comentario %></li>
+        <% }); %>
+    </div> -->
+
+    <button id="simEdit">Confirmar Edição</button>
+    <button id="naoEdit">Cancelar</button>
 </div>
     <script src="/PaginaADM/Scripts/ScriptADM.js"></script>
 </body>

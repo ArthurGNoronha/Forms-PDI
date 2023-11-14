@@ -47,6 +47,9 @@ app.locals.moment = require('moment-timezone');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json())
+
 // Manipular EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../PaginaADM', 'Html'));
@@ -233,7 +236,7 @@ app.get('/ADM', async (req, res) => {
       .find({})
       .sort({id: -1})
       .limit(14)
-       .toArray();
+      .toArray();
 
     // Renderizar a página de respostas com os dados
     res.render('AdmMainPg', { respostas });
@@ -436,6 +439,42 @@ app.get('/buscaReag', async (req, res) => {
   }
 });
 
+app.post('/atualizar', async (req, res) => {
+  const idAtualizar = parseInt(req.body.id);
+
+  if (!idAtualizar || isNaN(idAtualizar)) {
+    res.status(400).send('ID inválido');
+    console.log(idAtualizar);
+    return;
+  }
+
+  const novosValores = {
+    Responsavel: req.body.responsavel,
+    CodigoReagente: req.body.code,
+    Reagente: req.body.reag,
+    Quantidade: req.body.qtd,
+    Medida: req.body.medida,
+    Outros: req.body.outros,
+    Observacao: req.body.observacao,
+  };
+
+  try {
+    const result = await collection.updateOne(
+      { id: idAtualizar },
+      { $set: novosValores }
+    );
+
+    if (result.modifiedCount === 1) {
+      res.send('Documento Atualizado com sucesso');
+    } else {
+      res.send('Documento não encontrado');
+    }
+  } catch (error) {
+    console.error('Erro ao alterar o documento: ', error);
+    res.status(500).send('Erro interno no Servidor');
+  }
+});
+
 app.post('/excluir', async (req, res) => {
   const idExcluir = parseInt(req.body.id, 10);
 
@@ -445,7 +484,7 @@ app.post('/excluir', async (req, res) => {
   }
 
   try {
-    const result = await collection.deleteOne({ id: idExcluir }); // use o campo correto do seu modelo
+    const result = await collection.deleteOne({ id: idExcluir });
 
     if (result.deletedCount === 1) {
       res.send('Documento excluído com sucesso');

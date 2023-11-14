@@ -325,3 +325,87 @@ function excluirResposta() {
         alert('Erro ao excluir resposta. Por favor, tente novamente.');
     });
 }
+
+const editar = document.querySelectorAll('.editar');
+const divComment = document.getElementById('divComment');
+const confirmarEdit = document.getElementById('simEdit');
+const cancelarEdit = document.getElementById('naoEdit');
+
+let id;
+
+editar.forEach(img => {
+    img.addEventListener('click', (event) => {
+        id = event.target.dataset.id;
+        console.log('Id ao clicar editar: ', id);
+
+        overlay.style.display = 'block';
+        divComment.style.display = 'block';
+    });
+});
+
+cancelarEdit.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    divComment.style.display = 'none';
+});
+
+confirmarEdit.addEventListener('click', () => {
+    console.log('ID antes de chamar alterarDados:', id);
+    alterarDados(id);
+});
+
+async function alterarDados(id) {
+    if (isNaN(id)) {
+        console.error('ID não é um número válido:', id);
+        return;
+    }
+
+    console.log('ID no início da função:', id);
+
+    const responsavel = document.getElementById('Responsavel').value.trim();
+    const code = document.getElementById('Codigo').value.trim();
+    const reag = document.getElementById('Reagente').value.trim();
+    const qtd = document.getElementById('Quantidade').value.trim();
+    const medida = document.getElementById('Medida').value.trim();
+    const outros = document.getElementById('Outros').value.trim();
+    const observacao = document.getElementById('Observacao').value.trim();
+
+    console.log('Corpo da requisição: ', { id, responsavel, code, reag, qtd, medida, outros, observacao });
+
+    const params = new URLSearchParams();
+    params.append('id', id);
+    params.append('responsavel', responsavel);
+    params.append('code', code);
+    params.append('reag', reag);
+    params.append('qtd', qtd);
+    params.append('medida', medida);
+    params.append('outros', outros);
+    params.append('observacao', observacao);
+
+    try {
+        fetch('/atualizar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params.toString(),
+        })
+
+        .then(response => response.text())
+        .then(mensagem => {
+            alert(mensagem);
+            location.reload();
+        });
+
+        document.getElementById('Responsavel').value = '';
+        document.getElementById('Codigo'). value = '';
+        document.getElementById('Reagente').value = '';
+        document.getElementById('Quantidade').value = '';
+        document.getElementById('Medida').value = '';
+        document.getElementById('Outros').value = '';
+        document.getElementById('Observacao').value = '';
+        overlay.style.display = 'none';
+        divComment.style.display = 'none';
+    } catch (error) {
+        console.error('Erro ao fazer a requisição: ', error);
+    }
+}

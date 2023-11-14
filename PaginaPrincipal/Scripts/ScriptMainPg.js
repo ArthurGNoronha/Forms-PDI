@@ -104,7 +104,7 @@ function validarNumero() {
       ? "Por favor, insira um número válido."
       : numeroMedida < 0
       ? "O número não pode ser negativo!"
-      : "Esse número é maior do que o permitido!"
+      : "Número é maior do que o permitido!"
       setTimeout(() => {
         numeroMedidaInput.value = "";
       }, 120);
