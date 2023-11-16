@@ -444,19 +444,24 @@ app.post('/atualizar', async (req, res) => {
 
   if (!idAtualizar || isNaN(idAtualizar)) {
     res.status(400).send('ID inválido');
-    console.log(idAtualizar);
     return;
   }
 
-  const novosValores = {
-    Responsavel: req.body.responsavel,
-    CodigoReagente: req.body.code,
-    Reagente: req.body.reag,
-    Quantidade: req.body.qtd,
-    Medida: req.body.medida,
-    Outros: req.body.outros,
-    Observacao: req.body.observacao,
-  };
+  const campos = ['Responsavel', 'CodigoReagente', 'Reagente', 'Quantidade', 'Medida', 'Outros', 'Observacao'];
+  const novosValores = {};
+
+  for (const campo of campos) {
+    if (req.body[campo] !== '') {
+      novosValores[campo] = req.body[campo];
+    } else {
+      const documentoAtual = await collection.findOne({ id: idAtualizar });
+      if (documentoAtual && documentoAtual[campo] !== undefined) {
+        novosValores[campo] = documentoAtual[campo];
+      } else {
+        console.log(`Campo ${campo} não foi encontrado no documento atual no banco de dados`);
+      }
+    }
+  }
 
   try {
     const result = await collection.updateOne(
@@ -475,8 +480,35 @@ app.post('/atualizar', async (req, res) => {
   }
 });
 
+app.post('/comentario', async (req, res) => {
+  const idComentario = parseInt(req.body.id);
+
+  if(!idComentario || isNaN(idComentario)) {
+    res.status(400).send('Id inválido');
+    return;
+  }
+
+  const comentario = req.body.comentario;
+
+  try {
+    const result = await collection.updateOne(
+      { id: idComentario },
+      { $set: comentario }
+    );
+
+    if (result.deletedCount === 1) {
+      res.send('Comentário adicionado com sucesso');
+    } else {
+      res.send('Documento não encontrado');
+    }
+  } catch (error) {
+    console.error('Erro ao adicionar um comentário: ', error);
+    res.status(400).send('Erro interno no servidor');
+  }
+});
+
 app.post('/excluir', async (req, res) => {
-  const idExcluir = parseInt(req.body.id, 10);
+  const idExcluir = parseInt(req.body.id);
 
   if (!idExcluir || isNaN(idExcluir)) {
     res.status(400).send('ID inválido');

@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     proximaPaginaDados();
 });
 
+// Desabilitar os botões quando a página chega no Fim/Inicio
 function atualizarVisibilidadeBotao(data) {
     const nextPageButton = document.getElementById('btnProximo');
     const priorPageButton = document.getElementById('btnAnterior');
@@ -9,11 +10,13 @@ function atualizarVisibilidadeBotao(data) {
     priorPageButton.disabled = (data.currentPage <= 1);
 }
 
+// Função para esconder os botões quando o Filtro é ativado
 function desabilitarBotao() {
     document.getElementById('btnProximo').style.display = 'none';
     document.getElementById('btnAnterior').style.display = 'none';
 }
 
+// Função para exibir os dados na tela e os botões de exclusão ou modificação
 function adicionarDivsFiltros(respostas, limite = respostas.length) {
     const respFiltradas = document.querySelector('.respfiltradas');
 
@@ -37,19 +40,21 @@ function adicionarDivsFiltros(respostas, limite = respostas.length) {
                 <div class="dataFiltro">${dataFiltro}</div>
                 <div class="idFiltro">ID: ${data.id}</div>
             </div>
-            <img class="coment" src="/Imagens/Comentario.png" alt="Comentar">
+            <img class="editar" 
+            data-id=${data.id}"
+            src="/Imagens/edit.png" alt="Editar">
             <img class="deletar"
                 data-id="${data.id}"
                 data-Responsavel="${data.Responsavel}"
                 data-DataHora="${data.DataHora}"
-                src="/Imagens/trash-2-512.png" alt="Deletar"
-                onclick="abrirConfirmacaoExclusao(event)">
+                src="/Imagens/trash-2-512.png" alt="Deletar">
         `;
 
         respFiltradas.appendChild(novaDiv);
     });
 }
 
+// Função para exibir os dados na tela
 function adicionarLinhasTabela(data) {
     const tabelasRespostas = document.querySelector('.respostasEnv');
 
@@ -74,6 +79,7 @@ function adicionarLinhasTabela(data) {
     });
 }
 
+// Filtrar dados com base na opção selecionada
 document.getElementById('botaoFiltrar').addEventListener('click', function () {
     const tipoFiltro = document.getElementById('tipoFiltro').value;
     const valorPesquisa = document.getElementById('pesquisar').value;
@@ -210,14 +216,12 @@ document.getElementById('removeFiltro').addEventListener('click', function(){
     pesquisar.value = '';
     pesquisar.focus();
 
-    // Remova todas as linhas da tabela, exceto a primeira (cabeçalho)
+    // Remover todas as linhas da tabela, exceto a primeira (cabeçalho)
     const linhas = document.querySelectorAll('.respostasEnv tr:not(:first-child)');
     linhas.forEach(linha => linha.remove());
 
-    // Resetar a variável currentPage para 1
     currentPage = 1;
 
-    // Faça uma nova solicitação ao servidor para obter os dados originais
     fetch('/ADM/data')
         .then(response => response.json())
         .then(data => {
@@ -232,8 +236,11 @@ document.getElementById('removeFiltro').addEventListener('click', function(){
         });
 });
 
+// Alterar Página de dados
+
 var currentPage = 1;
 
+// Função para Avançar ou retroceder as páginas
 function proximaPaginaDados() {
     const urlPag = `/ADM/data?page=${currentPage}`;
 
@@ -248,28 +255,35 @@ function proximaPaginaDados() {
         });
 }
 
+// Avançar uma página
 document.getElementById('btnProximo').addEventListener('click', function(){
     currentPage ++;
     proximaPaginaDados();
 });
 
+// Voltar uma página
 document.getElementById('btnAnterior').addEventListener('click', function(){
     currentPage --;
     proximaPaginaDados();
 });
 
+// Deletar Dados
+
+// Obtem os botões
 const overlay = document.getElementById('overlay');
 const confirmar = document.getElementById('confirmar');
 const btnConfirmar = document.getElementById('sim');
 const btnCancelar = document.getElementById('nao');
 
-let currentIdDelete;
-let currentResponsavelDelete;
-let currentDateDelete;
+// Variaveis locais para o Id, Responsável e Data atual
+let currentId;
+let currentResponsavel;
+let currentDate;
 
-function abrirConfirmacaoExclusao(event) {
-    currentIdDelete = event.target.dataset.id;
-    currentResponsavelDelete = event.target.dataset.responsavel;
+// Função para receber quais os dados da resposta que o usuário selecionou
+function processarEvento(event){
+    currentId = event.target.dataset.id;
+    currentResponsavel = event.target.dataset.responsavel;
 
     const dataBruta = moment(event.target.dataset.datahora, 'DD/MM/YYYY HH:mm').toDate();
 
@@ -283,31 +297,53 @@ function abrirConfirmacaoExclusao(event) {
         dataFormatada = 'Data inválida';
     }
 
-    currentDateDelete = dataFormatada;
+    currentDate = dataFormatada;
 
-    const confirmacao = `Deseja mesmo excluir essa resposta?\n ID: ${currentIdDelete}\n Responsavel: ${currentResponsavelDelete}\n Data: ${currentDateDelete}`;
-    document.getElementById('confirmacao').innerText = confirmacao;
-
-    overlay.style.display = 'block';
-    confirmar.style.display = 'block';
+    overlay.style.display = 'block'
 }
 
+// Exibe na tela quais dados estão sendo Alterados/Deletados
+document.querySelector('.respfiltradas').addEventListener('click', (event) => {
+    if (event.target.classList.contains('deletar')) {
+
+        processarEvento(event);
+        
+        const confirmacao = `Deseja mesmo excluir essa resposta?\n ID: ${currentId}\n Responsavel: ${currentResponsavel}\n Data: ${currentDate}`;
+        document.getElementById('confirmacao').innerText = confirmacao;
+        
+        confirmar.style.display = 'block';
+    }
+
+    else if (event.target.classList.contains('editar')) {
+
+        processarEvento(event);
+
+        const texto = `Você está editando a resposta com o ID: ${currentId} do Responsável: ${currentResponsavel}`;
+        document.getElementById('respAtual').innerText = texto;
+        
+        divEdit.style.display = 'block';
+    }
+});
+
+// Cancelar a exclusão
 btnCancelar.addEventListener('click', () => {
     overlay.style.display = 'none';
     confirmar.style.display = 'none';
 })
 
+// Confirmar a exclusão
 btnConfirmar.addEventListener('click', excluirResposta);
 
+// Função para Excluir as Respostas
 function excluirResposta() {
     overlay.style.display = 'none';
     confirmar.style.display = 'none';
 
+    // Envia o ID para o servidor
     const params = new URLSearchParams();
-    params.append('id', currentIdDelete);
-    params.append('Responsavel', currentResponsavelDelete);
-    params.append('Data', currentDateDelete);
+    params.append('id', currentId);
 
+    // Faz o requerimento para a exclusão
     fetch('/excluir', {
         method: 'POST',
         headers: {
@@ -326,41 +362,33 @@ function excluirResposta() {
     });
 }
 
-const editar = document.querySelectorAll('.editar');
-const divComment = document.getElementById('divComment');
+// Atualizar Respostas
+
+// Pegar os botões
+const divEdit = document.getElementById('divEdit');
 const confirmarEdit = document.getElementById('simEdit');
 const cancelarEdit = document.getElementById('naoEdit');
 
-let id;
-
-editar.forEach(img => {
-    img.addEventListener('click', (event) => {
-        id = event.target.dataset.id;
-        console.log('Id ao clicar editar: ', id);
-
-        overlay.style.display = 'block';
-        divComment.style.display = 'block';
-    });
-});
-
+// Cancelar
 cancelarEdit.addEventListener('click', () => {
     overlay.style.display = 'none';
-    divComment.style.display = 'none';
+    divEdit.style.display = 'none';
 });
 
+// Confirmar
 confirmarEdit.addEventListener('click', () => {
-    console.log('ID antes de chamar alterarDados:', id);
-    alterarDados(id);
+    alterarDados(currentId);
 });
 
-async function alterarDados(id) {
-    if (isNaN(id)) {
-        console.error('ID não é um número válido:', id);
+// Função para alterar os dados
+async function alterarDados(currentId) {
+    // Verifica se o Id é válido
+    if (isNaN(currentId)) {
+        console.error('ID não é um número válido:', currentId);
         return;
     }
 
-    console.log('ID no início da função:', id);
-
+    // Recebe os dados atualizados
     const responsavel = document.getElementById('Responsavel').value.trim();
     const code = document.getElementById('Codigo').value.trim();
     const reag = document.getElementById('Reagente').value.trim();
@@ -369,42 +397,38 @@ async function alterarDados(id) {
     const outros = document.getElementById('Outros').value.trim();
     const observacao = document.getElementById('Observacao').value.trim();
 
-    console.log('Corpo da requisição: ', { id, responsavel, code, reag, qtd, medida, outros, observacao });
+    // Separa os dados com os nomes corretos do BD
+    const requestBody = new URLSearchParams();
+    requestBody.append('id', currentId);
+    requestBody.append('Responsavel', responsavel);
+    requestBody.append('CodigoReagente', code);
+    requestBody.append('Reagente', reag);
+    requestBody.append('Quantidade', qtd);
+    requestBody.append('Medida', medida);
+    requestBody.append('Outros', outros);
+    requestBody.append('Observacao', observacao);
 
-    const params = new URLSearchParams();
-    params.append('id', id);
-    params.append('responsavel', responsavel);
-    params.append('code', code);
-    params.append('reag', reag);
-    params.append('qtd', qtd);
-    params.append('medida', medida);
-    params.append('outros', outros);
-    params.append('observacao', observacao);
-
+    // Envia os dados para o servidor
     try {
-        fetch('/atualizar', {
+        const response = await fetch('/atualizar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: params.toString(),
-        })
-
-        .then(response => response.text())
-        .then(mensagem => {
-            alert(mensagem);
-            location.reload();
+            body: requestBody,
         });
 
+        const result = await response.text();
+        alert(result);
+
         document.getElementById('Responsavel').value = '';
-        document.getElementById('Codigo'). value = '';
+        document.getElementById('Codigo').value = '';
         document.getElementById('Reagente').value = '';
         document.getElementById('Quantidade').value = '';
         document.getElementById('Medida').value = '';
         document.getElementById('Outros').value = '';
         document.getElementById('Observacao').value = '';
-        overlay.style.display = 'none';
-        divComment.style.display = 'none';
+        location.reload();
     } catch (error) {
         console.error('Erro ao fazer a requisição: ', error);
     }

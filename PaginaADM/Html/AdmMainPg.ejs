@@ -40,21 +40,13 @@
                     </div>
                     <img class="editar" 
                         data-id="<%= data.id %>"
-                        data-resp="<%= data.Responsavel %>"
-                        data-code="<%= data.CodigoReagente %>"
-                        data-reag="<%= data.Reagente %>"
-                        data-qtd="<%= data.Quantidade %>"
-                        data-medida="<%= data.Medida %>"
-                        data-outros="<%= data.Outros %>"
-                        data-obs="<%= data.Observacao %>"
-                        data-coment="<%= data.Comentario %>"
+                        data-Responsavel="<%= data.Responsavel %>"
                         src="/Imagens/edit.png" alt="Editar">
                     <img class="deletar"
                         data-id="<%= data.id %>"
                         data-Responsavel="<%= data.Responsavel %>"
-                        data-DataHora="<%= data.DataHora %>"
-                        src="/Imagens/trash-2-512.png" alt="Deletar"
-                        onclick="abrirConfirmacaoExclusao(event)">
+                        data-DataHora="<%= moment(data.DataHora).format('DD/MM/YYYY HH:mm') %>"
+                        src="/Imagens/trash-2-512.png" alt="Deletar">
                 </div>
             <% }); %>            
         </div>        
@@ -102,25 +94,44 @@
     <button id="sim">Sim, Deletar</button>
     <button id="nao">Não</button>
 </div>
-<div id="divComment">
+<div id="divEdit">
     <h1>Atualizar Informações </h1>
-    <label for="Responsavel">Atualizar o nome do Responsavel</label>
-    <input type="text" id="Responsavel" placeholder="Digite aqui...">
+    <p id="respAtual"> Resposta Atual: </p>
+    <label for="Responsavel">Atualizar o Nome do Responsavel</label>
+    <br>
+    <input type="text" class="att" id="Responsavel" placeholder="Digite aqui..."> 
+    <br>
     <label for="Codigo">Atualizar o Código do Reagente</label>
-    <input type="text" id="Codigo" placeholder="Digite aqui...">
-    <label for="Reagente">Atualizar o nome do Reagente</label>
-    <input type="text" id="Reagente" placeholder="Digite aqui...">
+    <br>
+    <input type="text" class="att" id="Codigo" placeholder="Digite aqui...">
+    <br>
+    <label for="Reagente">Atualizar o Reagente</label>
+    <br>
+    <input type="text" class="att" id="Reagente" placeholder="Digite aqui..."> 
+    <br>
     <label for="Quantidade">Atualizar a Quantidade</label>
-    <input type="text" id="Quantidade" placeholder="Digite aqui...">
+    <br>
+    <input type="text" class="att" id="Quantidade" placeholder="Digite aqui..."> 
+    <br>
     <label for="Medida">Atualizar a Medida</label>
-    <input type="text" id="Medida" placeholder="Digite aqui...">
-    <label for="Outros">Atualizar Outros</label>
-    <input type="text" id="Outros" placeholder="Digite aqui...">
+    <br>
+    <input type="text" class="att" id="Medida" placeholder="Digite aqui..."> 
+    <br>
+    <label for="Outros">Atualizar Outros (medida)</label>
+    <br>
+    <input type="text" class="att" id="Outros" placeholder="Digite aqui..."> 
+    <br>
     <label for="Observacao">Atualizar a Observação do Responsável</label>
-    <input type="text" id="Observacao" placeholder="Digite aqui...">
+    <br>
+    <input type="text" class="att" id="Observacao" placeholder="Digite aqui...">
+    <br>
+    
+    <button id="simEdit">Confirmar Edição</button>
+    <button id="naoEdit">Cancelar</button>
+</div>
 
-    <h2>Adicionar um Comentário para a Resposta</h2>
-    <input type="text" id="addComent" placeholder="Digite aqui...">
+    <!-- <h2>Adicionar um Comentário para essa Resposta</h2>
+    <input type="text" id="addComent" placeholder="Digite aqui..."> -->
 
     <!-- <div class="comentarios">
         <h2>Comentários:</h2>
@@ -129,9 +140,6 @@
         <% }); %>
     </div> -->
 
-    <button id="simEdit">Confirmar Edição</button>
-    <button id="naoEdit">Cancelar</button>
-</div>
     <script src="/PaginaADM/Scripts/ScriptADM.js"></script>
 </body>
 </html>
