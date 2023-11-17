@@ -328,6 +328,10 @@ document.querySelector('.respfiltradas').addEventListener('click', (event) => {
 
         processarEvento(event);
 
+        if(currentId) {
+        verComentarios(currentId)
+        }
+
         const texto = `Você está adicionando um comentário para o ID: ${currentId} com Responsável: ${currentResponsavel}`;
         document.getElementById('respAtualC').innerText = texto;
 
@@ -493,3 +497,48 @@ async function addComment(currentId) {
         alert('Erro ao adicionar um comentário');
     }
 }
+
+// Exibir Comentários
+
+// Função para ver os Comentários
+async function verComentarios(currentId) {
+    if (isNaN(currentId)) {
+      console.error('Id inválido', currentId);
+      return;
+    }
+  
+    try {
+        const response = await fetch(`/obterComentarios?id=${currentId}`);
+              
+      if (response.status === 404) {
+        console.error('Resposta não encontrada');
+        return;
+      }
+  
+      const comentarios = await response.json();
+      console.log('Comentários recebidos:', comentarios);
+  
+      renderizarCometarios(comentarios);
+    } catch (error) {
+      console.error('Erro ao obter comentários: ', error);
+    }
+  }
+  
+  function renderizarCometarios(comentarios) {
+    const comentariosContainer = document.querySelector('.comentarios');
+    comentariosContainer.innerHTML = '<h2>Comentários:</h2>';
+  
+    if (Array.isArray(comentarios) && comentarios.length > 0) {
+      comentarios.forEach(comentario => {
+        const li = document.createElement('li');
+        li.classList.add('commentResposta');
+        li.textContent = comentario;
+        comentariosContainer.appendChild(li);
+      });
+    } else {
+      const li = document.createElement('li');
+      li.classList.add('commentResposta');
+      li.textContent = 'Nenhum comentário encontrado';
+      comentariosContainer.appendChild(li);
+    }
+  }  

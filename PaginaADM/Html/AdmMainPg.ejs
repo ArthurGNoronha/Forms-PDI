@@ -135,16 +135,13 @@
 </div>
 <div id="divComment">
     <h2>Adicionar um Comentário para essa Resposta</h2>
-    <input type="text" id="addComment" placeholder="Digite aqui...">
     <p id="respAtualC"> Resposta Atual: </p>
+    <input type="text" id="addComment" placeholder="Digite aqui...">
 
     <button id="simComment">Adicionar Comentário</button>
     <button id="naoComment">Cancelar</button>
     <div class="comentarios">
         <h2>Comentários:</h2>
-        <% respostas.forEach(function(data) { %>
-            <li class="commentResposta"><%= data.Comentario %></li>
-        <% }); %>
     </div>
 </div>
 

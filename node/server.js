@@ -515,6 +515,35 @@ app.post('/comentario', async (req, res) => {
   }
 });
 
+app.get('/obterComentarios', async (req, res) => {
+  const respostasId = req.query.id;  // Alterado de currentId para id
+
+  try {
+    console.log('ID recebido na rota /obterComentarios:', respostasId);
+
+    const idNumerico = parseInt(respostasId, 10);
+
+    if (isNaN(idNumerico)) {
+      console.log('ID inválido');
+      return res.status(400).json({ error: 'ID inválido' });
+    }
+
+    const resposta = await collection.findOne({ id: idNumerico });
+
+    if (!resposta) {
+      console.log('Resposta não encontrada');
+      return res.status(404).json({ error: 'Resposta não encontrada' });
+    }
+
+    const comentarios = resposta.Comentarios || [];
+
+    res.json(comentarios);
+  } catch (error) {
+    console.error('Erro ao obter comentários: ', error);
+    res.status(500).json({ error: 'Erro interno no servidor' });
+  }
+});
+
 app.post('/excluir', async (req, res) => {
   const idExcluir = parseInt(req.body.id);
 
