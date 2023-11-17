@@ -323,6 +323,16 @@ document.querySelector('.respfiltradas').addEventListener('click', (event) => {
         
         divEdit.style.display = 'block';
     }
+
+    else if (event.target.classList.contains('comentar')) {
+
+        processarEvento(event);
+
+        const texto = `Você está adicionando um comentário para o ID: ${currentId} com Responsável: ${currentResponsavel}`;
+        document.getElementById('respAtualC').innerText = texto;
+
+        divComment.style.display = 'block';
+    }
 });
 
 // Cancelar a exclusão
@@ -358,7 +368,7 @@ function excluirResposta() {
     })
     .catch(error => {
         console.error('Erro ao excluir resposta:', error);
-        alert('Erro ao excluir resposta. Por favor, tente novamente.');
+        alert('Erro ao excluir resposta.');
     });
 }
 
@@ -430,6 +440,56 @@ async function alterarDados(currentId) {
         document.getElementById('Observacao').value = '';
         location.reload();
     } catch (error) {
-        console.error('Erro ao fazer a requisição: ', error);
+        console.error('Erro alterar os dados: ', error);
+        alert('Erro ao Alterar os dados');
+    }
+}
+
+// Adicionar Comentários
+
+// Selecionar os botões
+const divComment = document.getElementById('divComment');
+const confirmarComment = document.getElementById('simComment');
+const cancelarComment = document.getElementById('naoComment');
+
+cancelarComment.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    divComment.style.display = 'none';
+});
+
+confirmarComment.addEventListener('click', () => {
+    addComment(currentId);  
+});
+
+// Função para adicionar comentários
+async function addComment(currentId) {
+    if (isNaN(currentId)) {
+        console.error('Id inválido', currentId);
+        return;
+    }
+
+    const comment = document.getElementById('addComment').value.trim();
+
+    const requestBody = new URLSearchParams();
+    requestBody.append('id', currentId);
+    requestBody.append('Comentario', comment);
+
+    try {
+        const response = await fetch ('/comentario', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: requestBody,
+        });
+
+        const result = await response.text();
+        alert(result);
+    
+        document.getElementById('addComment').value = '';
+    
+    } catch (error) {
+        console.error('Erro ao adicionar um comentário: ', error);
+        alert('Erro ao adicionar um comentário');
     }
 }

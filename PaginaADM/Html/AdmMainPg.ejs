@@ -42,6 +42,10 @@
                         data-id="<%= data.id %>"
                         data-Responsavel="<%= data.Responsavel %>"
                         src="/Imagens/edit.png" alt="Editar">
+                    <img class="comentar" 
+                        data-id="<%= data.id %>"
+                        data-Responsavel="<%= data.Responsavel %>"
+                        src="/Imagens/Comentario.png" alt="Comentar">
                     <img class="deletar"
                         data-id="<%= data.id %>"
                         data-Responsavel="<%= data.Responsavel %>"
@@ -129,16 +133,20 @@
     <button id="simEdit">Confirmar Edição</button>
     <button id="naoEdit">Cancelar</button>
 </div>
+<div id="divComment">
+    <h2>Adicionar um Comentário para essa Resposta</h2>
+    <input type="text" id="addComment" placeholder="Digite aqui...">
+    <p id="respAtualC"> Resposta Atual: </p>
 
-    <!-- <h2>Adicionar um Comentário para essa Resposta</h2>
-    <input type="text" id="addComent" placeholder="Digite aqui..."> -->
-
-    <!-- <div class="comentarios">
+    <button id="simComment">Adicionar Comentário</button>
+    <button id="naoComment">Cancelar</button>
+    <div class="comentarios">
         <h2>Comentários:</h2>
         <% respostas.forEach(function(data) { %>
             <li class="commentResposta"><%= data.Comentario %></li>
         <% }); %>
-    </div> -->
+    </div>
+</div>
 
     <script src="/PaginaADM/Scripts/ScriptADM.js"></script>
 </body>

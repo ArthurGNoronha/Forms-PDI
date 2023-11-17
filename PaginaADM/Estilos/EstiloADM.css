@@ -217,21 +217,24 @@ a {
     margin-right: 10%;
 }
 
-.deletar, .editar {
+.deletar, .editar, .comentar {
     width: 45px;
     height: 45px;
+    top: 15%;
     position: relative;
     cursor: pointer;
 }
 
 .deletar {
     right: 5%;
-    top: 15%;
 }
 
 .editar {
+    right: 12%;
+}
+
+.comentar {
     right: 8%;
-    top: 15%;
 }
 
 #overlay {
@@ -251,7 +254,8 @@ a {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: white;
+    background-color: var(--azul);
+    color: white;
     padding: 20px;
     border: 1px solid black;
     z-index: 10;
@@ -263,12 +267,26 @@ a {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: white;
+    background-color: var(--azul);
+    /* background-color: white; */
     padding: 80px;
     border: 1px solid black;
-    z-index: 11;
+    z-index: 10;
+    color: white;
 }
 
 .att {
     width: 50%;
+}
+
+#divComment {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 50px;
+    border: 1px solid black;
+    z-index: 10;
 }

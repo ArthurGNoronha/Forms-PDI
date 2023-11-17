@@ -483,27 +483,35 @@ app.post('/atualizar', async (req, res) => {
 app.post('/comentario', async (req, res) => {
   const idComentario = parseInt(req.body.id);
 
-  if(!idComentario || isNaN(idComentario)) {
+  if (!idComentario || isNaN(idComentario)) {
     res.status(400).send('Id inválido');
     return;
   }
 
-  const comentario = req.body.comentario;
+  const Comentario = req.body.Comentario;
+  
+  if (Comentario === null || Comentario === undefined) {
+    res.status(400).send('Comentário inválido');
+    return;
+  }
 
   try {
     const result = await collection.updateOne(
       { id: idComentario },
-      { $set: comentario }
+      {
+        $addToSet: { Comentarios: Comentario }, // Adiciona apenas se não estiver presente
+      },
+      { upsert: true } // Cria o documento se não existir
     );
 
-    if (result.deletedCount === 1) {
+    if (result.upsertedCount === 1 || result.modifiedCount === 1) {
       res.send('Comentário adicionado com sucesso');
     } else {
-      res.send('Documento não encontrado');
+      res.send('Documento não encontrado ou não modificado');
     }
   } catch (error) {
     console.error('Erro ao adicionar um comentário: ', error);
-    res.status(400).send('Erro interno no servidor');
+    res.status(500).send('Erro interno no servidor');
   }
 });
 
