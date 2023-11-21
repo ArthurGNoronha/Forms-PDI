@@ -41,12 +41,17 @@ function adicionarDivsFiltros(respostas, limite = respostas.length) {
                 <div class="idFiltro">ID: ${data.id}</div>
             </div>
             <img class="editar" 
-            data-id=${data.id}"
-            src="/Imagens/edit.png" alt="Editar">
+                data-id="<%= data.id %>"
+                data-Responsavel="<%= data.Responsavel %>"
+                src="/Imagens/edit.png" alt="Editar">
+            <img class="comentar" 
+                data-id="<%= data.id %>"
+                data-Responsavel="<%= data.Responsavel %>"
+                src="/Imagens/Comentario.png" alt="Comentar">
             <img class="deletar"
-                data-id="${data.id}"
-                data-Responsavel="${data.Responsavel}"
-                data-DataHora="${data.DataHora}"
+                data-id="<%= data.id %>"
+                data-Responsavel="<%= data.Responsavel %>"
+                data-DataHora="<%= moment(data.DataHora).format('DD/MM/YYYY HH:mm') %>"
                 src="/Imagens/trash-2-512.png" alt="Deletar">
         `;
 
@@ -92,7 +97,7 @@ document.getElementById('botaoFiltrar').addEventListener('click', function () {
 
             if (!id1) {
                 id1 = '1';
-                id2 = '99999999';
+                id2 = '999999999';
             }
 
             const urlId = `/buscarDadosId?id1=${id1}&id2=${id2}`;
@@ -509,36 +514,83 @@ async function verComentarios(currentId) {
   
     try {
         const response = await fetch(`/obterComentarios?id=${currentId}`);
-              
+
       if (response.status === 404) {
         console.error('Resposta não encontrada');
         return;
       }
   
       const comentarios = await response.json();
-      console.log('Comentários recebidos:', comentarios);
   
       renderizarCometarios(comentarios);
     } catch (error) {
       console.error('Erro ao obter comentários: ', error);
     }
-  }
+}
   
-  function renderizarCometarios(comentarios) {
+function renderizarCometarios(comentarios) {
     const comentariosContainer = document.querySelector('.comentarios');
     comentariosContainer.innerHTML = '<h2>Comentários:</h2>';
-  
+
     if (Array.isArray(comentarios) && comentarios.length > 0) {
-      comentarios.forEach(comentario => {
+        comentarios.forEach((comentario, index) => {
+            const li = document.createElement('li');
+            li.classList.add('commentResposta');
+            li.textContent = `${index + 1}. ${comentario}`;
+
+            comentariosContainer.appendChild(li);
+        });
+
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('deleteComment');
+        deleteButton.textContent = 'Deletar Comentário';
+        comentariosContainer.appendChild(deleteButton);
+        deletarComentario(currentId, deleteButton);
+    } else {
         const li = document.createElement('li');
         li.classList.add('commentResposta');
-        li.textContent = comentario;
+        li.textContent = 'Nenhum comentário encontrado';
         comentariosContainer.appendChild(li);
-      });
-    } else {
-      const li = document.createElement('li');
-      li.classList.add('commentResposta');
-      li.textContent = 'Nenhum comentário encontrado';
-      comentariosContainer.appendChild(li);
     }
-  }  
+}
+
+function deletarComentario(currentId, deleteButton) {
+    if (!deleteButton) {
+      console.error('Elemento deleteComment não encontrado.');
+      return;
+    }
+  
+    if (isNaN(currentId)) {
+      console.error('Id inválido', currentId);
+      return;
+    }
+  
+    deleteButton.addEventListener('click', async () => {
+      try {
+        const commentDel = parseInt( prompt('Digite o número do comentário que quer excluir: '));
+  
+        if (!commentDel || isNaN(commentDel)) {
+          console.error('Número de comentário inválido', commentDel);
+          return;
+        }
+  
+        const requestBody = new URLSearchParams();
+        requestBody.append('id', currentId);
+        requestBody.append('commentDel', commentDel);
+  
+        const response = await fetch('/excluirComentario', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: requestBody,
+          });
+
+          alert('Comentário excluido com Sucesso!');   
+          location.reload();       
+      } catch (error) {
+        console.error('Erro ao excluir comentário:', error);
+        alert('Erro ao excluir comentário');
+      }
+    });
+  }

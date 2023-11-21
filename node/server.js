@@ -516,10 +516,9 @@ app.post('/comentario', async (req, res) => {
 });
 
 app.get('/obterComentarios', async (req, res) => {
-  const respostasId = req.query.id;  // Alterado de currentId para id
+  const respostasId = req.query.id;
 
   try {
-    console.log('ID recebido na rota /obterComentarios:', respostasId);
 
     const idNumerico = parseInt(respostasId, 10);
 
@@ -562,6 +561,34 @@ app.post('/excluir', async (req, res) => {
     }
   } catch (error) {
     console.error('Erro ao excluir o documento: ', error);
+    res.status(500).send('Erro interno no Servidor');
+  }
+});
+
+app.post('/excluirComentario', async (req, res) => {
+  const idExcluir = parseInt(req.body.id);
+  const commentIndex = parseInt(req.body.commentDel) - 1;
+
+  if (!idExcluir || isNaN(idExcluir) || isNaN(commentIndex)) {
+    res.status(400).send('Id ou índice do comentário inválido');
+    return;
+  }
+
+  try {
+    await collection.updateOne({ id: idExcluir }, { $unset: { [`Comentarios.${commentIndex}`]: 1 } });
+
+    await collection.updateOne({ id: idExcluir }, { $pull: { Comentarios: null } });
+
+    const result = await collection.findOne({ id: idExcluir }, { id: 0, Comentarios: 1 });
+
+    if (!result || !result.Comentarios) {
+      res.status(404).send('Comentário não encontrado');
+      return;
+    }
+
+    res.status(200).json(result.Comentarios);
+  } catch (error) {
+    console.error('Erro ao excluir o comentário: ', error);
     res.status(500).send('Erro interno no Servidor');
   }
 });

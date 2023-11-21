@@ -267,12 +267,13 @@ a {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: var(--azul);
-    /* background-color: white; */
+    /* background-color: var(--azul); */
+    /* background-image: linear-gradient(to right top, #283444, #283647, #29384b, #29394e, #2a3b52, #2a3d56, #293e5a, #29405e, #274163, #254269, #23436e, #214473); */
+    
+    background-color: white;
     padding: 80px;
-    border: 1px solid black;
     z-index: 10;
-    color: white;
+    /* color: white; */
 }
 
 .att {
