@@ -7,14 +7,24 @@
     <link rel="stylesheet" href="/PaginaADM/Estilos/EstiloADM.css">
 </head>
 <body>
+    <div class="containerLog">
+        <div class="quadradoLog">
+            <img src="/Imagens/header.png" class="LogoLog" alt="Biopark Educação">
+            <div class="txtLog">Faça seu Login utilizando os campos abaixo</div>
     <form action="/Login" method="post">
-        <label for="username" class="lbUser">Usuário: </label>
-        <input type="text" id="username" name="username" required>
+        <div class="inputUser">
+        <img src="/Imagens/user.png" class="imgUser" alt="Usuário">
+        <input type="text" id="username" name="username" required placeholder="Digite seu Usuário..." autocomplete="off">
+        </div>
         <br>
-        <label for="password" class="lbPass">Senha: </label>
-        <input type="password" name="password" id="password" required>
+        <div class="inputPass">
+        <img src="/Imagens//padlock.png" class="imgSenha" alt="Senha">
+        <input type="password" name="password" id="password" required placeholder="Digite sua Senha...">
+        </div>
         <br>
-        <button type="submit">Entrar</button>
+        <button type="submit" class="Login">Entrar</button>
     </form>
+        </div>
+    </div>
 </body>
 </html>
