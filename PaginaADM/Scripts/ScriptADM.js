@@ -41,17 +41,23 @@ function adicionarDivsFiltros(respostas, limite = respostas.length) {
                 <div class="idFiltro">ID: ${data.id}</div>
             </div>
             <img class="editar" 
-                data-id="<%= data.id %>"
-                data-Responsavel="<%= data.Responsavel %>"
+                data-id="${data.id}"
+                data-Responsavel="${data.Responsavel}"
+                data-Code="${data.CodigoReagente}"
+                data-Reag="${data.Reagente}"
+                data-Qtd="${data.Quantidade}"
+                data-Med="${data.Medida}"
+                data-Outros="${data.Outros}"
+                data-Obs="${data.Observacao}"
                 src="/Imagens/edit.png" alt="Editar">
             <img class="comentar" 
-                data-id="<%= data.id %>"
-                data-Responsavel="<%= data.Responsavel %>"
+                data-id="${data.id}"
+                data-Responsavel="${data.Responsavel}"
                 src="/Imagens/Comentario.png" alt="Comentar">
             <img class="deletar"
-                data-id="<%= data.id %>"
-                data-Responsavel="<%= data.Responsavel %>"
-                data-DataHora="<%= moment(data.DataHora).format('DD/MM/YYYY HH:mm') %>"
+                data-id="${data.id}"
+                data-Responsavel="${data.Responsavel}"
+                data-DataHora="${dataFiltro}"
                 src="/Imagens/trash-2-512.png" alt="Deletar">
         `;
 
@@ -284,11 +290,23 @@ const btnCancelar = document.getElementById('nao');
 let currentId;
 let currentResponsavel;
 let currentDate;
+let currentCode;
+let currentReag;
+let currentQtd;
+let currentMed;
+let currentOutros;
+let currentObs;
 
 // Função para receber quais os dados da resposta que o usuário selecionou
 function processarEvento(event){
     currentId = event.target.dataset.id;
     currentResponsavel = event.target.dataset.responsavel;
+    currentCode = event.target.dataset.code;
+    currentReag = event.target.dataset.reag;
+    currentQtd = event.target.dataset.qtd;
+    currentMed = event.target.dataset.med;
+    currentOutros = event.target.dataset.outros;
+    currentObs = event.target.dataset.obs;
 
     const dataBruta = moment(event.target.dataset.datahora, 'DD/MM/YYYY HH:mm').toDate();
 
@@ -323,7 +341,7 @@ document.querySelector('.respfiltradas').addEventListener('click', (event) => {
 
         processarEvento(event);
 
-        const texto = `Você está editando a resposta com o ID: ${currentId} do Responsável: ${currentResponsavel}`;
+        const texto = `Você está editando a resposta:\n ID: ${currentId}\n Responsável: ${currentResponsavel}\n Codigo Reagente: ${currentCode}\n Reagente: ${currentReag}\n Quantidade: ${currentQtd}\n Medida: ${currentMed}\n Outros: ${currentOutros}\n Observacação: ${currentObs}`;
         document.getElementById('respAtual').innerText = texto;
         
         divEdit.style.display = 'block';
@@ -337,7 +355,7 @@ document.querySelector('.respfiltradas').addEventListener('click', (event) => {
         verComentarios(currentId)
         }
 
-        const texto = `Você está adicionando um comentário para o ID: ${currentId} com Responsável: ${currentResponsavel}`;
+        const texto = `Você está adicionando um comentário para:\n ID: ${currentId}\n Responsável: ${currentResponsavel}`;
         document.getElementById('respAtualC').innerText = texto;
 
         divComment.style.display = 'block';
