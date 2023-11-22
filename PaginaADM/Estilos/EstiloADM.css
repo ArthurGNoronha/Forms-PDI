@@ -291,3 +291,13 @@ a {
     border: 1px solid black;
     z-index: 10;
 }
+
+
+/* Pagina para o Login */
+.lbUser {
+    color: white;
+}
+
+.lbPass {
+    color: white;
+}

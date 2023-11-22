@@ -10,6 +10,8 @@ const { MongoClient } = require('mongodb');
 const ObjectId = require('mongodb').ObjectId;
 const ejs = require('ejs');
 const { google } = require('googleapis');
+const bcrypt = require('bcrypt');
+const session = require('express-session')
 
 const app = express();
 const port = 3000;
@@ -33,6 +35,13 @@ const sheets = google.sheets({ version: 'v4', auth: sheetClient });
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
 const SHEET_NAME = 'Controle';
 
+const users = [
+  {
+    username: process.env.USERNAME,
+    passwordHash: process.env.PASSWORD_HASH
+  },
+];
+
 // Configurar o middleware para servir arquivos estáticos (CSS, JavaScript, imagens)
 app.use('/PaginaPrincipal/Estilos', express.static(path.join(__dirname, '../PaginaPrincipal/Estilos')));
 app.use('/PaginaPrincipal/Scripts', express.static(path.join(__dirname, '../PaginaPrincipal/Scripts')));
@@ -49,6 +58,13 @@ app.use(bodyParser.json());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
+
+// Configura o middleware do express-session
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+}));
 
 // Manipular EJS
 app.set('view engine', 'ejs');
@@ -67,6 +83,28 @@ app.get('/', (req, res) => {
 // Pagina de Envio
 app.get('/Envio', (req, res) => {
   res.sendFile(path.join(__dirname, '../PaginaPrincipal/Html/EnvioPag.html'));
+});
+
+// Pagina de login
+app.get('/Login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../PaginaAdm/Html/LoginPag.html'));
+});
+
+// Login para a pagina Adm
+app.post('/Login', (req, res) => {
+  const { username, password } = req.body;
+  const user = users[0];
+
+  console.log('Usuário:', user);
+
+  if(user && bcrypt.compareSync(password, user.passwordHash)) {
+    req.session.user = username;
+    res.redirect('/adm');
+  } else {
+    console.log('Senha fornecida:', password);
+    console.log('Hash armazenado:', user ? user.passwordHash : 'N/A');
+    res.send('Senha ou Login incorreto');
+  }
 });
 
 // Receber as informações
@@ -93,7 +131,7 @@ app.post('/salvar', async (req, res) => {
     await collection.insertOne(novaResposta);
 
     // Enviar para a planilha
-    // await enviarParaGoogleSheets(novaResposta);
+    // enviarParaGoogleSheets(novaResposta);
 
     // Enviar e-mail
     // enviarEmail(novaResposta);
@@ -107,56 +145,56 @@ app.post('/salvar', async (req, res) => {
 });
 
 // Login do email
-// function enviarEmail(novaResposta) {
-//   try{
-//     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-//         console.error('Erro: As variáveis estão incorretas');
-//         return;
-//     }
+function enviarEmail(novaResposta) {
+  try{
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.error('Erro: As variáveis estão incorretas');
+        return;
+    }
 
-//     const transporter = nodemailer.createTransport({
-//         service: 'outlook',
-//         auth: {
-//             user: process.env.EMAIL_USER,
-//             pass: process.env.EMAIL_PASS,
-//         },
-//     });
+    const transporter = nodemailer.createTransport({
+        service: 'outlook',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+    });
 
-//     // Informações do Email
-//     const emailHTML = `
-//     <html>
-//       <body>
-//         <h1 style="color: #000; font-family: Arial;">Olá, uma nova resposta foi registrada!</h1>
-//         <p style="color: black;"><b>ID:</b> ${novaResposta.id}</p>
-//         <p style="color: black;"><b>Nome:</b> ${novaResposta.Responsavel}</p>
-//         <p style="color: black;"><b>Código do reagente:</b> ${novaResposta.CodigoReagente}</p>
-//         <p style="color: black;"><b>Reagente:</b> ${novaResposta.Reagente}</p>
-//         <p style="color: black;"><b>Quantidade Utilizada:</b> ${novaResposta.Quantidade} - ${novaResposta.Medida} ${novaResposta.Outros}</p>
-//         <p style="color: black;"><b>Observação:</b> ${novaResposta.Observacao}</p>
-//         <p style="color: black;"><b>Data e Hora:</b> ${moment(novaResposta.DataHora).format('DD/MM/YYYY HH:mm')}</p>
-//       </body>
-//     </html>
-//     `;
+    // Informações do Email
+    const emailHTML = `
+    <html>
+      <body>
+        <h1 style="color: #000; font-family: Arial;">Olá, uma nova resposta foi registrada!</h1>
+        <p style="color: black;"><b>ID:</b> ${novaResposta.id}</p>
+        <p style="color: black;"><b>Nome:</b> ${novaResposta.Responsavel}</p>
+        <p style="color: black;"><b>Código do reagente:</b> ${novaResposta.CodigoReagente}</p>
+        <p style="color: black;"><b>Reagente:</b> ${novaResposta.Reagente}</p>
+        <p style="color: black;"><b>Quantidade Utilizada:</b> ${novaResposta.Quantidade} - ${novaResposta.Medida} ${novaResposta.Outros}</p>
+        <p style="color: black;"><b>Observação:</b> ${novaResposta.Observacao}</p>
+        <p style="color: black;"><b>Data e Hora:</b> ${moment(novaResposta.DataHora).format('DD/MM/YYYY HH:mm')}</p>
+      </body>
+    </html>
+    `;
 
-//     // Como o Email deve ser enviado
-//     const mailOptions = {
-//         from: 'Formulário PDI <' + process.env.EMAIL_USER + '>',
-//         to: 'testeandoarthur@gmail.com',
-//         subject: 'Novas respostas registradas no Formulário',
-//         html: emailHTML,
-//     };
+    // Como o Email deve ser enviado
+    const mailOptions = {
+        from: 'Formulário PDI <' + process.env.EMAIL_USER + '>',
+        to: 'testeandoarthur@gmail.com',
+        subject: 'Novas respostas registradas no Formulário',
+        html: emailHTML,
+    };
 
-//     transporter.sendMail(mailOptions, function (error, info) {
-//         if (error) {
-//             console.error('Erro ao enviar o email',error);
-//         } else {
-//             console.log('Email enviado com sucesso! ' + info.response);
-//         }
-//     });
-//   } catch(error){
-//     console.error('Erro geral ao enviar o email', error);
-//   }
-// }
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.error('Erro ao enviar o email',error);
+        } else {
+            console.log('Email enviado com sucesso! ' + info.response);
+        }
+    });
+  } catch(error){
+    console.error('Erro geral ao enviar o email', error);
+  }
+}
 
 async function enviarParaGoogleSheets(novaResposta) {
   try {
@@ -228,7 +266,7 @@ function isEqual(array1, array2) {
 
 
 // Enviar para a pagina de ADM
-app.get('/ADM', async (req, res) => {
+app.get('/ADM', authenticate, async (req, res) => {
   try {
 
     // Buscar todas as respostas
@@ -592,6 +630,14 @@ app.post('/excluirComentario', async (req, res) => {
     res.status(500).send('Erro interno no Servidor');
   }
 });
+
+function authenticate(req, res, next) {
+  if (req.session && req.session.user) {
+    return next();
+  } else {
+    res.redirect('/Login');
+  }
+}
 
 //Ligar o servidor
 app.listen(port, async () => {
