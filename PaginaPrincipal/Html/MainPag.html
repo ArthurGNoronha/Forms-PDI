@@ -7,9 +7,11 @@
     <title>Controlde de Estoque - Log Book</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="/PaginaPrincipal/Estilos/EstiloMainPg.css">
+    <link rel="stylesheet" href="/PaginaPrincipal/Estilos/mediaQMain.css">
 </head>
 <body>
     <form action="/salvar" method="post">
+    <div class="containerGeral">
     <div id="header">
         <img src="/Imagens/header.png" alt="Biopark">
         <p id="titulo">Controle de Estoque - Log Book</p>
@@ -27,9 +29,10 @@
     <div class="codigo">
         <p class="CodTexto">2. Digite o código e/ou nome do Insumo/Reagente:</p>
         <div class="inputContainer">
-          <label for="pesquisar" id="labelDrop">Escolha uma opção:</label>
+          <div class="borda">
           <input type="text" id="pesquisar" placeholder="Pesquisar..." autocomplete="off" oninput="validarReag()" required>
           <div id="dropdown-icon">▼</div>
+          </div>
         </div>
         <p id="mensagemErroReag"></p>
         <ul id="dropdown">
@@ -871,12 +874,11 @@
                 <input type="radio" id="outros" name="medida" value="Outros" class="radioEstilo">
                 <label for="outros" class="labelEstilo" >Outros:</label>
                 <input type="text" maxlength="15" id="outros-texto" name="outros-texto" required hidden>
+                <p id="mensagemErroOutros"></p>
             </div>
-            <p id="mensagemErroOutros"></p>
         </div>
     </div>
 </div>
-
 <div class="aviso">
     <div class="sup"></div>
         <div class="inf"><p class="avisoTexto2">Verifique suas respostas antes de enviar!</p></div>
@@ -889,7 +891,7 @@
     <input type="submit" id="btnEnviar" value="Enviar">
 
 </form>
-
+</div>
     <script src="/PaginaPrincipal/Scripts/ScriptMainPg.js"></script>
 </body>
 </html>

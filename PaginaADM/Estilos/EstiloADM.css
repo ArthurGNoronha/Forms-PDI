@@ -332,6 +332,7 @@ a {
     margin-top: 1%;
     margin-bottom: -1%;
     margin-left: 1%;
+    user-select: none;
 }
 
 .inputUser, .inputPass {
