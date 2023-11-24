@@ -1,6 +1,6 @@
-@media only screen and (min-width: 375px) and (max-width: 768px) {
+@media only screen and (min-width: 320px) and (max-width: 871px) {
 
-  #header{
+  #header {
     width: 95%;
   }
 
@@ -10,6 +10,95 @@
 
   .subtitulo {
     font-size: 12px;
+  }
+
+  #pergunta1, #pergunta2 {
+    width: 95%;
+  }
+
+  #pgt1, #pgt2 {
+    font-size: 14px;
+    margin-left: 3.5%;
+  }
+
+  #responsavel, #observacao {
+    font-size: 12px;
+    margin-left: 3.5%;
+    width: 40%;
+  }
+
+  .aviso, .aviso2 {
+    width: 95%;
+  }
+
+  .sup {
+    height: 20px;
+  }
+
+  .avisoTexto, .avisoTexto2, .avisoTexto3, .avisoTexto4, .avisoTexto5{
+    font-size: 16px;
+  }
+
+  .codigo {
+    width: 95%;
+  }
+
+  .CodTexto {
+    font-size: 14px;
+    margin-left: 3.5%;
+  }
+
+  .inputContainer {
+    margin-left: 3.5%;
+    width: 47%;
+  }
+
+  #pesquisar {
+    font-size: 12px;
+    height: 15px;
+  }
+
+  #dropdown li {
+    font-size: 10px;
+    padding: 2px;
+  }
+
+  .medida {
+    width: 95%;
+  }
+
+  .qntd {
+    font-size: 14px;
+  }
+
+  #quantidade {
+    font-size: 12px;
+  }
+
+  .escqntd {
+    display: block;
+  }
+
+  .selecMed {
+    font-size: 14px;
+  }
+
+  .labelEstilo {
+    font-size: 10px;
+  }
+
+  .radioEstilo {
+    width: 10px;
+    height: 10px;
+  }
+
+  .divEnviar {
+    width: 95%;
+  }
+
+  #btnEnviar {
+    width: 120px;
+    height: 35px;
   }
 
   }

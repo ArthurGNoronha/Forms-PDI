@@ -44,7 +44,7 @@ a{
 }
 
 img {
-    width: 50%;
+    width: 40%;
     user-select: none;
 }
 
@@ -70,7 +70,6 @@ img {
 
 #pergunta1, #pergunta2{
     width: 70%;
-    height: 148px;
     border-radius: 10px;
     background: var(--branco);
     display: flex;
@@ -97,8 +96,7 @@ img {
 }
 
 #responsavel, #observacao {
-    width: 329px;
-    height: 37px;
+    width: 32%;
     border: none;
     border-bottom: 2px solid black;
     font-family: Arial;
@@ -107,7 +105,6 @@ img {
     user-select: none;
     margin-left: 5%;
     margin-bottom: 2%;
-    margin-top: -2%;
 }
 
 #responsavel,#observacao:focus {
@@ -117,7 +114,6 @@ img {
 
 .aviso, .aviso2 {
     width: 70%;
-    height: 120px;
     background-color: var(--branco);
     border-radius: 10px;
     margin-bottom: 1.5%;
@@ -129,14 +125,13 @@ img {
 
 .sup{
     width: 100%;
-    height: 40%;
+    height: 40px;
     background-color: var(--vermelho);
     border-radius: 10px 10px 0 0;
 }
 
 .inf {
     width: 100%;
-    height: 100%;
     background-color: var(--branco);
     border-radius: 10px;
     display: flex;
@@ -172,7 +167,6 @@ img {
 
 .codigo{
     width: 70%;
-    height: 175px;
     background-color: var(--branco);
     border-radius: 10px;
     margin-bottom: 1.5%;
@@ -192,16 +186,17 @@ img {
     line-height: normal;
 }
 
+.CodTexto::after{
+    content: " *";
+    color: red;
+}
+
 .inputContainer{
+    width: 37%;
     margin-left: 5%;
     margin-bottom: 1.5%;
     display: flex;
     align-items: center;
-}
-
-.CodTexto::after{
-    content: " *";
-    color: red;
 }
 
 #dropdown-icon {
@@ -212,6 +207,7 @@ img {
 }
   
 .borda {
+    width: 100%;
     border: 1px solid black;
     display: flex;
     justify-content: center;
@@ -219,7 +215,7 @@ img {
 }
 
 #pesquisar{
-    width: 365px;
+    width: 90%;
     height: 30px;
     color: var(--preto);
     font-family: Arial;
@@ -238,7 +234,6 @@ img {
 
 #dropdown {
     display:none;
-    position: absolute;
     border: 1px solid var(--preto);
     max-height: 150px;
     overflow-y: auto;
@@ -246,7 +241,7 @@ img {
     list-style: none;
     z-index: 2;
     user-select: none;
-    bottom: -41.9%;
+    margin-top: -1.5%
 }
   
 #dropdown li {
@@ -264,14 +259,15 @@ img {
       
 .medida{
     width: 70%;
-    height: 256px;
     border-radius: 10px;
     background: var(--branco);
+    margin-bottom: 1.5%;
+}
+
+.containerMedida {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    text-align: center;
-    margin-bottom: 1.5%;
 }
 
 .qntd{
@@ -282,14 +278,15 @@ img {
     font-weight: 400;
     line-height: normal;
     margin-left: 5%;
-    
 }
+
 .qntd::after {
     content: ' *';
     color: red;
 }
 
 #quantidade {
+    width: 36%;
     border: none;
     border-bottom: 2px solid black;
     color: #000;
@@ -305,7 +302,12 @@ img {
     border-bottom: 2px solid black;
 }
 
-.selecMed{
+.escqntd {
+
+}
+
+.selecMed {
+    margin-left: 5%;
     color: var(--preto);
     font-family: Arial;
     font-size: 28px;
@@ -314,44 +316,9 @@ img {
     line-height: normal;
 }
 
-.escqntd {
-    position: relative;
-    bottom: 45%;
-    margin-left: 55%
-}
-
 .selecMed::after {
     content: ' *';
     color: red;
-}
-
-#mensagemErroQtd, #mensagemErroResp, #mensagemErroReag, #mensagemErroOutros{
-    color: var(--vermelho);
-    font-size: 28px;
-    font-weight:600;
-    user-select: none;
-    position: absolute;
-}
-
-#mensagemErroResp{
-    left: 42%;
-    top: 66%;
-}
-
-#mensagemErroReag{
-    right: 34%;
-    bottom: -23%;
-}
-
-#mensagemErroQtd{
-    left: 16%;
-    bottom: -51%;
-}
-
-#mensagemErroOutros{
-    font-size: 20px;
-    bottom: -15%;
-    left: 42%;
 }
 
 .labelEstilo {
@@ -361,25 +328,19 @@ img {
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    align-items: center;
-    margin-right: 12%;
 }
 
 .linhasMedidas {
-    display: flex;
-    margin-bottom: 3%;
+
 }
 
 .radioEstilo {
     width: 20px;
     height: 20px;
-    margin-right: 3%;
 }
 
 .radio-label-container {
-    width: 60%;
-    display: flex;
-    margin-right: -3%;
+    
 }
 
 #outros-texto{
@@ -395,6 +356,13 @@ img {
     border-bottom: 2px solid black;
 }
 
+.divEnviar {
+    width: 70%;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+
 #btnEnviar{
     width: 188px;
     height: 44px;
@@ -403,7 +371,6 @@ img {
     border: 2px solid var(--branco);
     color: var(--branco);
     z-index: 3;
-    margin-left: 58%;
 }
 
 #btnEnviar:hover{
@@ -411,4 +378,31 @@ img {
     color: var(--preto);
     border: none;
     cursor: pointer;
+}
+
+#mensagemErroQtd, #mensagemErroResp, #mensagemErroReag, #mensagemErroOutros{
+    color: var(--vermelho);
+    font-size: 28px;
+    font-weight:600;
+    user-select: none;
+    position: absolute;
+}
+
+#mensagemErroResp{
+    margin-left: 27%;
+    margin-top: 6.5%;
+}
+
+#mensagemErroReag{
+    margin-left: 29.5%;
+    margin-top: 6.5%;
+}
+
+#mensagemErroQtd{
+    margin-top: 8%;
+    margin-left: 3%;
+}
+
+#mensagemErroOutros{
+    font-size: 20px;
 }

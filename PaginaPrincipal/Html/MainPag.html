@@ -822,12 +822,14 @@
         </ul>
  </div>
  <div class="medida">
+    <div class="containerMedida">
     <p class="qntd">3. Digite a quantidade que foi utilizada:</p>
     <input type="text" maxlength="6" id="quantidade" placeholder="Digite aqui..." oninput="validarNumero(this)" autocomplete="off" required>
     <p id="mensagemErroQtd"></p>
+    </div>
+    <p class="selecMed">Selecione a medida utilizada:</p>
+    
     <div class="escqntd">
-        <p class="selecMed">Selecione a medida utilizada:</p>
-
             <div class="linhasMedidas">
                 <div class="radio-label-container">
                     <input type="radio" id="gramas" name="medida" value="Gramas" class="radioEstilo" required>
@@ -887,9 +889,9 @@
         <p id="pgt2">4. Deixe uma observação, caso necessário: </p>
         <input type="text" id="observacao" placeholder="Digite aqui..." autocomplete="off">
     </div>
-
+<div class="divEnviar">
     <input type="submit" id="btnEnviar" value="Enviar">
-
+</div>
 </form>
 </div>
     <script src="/PaginaPrincipal/Scripts/ScriptMainPg.js"></script>
