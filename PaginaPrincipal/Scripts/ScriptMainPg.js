@@ -61,6 +61,7 @@ options.forEach(option => {
     dropdown.style.display = 'none';
 
     mensagemErroReag.textContent = "";
+    mensagemErroReag.style.display = 'none';
   });
 });
 
@@ -113,7 +114,7 @@ function validarNumero() {
       }, 120);
     } else {
       numeroMedidaInput.value = numeroMedidaTexto;
-      mensagemErroQtd.style.display = 'block';
+      mensagemErroQtd.style.display = 'none';
     }
   }
   
@@ -172,6 +173,7 @@ function validarOutros() {
 
 outrosCheckbox.addEventListener("change", function () {
   mensagemErroOutros.textContent = "";
+  mensagemErroOutros.style.display = 'none'
 });
 
 //Não preencheu todos os campos obrigatórios

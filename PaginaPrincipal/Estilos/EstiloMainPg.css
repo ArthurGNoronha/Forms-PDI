@@ -372,7 +372,7 @@ img {
 }
 
 #outros-texto{
-    width: 100px;
+    width: 50%;
     margin-left: 2%;
     border: none;
     border-bottom: 2px solid black;
@@ -416,21 +416,13 @@ img {
     display: none;
 }
 
-/* #mensagemErroResp{
-    margin-left: 27%;
-    margin-top: 6.5%;
+#mensagemErroResp, #mensagemErroReag {
+    margin-left: 5%;
+    margin-bottom: 1%;
+    margin-top: 0;
 }
-
-#mensagemErroReag{
-    margin-left: 29.5%;
-    margin-top: 6.5%;
-}
-
-#mensagemErroQtd{
-    margin-top: 8%;
-    margin-left: 3%;
-} */
 
 #mensagemErroOutros{
     font-size: 20px;
+    margin-top: 0;
 }

@@ -101,6 +101,16 @@
     height: 10px;
   }
 
+  #outros-texto {
+    width: 40%;
+    font-size: 10px;
+    border-bottom: 1px solid black;
+  }
+
+  #outros-texto:focus {
+    border-bottom: 1px solid black;
+  }
+
   .divEnviar {
     width: 95%;
   }
@@ -108,6 +118,14 @@
   #btnEnviar {
     width: 120px;
     height: 35px;
+  }
+
+  #mensagemErroQtd, #mensagemErroResp, #mensagemErroReag, #mensagemErroOutros{
+    font-size: 16px;
+  }
+
+  #mensagemErroOutros {
+    font-size: 12px;
   }
 
   }
