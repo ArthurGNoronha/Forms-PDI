@@ -84,6 +84,7 @@ outrasOpcoes.forEach(function(opcao) {
       outrosTexto.hidden = true;
       outrosTexto.value = "";
       mensagemErroOutros.textContent = "";
+      mensagemErroOutros.style.display = 'none';
     }
   });
 });
@@ -98,6 +99,7 @@ function validarNumero() {
   const numeroMedida = parseFloat(numeroMedidaTexto.replace(",", "."));
 
   mensagemErroQtd.textContent = "";
+  mensagemErroQtd.style.display = 'none';
 
   if (isNaN(numeroMedida) || numeroMedida < 0 || numeroMedida > 99999) {
     mensagemErroQtd.textContent = isNaN(numeroMedida)
@@ -107,9 +109,11 @@ function validarNumero() {
       : "Número é maior do que o permitido!"
       setTimeout(() => {
         numeroMedidaInput.value = "";
+        mensagemErroQtd.style.display = 'block';
       }, 120);
     } else {
       numeroMedidaInput.value = numeroMedidaTexto;
+      mensagemErroQtd.style.display = 'block';
     }
   }
   
@@ -122,9 +126,11 @@ function validarReag() {
   var valorReag = valorPesquisa.value;
   
   mensagemErroReag.textContent = "";
+  mensagemErroReag.style.display = 'none';
   
   if (valorReag === '') {
     mensagemErroReag.textContent = MENSAGEM_ERRO_GERAL;
+    mensagemErroReag.style.display = 'block'
     valorPesquisa.value = "";
   }
 }
@@ -137,9 +143,11 @@ function validarResp(){
   var nomeResp = respInput.value.trimStart();
 
   mensagemErroResp.textContent = "";
+  mensagemErroResp.style.display = 'none';
 
   if (nomeResp === '' ){
     mensagemErroResp.textContent = MENSAGEM_ERRO_GERAL;
+    mensagemErroResp.style.display = 'block'
   } 
 }
 
@@ -151,10 +159,12 @@ function validarOutros() {
   const outrosInput = valorOutros.value.trimStart();
   
   mensagemErroOutros.textContent = "";
+  mensagemErroOutros.style.display = 'none';
 
   if (outrosCheckbox.checked && outrosInput === "") {
     setTimeout(function () {
       mensagemErroOutros.textContent = MENSAGEM_ERRO_GERAL;
+      mensagemErroOutros.style.display = 'block'
       valorOutros.value = "";
     }, 62);
   }

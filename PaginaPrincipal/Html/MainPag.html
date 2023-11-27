@@ -823,60 +823,58 @@
  </div>
  <div class="medida">
     <div class="containerMedida">
+    <div class="containerMedidaTexto">
     <p class="qntd">3. Digite a quantidade que foi utilizada:</p>
     <input type="text" maxlength="6" id="quantidade" placeholder="Digite aqui..." oninput="validarNumero(this)" autocomplete="off" required>
     <p id="mensagemErroQtd"></p>
     </div>
-    <p class="selecMed">Selecione a medida utilizada:</p>
-    
     <div class="escqntd">
-            <div class="linhasMedidas">
-                <div class="radio-label-container">
+        <p class="selecMed">Selecione a medida utilizada:</p>
+        <div class="medidaBol">
+            <div class="medBolEsq">
+                <div class="estiloMedBol">
                     <input type="radio" id="gramas" name="medida" value="Gramas" class="radioEstilo" required>
                     <label for="gramas" class="labelEstilo">G - Gramas</label>
-                </div>
+                    </div>
 
-                <div class="radio-label-container">
+                <div class="estiloMedBol">
                     <input type="radio" id="kilogramas" name="medida" value="Kilogramas" class="radioEstilo">
                     <label for="kilogramas" class="labelEstilo">KG - Kilogramas</label>
-                </div>
-            </div>
+                    </div>
 
-            <div class="linhasMedidas">
-                <div class="radio-label-container">
+                <div class="estiloMedBol">
                     <input type="radio" id="miligramas" name="medida" value="Miligramas" class="radioEstilo">
                     <label for="miligramas" class="labelEstilo">MG - Miligramas</label>
-                </div>
-
-                <div class="radio-label-container">
+                    </div>
+                    
+                <div class="estiloMedBol">
                     <input type="radio" id="mililitros" name="medida" value="Mililitros" class="radioEstilo">
                     <label for="mililitros" class="labelEstilo">ML- Mililitros</label>
+                    </div>
                 </div>
-            </div>
-
-            <div class="linhasMedidas">
-                <div class="radio-label-container">
+            <div class="medBolDir">
+                <div class="estiloMedBol">
                     <input type="radio" id="litros" name="medida" value="Litros" class="radioEstilo">
                     <label for="litros" class="labelEstilo">L - Litros</label>
-                </div>
+                    </div>
 
-                <div class="radio-label-container">
+                    <div class="estiloMedBol">
                     <input type="radio" id="unidade" name="medida" value="Unidade" class="radioEstilo">
                     <label for="unidade" class="labelEstilo">UN - Unidade</label>
+                    </div>
+
+                    <div class="estiloMedBol">
+                    <input type="radio" id="caixa" name="medida" value="Caixas" class="radioEstilo">
+                    <label for="caixa" class="labelEstilo">CX - Caixas</label>
+                    </div>
+
+                    <div class="estiloMedBol">
+                    <input type="radio" id="outros" name="medida" value="Outros" class="radioEstilo">
+                    <label for="outros" class="labelEstilo" >Outros:</label>
+                    <input type="text" maxlength="15" id="outros-texto" name="outros-texto" required hidden>
+                    <p id="mensagemErroOutros"></p>
+                    </div>
                 </div>
-            </div>
-
-            <div class="linhasMedidas">
-            <div class="radio-label-container">
-                <input type="radio" id="caixa" name="medida" value="Caixas" class="radioEstilo">
-                <label for="caixa" class="labelEstilo">CX - Caixas</label>
-            </div>
-
-            <div class="radio-label-container">
-                <input type="radio" id="outros" name="medida" value="Outros" class="radioEstilo">
-                <label for="outros" class="labelEstilo" >Outros:</label>
-                <input type="text" maxlength="15" id="outros-texto" name="outros-texto" required hidden>
-                <p id="mensagemErroOutros"></p>
             </div>
         </div>
     </div>

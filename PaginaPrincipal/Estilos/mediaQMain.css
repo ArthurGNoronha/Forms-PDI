@@ -77,6 +77,7 @@
 
   .escqntd {
     display: block;
+    width: 100%;
   }
 
   .selecMed {
@@ -85,6 +86,14 @@
 
   .labelEstilo {
     font-size: 10px;
+  }
+
+  .containerMedida {
+    display: block;
+  }
+
+  .containerMedidaTexto {
+    width: 100%;
   }
 
   .radioEstilo {
