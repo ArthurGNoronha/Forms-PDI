@@ -92,7 +92,6 @@ html, body{
 
 .tabela {
     height: 700px;
-    margin: 0 auto;
     overflow-y: auto;
 }
 
@@ -220,21 +219,9 @@ a {
 .deletar, .editar, .comentar {
     width: 45px;
     height: 45px;
-    top: 15%;
-    position: relative;
+    margin-left: 4%;
+    margin-top: 2%;
     cursor: pointer;
-}
-
-.deletar {
-    right: 5%;
-}
-
-.editar {
-    right: 12%;
-}
-
-.comentar {
-    right: 8%;
 }
 
 #overlay {

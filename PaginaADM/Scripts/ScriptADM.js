@@ -366,7 +366,7 @@ document.querySelector('.respfiltradas').addEventListener('click', (event) => {
 btnCancelar.addEventListener('click', () => {
     overlay.style.display = 'none';
     confirmar.style.display = 'none';
-})
+});
 
 // Confirmar a exclusão
 btnConfirmar.addEventListener('click', excluirResposta);
@@ -406,13 +406,13 @@ const divEdit = document.getElementById('divEdit');
 const confirmarEdit = document.getElementById('simEdit');
 const cancelarEdit = document.getElementById('naoEdit');
 
-// Cancelar
+// Cancelar Edição
 cancelarEdit.addEventListener('click', () => {
     overlay.style.display = 'none';
     divEdit.style.display = 'none';
 });
 
-// Confirmar
+// Confirmar Edição
 confirmarEdit.addEventListener('click', () => {
     alterarDados(currentId);
 });
@@ -479,11 +479,13 @@ const divComment = document.getElementById('divComment');
 const confirmarComment = document.getElementById('simComment');
 const cancelarComment = document.getElementById('naoComment');
 
+// Cancelar Comentário
 cancelarComment.addEventListener('click', () => {
     overlay.style.display = 'none';
     divComment.style.display = 'none';
 });
 
+// Confirmar Comentário
 confirmarComment.addEventListener('click', () => {
     addComment(currentId);  
 });
@@ -520,6 +522,14 @@ async function addComment(currentId) {
         alert('Erro ao adicionar um comentário');
     }
 }
+
+// Sair das operações
+overlay.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    confirmar.style.display = 'none';
+    divEdit.style.display = 'none';
+    divComment.style.display = 'none';
+});
 
 // Exibir Comentários
 
