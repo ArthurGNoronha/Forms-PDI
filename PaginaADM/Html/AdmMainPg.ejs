@@ -149,7 +149,21 @@
     <div class="comentarios">
     </div>
 </div>
-
+<div id="divReag">
+    <h2>Alterar Reagentes </h2>
+    <h3>Reagentes Atuais: </h3>
+    <div class="inputContainer">
+        <div class="borda">
+        <input type="text" id="pesquisar" placeholder="Pesquisar..." autocomplete="off" oninput="validarReag()" required>
+        <div id="dropdown-icon">▼</div>
+        </div>
+      </div>
+      <ul id="dropdown">
+        <% reagentes.forEach(function(data) { %>
+            <li> <%= data.Codigo %> - <%= data.Reagente %></li>
+        <%}); %>
+      </ul>
+</div>
     <script src="/PaginaADM/Scripts/ScriptADM.js"></script>
 </body>
 </html>

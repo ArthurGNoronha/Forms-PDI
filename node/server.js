@@ -22,6 +22,7 @@ const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
 database = client.db('forms');
 collection = database.collection('Respostas');
+collectionReag = database.collection('Reagentes');
 
 const sheetClient = new google.auth.JWT(
   key.client_email,
@@ -68,16 +69,24 @@ app.use(session({
 
 // Manipular EJS
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '../PaginaADM', 'Html'));
+app.set('views', [
+  path.join(__dirname, '../PaginaADM', 'Html'),
+  path.join(__dirname, '../PaginaPrincipal', 'Html')
+]);
 
 // Favicon
 app.get('/favicon.ico', (req, res) => {
   res.sendFile(path.join(__dirname, '../Imagens/Icone.ico'));
 });  
 
-// Pagina Inicial
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../PaginaPrincipal/Html/MainPag.html'));
+app.get('/', async (req, res) => {
+  try {
+    const reagente = await collectionReag.find({}).toArray();
+    res.render('MainPag', { reagente });
+  } catch(error) {
+    console.error('Erro ao renderizar a página principal ', error);
+    res.status(500).send('Erro interno no Servidor');
+  }
 });
 
 // Pagina de Envio
@@ -95,14 +104,10 @@ app.post('/Login', (req, res) => {
   const { username, password } = req.body;
   const user = users[0];
 
-  console.log('Usuário:', user);
-
   if(user && bcrypt.compareSync(password, user.passwordHash)) {
     req.session.user = username;
     res.redirect('/adm');
   } else {
-    console.log('Senha fornecida:', password);
-    console.log('Hash armazenado:', user ? user.passwordHash : 'N/A');
     res.send('Senha ou Login incorreto');
   }
 });
@@ -264,6 +269,22 @@ function isEqual(array1, array2) {
   return true;
 }
 
+// Salvar novo Reagente
+app.post('/reagentes', async function(){
+  try {
+    const novoReag = {
+      Codigo: codigo,
+      Reagente: reagente
+    };
+
+    await collectionReag.insertOne(novoReag);
+
+    console.log('Reagente inserido com sucesso no MongoDB');
+  } catch (error) {
+    console.error('Erro ao salvar os dados', error);
+    res.status(500).json({success: false, error: 'Erro interno no servidor'})
+  }
+});
 
 // Enviar para a pagina de ADM
 app.get('/ADM', authenticate, async (req, res) => {
@@ -276,8 +297,10 @@ app.get('/ADM', authenticate, async (req, res) => {
       .limit(14)
       .toArray();
 
+
+    const reagentes = await collectionReag.find({}).toArray()
     // Renderizar a página de respostas com os dados
-    res.render('AdmMainPg', { respostas });
+    res.render('AdmMainPg', { respostas, reagentes });
   } catch (error) {
     console.error('Erro ao ver os dados: ', error);
     res.status(500).send('Erro interno do servidor');
@@ -627,6 +650,23 @@ app.post('/excluirComentario', async (req, res) => {
     res.status(200).json(result.Comentarios);
   } catch (error) {
     console.error('Erro ao excluir o comentário: ', error);
+    res.status(500).send('Erro interno no Servidor');
+  }
+});
+
+app.post('/excluirReagente', async (req, res) => {
+  const codeExcluir = req.body.code;
+
+  try {
+    const result = await collectionReag.deleteOne({Codigo: codeExcluir});
+    
+    if (result.deletedCount === 1) {
+      res.send('Reagente excluido com Sucesso');
+    } else {
+      res.send('Falha ao excluir Reagente');
+    }
+  } catch (error) {
+    console.error('Erro ao excluir Reagente ', error);
     res.status(500).send('Erro interno no Servidor');
   }
 });
