@@ -92,6 +92,7 @@
     </div>
     <hr>
     <div class="googlesheet">
+        <button id="btnReag">Ver Reagentes</button>
         <button id="baixar">
             <a href="https://docs.google.com/spreadsheets/d/1RNCNXsqR2xSqnosi33V9Uu2s_o0EbxjWB3CckXLKMBA/edit#gid=0" target="_blank">Abrir no aplicativo Google Planilhas</a>
         </button>
@@ -150,11 +151,11 @@
     </div>
 </div>
 <div id="divReag">
-    <h2>Alterar Reagentes </h2>
+    <h2>Reagentes </h2>
     <h3>Reagentes Atuais: </h3>
     <div class="inputContainer">
         <div class="borda">
-        <input type="text" id="pesquisar" placeholder="Pesquisar..." autocomplete="off" oninput="validarReag()" required>
+        <input type="text" multiline="true" id="pesquisarReag" placeholder="Pesquisar..." autocomplete="off">
         <div id="dropdown-icon">▼</div>
         </div>
       </div>
@@ -163,6 +164,47 @@
             <li> <%= data.Codigo %> - <%= data.Reagente %></li>
         <%}); %>
       </ul>
+      <div class="addExEdReag">
+        <div class="addReag">
+      <h2>Adicionar: </h2>
+      <label for="newCode">Código: </label>
+      <br>
+      <input type="text" name="newCode" id="newCode">
+      <br>
+      <label for="newReag">Reagente: </label>
+      <br>
+      <input type="text" name="newReag" id="newReag">
+      <br>
+      <button id="simReag">Confirmar</button>
+      <button id="naoReag">Cancelar</button>
+      </div>
+      <div class="edReag">
+        <h2>Editar: </h2>
+        <label for="edCode">Código para editar: </label>
+        <br>
+        <input type="text" name="edCode" id="edCode">
+        <br>
+        <label for="newEdCode">Novo Código: </label>
+        <br>
+        <input type="text" name="newEdCode" id="newEdCode">
+        <br>
+        <label for="newEdReag">Novo Reagente: </label>
+        <br>
+        <input type="text" name="newEdReag" id="newEdReag">
+        <br>
+        <button id="simEdReag">Confirmar</button>
+        <button id="naoEdReag">Cancelar</button>
+      </div>
+      <div class="exReag">
+        <h2>Excluir: </h2>
+        <label for="exCode">Código para <b>excluir</b></label>
+        <br>
+        <input type="text" name="exCode" id="exCode">
+        <br>
+        <button id="simExReag">Confirmar</button>
+        <button id="naoExReag">Cancelar</button>
+      </div>
+      </div>
 </div>
     <script src="/PaginaADM/Scripts/ScriptADM.js"></script>
 </body>

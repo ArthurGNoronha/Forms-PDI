@@ -529,6 +529,7 @@ overlay.addEventListener('click', () => {
     confirmar.style.display = 'none';
     divEdit.style.display = 'none';
     divComment.style.display = 'none';
+    divReag.style.display = 'none';
 });
 
 // Exibir Comentários
@@ -556,6 +557,7 @@ async function verComentarios(currentId) {
     }
 }
   
+// Renderizar Comentários
 function renderizarCometarios(comentarios) {
     const comentariosContainer = document.querySelector('.comentarios');
     comentariosContainer.innerHTML = '<h2>Comentários:</h2>';
@@ -582,9 +584,10 @@ function renderizarCometarios(comentarios) {
     }
 }
 
+// Deletar Comentários
 function deletarComentario(currentId, deleteButton) {
     if (!deleteButton) {
-      console.error('Elemento deleteComment não encontrado.');
+        console.error('Erro ao deletar');
       return;
     }
   
@@ -606,19 +609,169 @@ function deletarComentario(currentId, deleteButton) {
         requestBody.append('id', currentId);
         requestBody.append('commentDel', commentDel);
   
-        const response = await fetch('/excluirComentario', {
+        fetch('/excluirComentario', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: requestBody,
-          });
+          })
 
-          alert('Comentário excluido com Sucesso!');   
-          location.reload();       
+          alert('Comentário excluido com sucesso');   
+          location.reload();
       } catch (error) {
         console.error('Erro ao excluir comentário:', error);
         alert('Erro ao excluir comentário');
       }
     });
   }
+
+// Adicionar/Editar/Excluir Reagentes
+// Obter Variaveis
+const divReag = document.getElementById('divReag');
+const confirmarReag = document.getElementById('simReag');
+const cancelarReag = document.getElementById('naoReag');
+const btnReag = document.getElementById('btnReag');
+const dropdown = document.getElementById('dropdown');
+const pesquisarReag = document.getElementById('pesquisarReag');
+const dropdownIcon = document.getElementById('dropdown-icon');
+const options = document.querySelectorAll("#dropdown li");
+let angle = 0;
+var opcaoSelecionada = '';
+const btnConfExReag = document.getElementById('simExReag');
+const btnConfEdReag = document.getElementById('simEdReag');
+
+// Abrir a div dos Reagentes
+btnReag.addEventListener('click', function() {
+    divReag.style.display = 'block';
+    overlay.style.display = 'block';
+});
+
+// Abrir o dropdown
+pesquisarReag.addEventListener('focus', () => {
+    angle += 180;
+    dropdown.style.display = 'block';
+    dropdownIcon.style.transform = `rotate(${angle}deg)`;
+});
+
+// Fechar o dropdonw
+pesquisarReag.addEventListener('blur', () => {
+    setTimeout(() => {
+    angle += 180;
+    dropdown.style.display = 'none';
+    dropdownIcon.style.transform = `rotate(${angle}deg)`;
+}, 240);
+});
+
+// Mostrar as opções
+pesquisarReag.addEventListener('input', () => {
+    const valor = pesquisarReag.value.toLowerCase();
+
+    options.forEach(option => {
+        const optionText =option.innerText.toLowerCase();
+        if (optionText.includes(valor)) {
+          option.style.display = 'block';
+        } else {
+          option.style.display = 'none';
+        }
+    });
+});
+
+options.forEach(option => {
+    option.addEventListener('click', () => {
+        opcaoSelecionada = option.innerText;
+        pesquisarReag.value = opcaoSelecionada;
+        dropdown.style.display = 'none';
+    });
+});
+
+// Rotacionar a setinha
+dropdownIcon.addEventListener('click', function() {
+    angle += 180;
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+  
+    if (dropdownIcon.style) {
+        dropdownIcon.style.transform = `rotate(${angle}deg)`;
+    }
+  });
+
+  confirmarReag.addEventListener('click', () => {
+    adicionarReagente();
+  });
+  
+  btnConfEdReag.addEventListener('click', () => {
+    editarReagente();
+  });
+
+  btnConfExReag.addEventListener('click', () => {
+    excluirReagente();
+  });
+
+// Função para adicionar Reagentes
+function adicionarReagente() {
+    const code = document.getElementById('newCode').value.trim();
+    const reagente = document.getElementById('newReag').value;
+
+    fetch('/addReag', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `code=${code}&reagente=${reagente}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+    })
+    .catch(error => {
+        console.error(error);
+        alert('Erro ao adicionar o reagente');
+    });
+}
+
+//Função para editar Reagente
+function editarReagente() {
+    const codeEdit = document.getElementById('edCode').value.trim();
+    const newCode = document.getElementById('newEdCode').value.trim();
+    const newReag = document.getElementById('newEdReag').value.trim();
+
+    console.log('codeEdit:', codeEdit, 'newCode:', newCode, 'newReag:', newReag);
+
+    fetch('/editarReagente', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `codeEdit=${codeEdit}&code=${newCode}&reag=${newReag}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        alert(data.message);
+    })
+    .catch(error => {
+        console.error(error);
+        alert('Erro ao editar o reagente');
+    });
+}
+
+// Função para deletar Reagente
+function excluirReagente() {
+    const code = document.getElementById('exCode').value.trim();
+
+    fetch('/excluirReagente', {
+        method: 'POST',
+        headers: {
+            'Content-Type' : 'application/x-www-form-urlencoded'
+        },
+        body: `codeExcluir=${code}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+    })    
+    .catch(error => {
+        console.error(error);
+        alert('Erro ao excluir o reagente');
+    });
+}

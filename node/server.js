@@ -270,24 +270,30 @@ function isEqual(array1, array2) {
 }
 
 // Salvar novo Reagente
-app.post('/reagentes', async function(){
+app.post('/addReag', async function(req, res) {
   try {
-    const novoReag = {
-      Codigo: codigo,
-      Reagente: reagente
-    };
 
-    await collectionReag.insertOne(novoReag);
+      const novoReag = {
+          Codigo: req.body.code,
+          Reagente: req.body.reagente
+      };
 
-    console.log('Reagente inserido com sucesso no MongoDB');
+      if (!novoReag.Codigo || !novoReag.Reagente) {
+          throw new Error('Dados inválidos. Certifique-se de enviar um formulário válido.');
+      }
+
+      await collectionReag.insertOne(novoReag);
+
+      res.status(200).json({ success: true, message: 'Reagente inserido com sucesso' });
   } catch (error) {
-    console.error('Erro ao salvar os dados', error);
-    res.status(500).json({success: false, error: 'Erro interno no servidor'})
+      console.error('Erro ao salvar os dados', error);
+      res.status(500).json({ success: false, error: 'Erro interno no servidor' });
   }
 });
 
 // Enviar para a pagina de ADM
-app.get('/ADM', authenticate, async (req, res) => {
+// app.get('/ADM', authenticate, async (req, res) => {
+app.get('/ADM', async (req, res) => {
   try {
 
     // Buscar todas as respostas
@@ -541,6 +547,38 @@ app.post('/atualizar', async (req, res) => {
   }
 });
 
+app.post('/editarReagente', async (req, res) => {
+  const code = req.body.codeEdit;
+  const newCode = req.body.code;
+  const newReag = req.body.reag;
+
+  try {
+    if (!code || !newCode || !newReag) {
+      res.status(400).json({ success: false, message: 'Parâmetros inválidos. Certifique-se de fornecer valores válidos.' });
+      return;
+    }
+
+    const result = await collectionReag.updateOne(
+      { Codigo: code },
+      {
+        $set: {
+          Codigo: newCode,
+          Reagente: newReag
+        }
+      }
+    );
+
+    if (result.modifiedCount === 1) {
+      res.status(200).json({ success: true, message: 'Reagente atualizado com sucesso' });
+    } else {
+      res.status(404).json({ success: false, message: 'Documento não encontrado' });
+    }
+  } catch (error) {
+    console.error('Erro ao editar Reagente ', error);
+    res.status(500).json({ success: false, message: 'Erro interno no servidor' });
+  }
+});
+
 app.post('/comentario', async (req, res) => {
   const idComentario = parseInt(req.body.id);
 
@@ -655,19 +693,20 @@ app.post('/excluirComentario', async (req, res) => {
 });
 
 app.post('/excluirReagente', async (req, res) => {
-  const codeExcluir = req.body.code;
+  const codeExcluir = req.body.codeExcluir;
 
   try {
-    const result = await collectionReag.deleteOne({Codigo: codeExcluir});
+    const regexPattern = new RegExp('^' + codeExcluir + '$', 'i');
+    const result = await collectionReag.deleteOne({ Codigo: regexPattern });
     
     if (result.deletedCount === 1) {
-      res.send('Reagente excluido com Sucesso');
+      res.json({ success: true, message: 'Reagente excluído com sucesso' });
     } else {
-      res.send('Falha ao excluir Reagente');
+      res.json({ success: false, message: 'Reagente não encontrado' });
     }
   } catch (error) {
     console.error('Erro ao excluir Reagente ', error);
-    res.status(500).send('Erro interno no Servidor');
+    res.status(500).json({ success: false, message: 'Erro interno no servidor' });
   }
 });
 

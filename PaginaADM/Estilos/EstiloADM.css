@@ -279,6 +279,101 @@ a {
     z-index: 10;
 }
 
+.addExEdReag {
+    width: 100%;
+    display: flex;
+}
+
+.addReag {
+    width: 33%;
+}
+
+.edReag {
+    width: 33%;
+}
+
+.exReag {
+    width: 33%;
+}
+
+#divReag {
+    /* display: none; */
+    position: fixed;
+    width: 50%;
+    height: 80%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid black;
+    z-index: 10;
+}
+
+.inputContainer{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#dropdown-icon {
+    height: 20px;
+    cursor: pointer;
+    user-select: none;
+    z-index: 2;
+}
+  
+.borda {
+    width: 100%;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#pesquisarReag {
+    width: 90%;
+    height: 30px;
+    color: var(--preto);
+    font-family: Arial;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    /* text-overflow: ellipsis; */
+    border: none;
+    user-select: none;
+}
+
+#pesquisarReag:focus{
+    outline: none;
+}
+
+#dropdown {
+    display:none;
+    border: 1px solid var(--preto);
+    max-height: 150px;
+    overflow-y: auto;
+    padding: 0;
+    list-style: none;
+    z-index: 10;
+    user-select: none;
+    margin-top: 0%
+}
+  
+#dropdown li {
+    color: var(--preto);
+    font-family: Arial;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding: 5px;
+    cursor: pointer;
+    border: 1px solid var(--preto);
+    background-color: var(--branco);
+}
+
 /* Pagina para o Login */
 .containerLog {
     display: flex;

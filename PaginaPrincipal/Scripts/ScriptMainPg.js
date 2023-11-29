@@ -23,12 +23,16 @@ let angle = 0
 const opcoesValidas = Array.from(options).map(option => option.innerText.toLowerCase());
 
 valorPesquisa.addEventListener('focus', function() {
+  angle += 180;
   dropdown.style.display = 'block';
+  dropdownIcon.style.transform = `rotate(${angle}deg)`;
 });
 
 valorPesquisa.addEventListener('blur', function() {
+  angle += 180;
   setTimeout(() => {
     dropdown.style.display = 'none';
+    dropdownIcon.style.transform = `rotate(${angle}deg)`;
   }, 240);
 });
 
