@@ -19,9 +19,6 @@ const dropdown = document.getElementById("dropdown");
 const options = document.querySelectorAll("#dropdown li");
 let angle = 0
 
-// Criar um array das opções para validação
-const opcoesValidas = Array.from(options).map(option => option.innerText.toLowerCase());
-
 valorPesquisa.addEventListener('focus', function() {
   angle += 180;
   dropdown.style.display = 'block';
@@ -74,10 +71,13 @@ options.forEach(option => {
 document.getElementById("outros").addEventListener("change", function () {
   var outrosTexto = document.getElementById("outros-texto");
   outrosTexto.hidden = !this.checked;
+  
   if (!this.checked) {
     outrosTexto.value = "";
+    outrosTexto.removeAttribute("required"); 
   } else {
     outrosTexto.focus();
+    outrosTexto.setAttribute("required", "required"); 
   }
 });
 
@@ -192,11 +192,16 @@ document.getElementById("btnEnviar").addEventListener("click", function () {
   var outrosCheckbox = document.getElementById("outros");
   var outrosValor = document.getElementById("outros-texto").value.trimStart();
   var observacao = document.getElementById("observacao").value;
+  const opcoesValidas = Array.from(options).map(option => option.innerText.toLowerCase().trim());
 
   if (valorResp === "" || valorQtd === "" || medida === null || valorReagente === "") {
       alert(`Por favor, preencha todos os campos obrigatórios antes de enviar!`);
   } else if (outrosCheckbox.checked && outrosValor === '') {
       alert('A opção "Outros" é obrigatória!');
+  } else if(!opcoesValidas.includes(valorReagente.toLowerCase())) {
+    mensagemErroReag.textContent = 'Por favor, selecione uma opção válida';
+    mensagemErroReag.style.display = 'block';
+    reagente.value = '';
   } else {
 
     this.disabled = true;
