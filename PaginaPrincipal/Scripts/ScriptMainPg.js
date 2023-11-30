@@ -219,6 +219,7 @@ document.getElementById("btnEnviar").addEventListener("click", function () {
         nomeReagente: nomeReagente,
         outros: outrosCheckbox.checked ? outrosValor : "",
         observacao: observacao,
+        valReag: valorReagente
     };
   
     // Enviar os dados para o servidor
@@ -229,17 +230,30 @@ document.getElementById("btnEnviar").addEventListener("click", function () {
       },
       body: JSON.stringify(dados),
     })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        // Redireciona para "/envio" após o sucesso
-        window.location.href = data.redirectUrl;
-      } else {
-        console.error('Erro ao enviar os dados para o servidor:', data.error);
-      }
-    })
-    .catch((error) => {
-      console.error('Erro ao enviar os dados para o servidor', error);
-    }); 
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          window.location.href = data.redirectUrl;
+        } else {
+          console.error('Erro ao enviar os dados para o servidor:', data.error);
+    
+          // Exibir mensagem de erro ao usuário
+          if (data.error === 'Opção inválida selecionada') {
+            alert('Opção inválida selecionada. Por favor, escolha uma opção válida.');
+            reagente.value='';
+            mensagemErroReag.textContent = 'Por favor, selecione uma opção válida!';
+            mensagemErroReag.style.display = 'block';
+            this.disabled = false;
+          } else {
+            alert('Erro ao enviar os dados para o servidor. Por favor, tente novamente mais tarde.');
+          }
+        }
+      })
+      .catch((error) => {
+        console.error('Erro ao enviar os dados para o servidor', error);
+    
+        // Exibir mensagem de erro ao usuário
+        alert('Erro ao enviar os dados para o servidor. Por favor, tente novamente mais tarde.');
+      });    
   }
 });

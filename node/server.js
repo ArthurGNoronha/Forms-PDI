@@ -115,6 +115,18 @@ app.post('/Login', (req, res) => {
 // Receber as informações
 app.post('/salvar', async (req, res) => {
   try {
+
+    const opcoesValidas = (await collectionReag.find().toArray()).map(doc => `${doc.Codigo} - ${doc.Reagente}`.toLowerCase());
+    const reagVal = req.body.valReag.toLowerCase().trim();
+
+    console.log(opcoesValidas);
+    console.log(reagVal);
+    
+    if (!opcoesValidas.includes(reagVal)) {
+      res.json({ success: false, error: 'Opção inválida selecionada' });
+      return;
+    }
+
     // Definir o ID
     const maxIdDoc = await collection.findOne({}, { sort: { id: -1 } });
     const nextId = maxIdDoc ? maxIdDoc.id + 1 : 1;
