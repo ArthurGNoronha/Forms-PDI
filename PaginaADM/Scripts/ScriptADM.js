@@ -516,6 +516,8 @@ async function addComment(currentId) {
         alert(result);
     
         document.getElementById('addComment').value = '';
+
+        location.reload();
     
     } catch (error) {
         console.error('Erro ao adicionar um comentário: ', error);
@@ -630,7 +632,7 @@ function deletarComentario(currentId, deleteButton) {
 // Obter Variaveis
 const divReag = document.getElementById('divReag');
 const confirmarReag = document.getElementById('simReag');
-const cancelarReag = document.getElementById('naoReag');
+const cancelarReag = document.querySelectorAll('.naoReag');
 const btnReag = document.getElementById('btnReag');
 const dropdown = document.getElementById('dropdown');
 const pesquisarReag = document.getElementById('pesquisarReag');
@@ -677,6 +679,7 @@ pesquisarReag.addEventListener('input', () => {
     });
 });
 
+// Faz o reagente aparecer no input
 options.forEach(option => {
     option.addEventListener('click', () => {
         opcaoSelecionada = option.innerText;
@@ -695,6 +698,7 @@ dropdownIcon.addEventListener('click', function() {
     }
   });
 
+  //Confirmar
   confirmarReag.addEventListener('click', () => {
     adicionarReagente();
   });
@@ -705,6 +709,14 @@ dropdownIcon.addEventListener('click', function() {
 
   btnConfExReag.addEventListener('click', () => {
     excluirReagente();
+  });
+
+//Cancelar
+cancelarReag.forEach(botao => {
+    botao.addEventListener('click', () => {
+      overlay.style.display = 'none';
+      divReag.style.display = 'none';
+    });
   });
 
 // Função para adicionar Reagentes
@@ -722,6 +734,7 @@ function adicionarReagente() {
     .then(response => response.json())
     .then(data => {
         alert(data.message);
+        location.reload();
     })
     .catch(error => {
         console.error(error);
@@ -748,6 +761,7 @@ function editarReagente() {
     .then(data => {
         console.log(data);
         alert(data.message);
+        location.reload();
     })
     .catch(error => {
         console.error(error);
@@ -769,6 +783,7 @@ function excluirReagente() {
     .then(response => response.json())
     .then(data => {
         alert(data.message);
+        location.reload();
     })    
     .catch(error => {
         console.error(error);

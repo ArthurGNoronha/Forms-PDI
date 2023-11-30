@@ -120,18 +120,16 @@ hr{
 }
 
 .respMongo {
-    overflow: hidden;
     font-size: 16px;
-    padding: 2px;
     border: 1px solid;
 }
 
 #thCodR {
-    padding: 5px;
+    padding: 0;
 }
 
 #thId {
-    padding: 2px;
+    padding: 0;
 }
 
 .containerBtns {
@@ -199,21 +197,20 @@ a {
     flex-direction: row;
 }
 
-.nomeFiltro, .idFiltro, .dataFiltro {
-    display: flex;
-    color: white;
-    margin-left: 8%;
-}
-
 .nomeFiltro {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 24px;
 }
 
 .containerTextos {
-    width: 95%;
+    width: 50%;
     display: flex;
     flex-direction: column;
-    margin-right: 10%;
+    text-align: start;
+    color: white;
+    margin-left: 5%;
 }
 
 .deletar, .editar, .comentar {
@@ -243,9 +240,20 @@ a {
     transform: translate(-50%, -50%);
     background-color: var(--azul);
     color: white;
-    padding: 20px;
+    padding: 10px;
     border: 1px solid black;
     z-index: 10;
+}
+
+#btnReag {
+    width: 120px;
+    height: 30px;
+    border-radius: 10px;
+    background-color:lightgrey;
+    background-color: var(--vermelho);
+    border: 3px solid blue;
+    margin-right: 2%;
+    margin-top: 1%;
 }
 
 #divEdit {
@@ -258,7 +266,7 @@ a {
     /* background-image: linear-gradient(to right top, #283444, #283647, #29384b, #29394e, #2a3b52, #2a3d56, #293e5a, #29405e, #274163, #254269, #23436e, #214473); */
     
     background-color: white;
-    padding: 80px;
+    padding: 15px;
     z-index: 10;
     /* color: white; */
 }
@@ -274,7 +282,7 @@ a {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 50px;
+    padding: 15px;
     border: 1px solid black;
     z-index: 10;
 }
@@ -285,19 +293,19 @@ a {
 }
 
 .addReag {
-    width: 33%;
+    width: 33.33%;
 }
 
 .edReag {
-    width: 33%;
+    width: 33.33%;
 }
 
 .exReag {
-    width: 33%;
+    width: 33.33%;
 }
 
 #divReag {
-    /* display: none; */
+    display: none;
     position: fixed;
     width: 50%;
     height: 80%;
@@ -321,6 +329,7 @@ a {
     cursor: pointer;
     user-select: none;
     z-index: 2;
+    margin-left: 2%;
 }
   
 .borda {
@@ -332,7 +341,7 @@ a {
 }
 
 #pesquisarReag {
-    width: 90%;
+    width: 93%;
     height: 30px;
     color: var(--preto);
     font-family: Arial;
@@ -340,7 +349,7 @@ a {
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    /* text-overflow: ellipsis; */
+    text-overflow: ellipsis;
     border: none;
     user-select: none;
 }
