@@ -272,7 +272,49 @@ async function enviarParaGoogleSheets(novaResposta) {
   }
 }
 
+// Função para Deletar dados da planilha
+async function deletarDaGoogleSheets(idExcluir) {
+  try {
+    const auth = sheetClient;
 
+    // Verifica se há dados na planilha
+    const sheetData = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId: SPREADSHEET_ID,
+      range: SHEET_NAME,
+    });
+
+    const existingRowIndex = sheetData.data.values
+      ? sheetData.data.values.findIndex(existingRow => existingRow[0] === idExcluir.toString())
+      : -1;
+
+    if (existingRowIndex !== -1) {
+      // Se o ID existir, remove completamente a linha correspondente
+      await sheets.spreadsheets.values.batchClear({
+        auth,
+        spreadsheetId: SPREADSHEET_ID,
+        resource: {
+          ranges: [`${SHEET_NAME}!A${existingRowIndex + 1}:G${existingRowIndex + 1}`],
+        },
+      });
+
+      // Força uma atualização da planilha definindo os dados novamente
+      await sheets.spreadsheets.values.update({
+        auth,
+        spreadsheetId: SPREADSHEET_ID,
+        range: `${SHEET_NAME}!A1:G100`,  // Ajuste conforme necessário
+        valueInputOption: 'RAW',
+        resource: { values: sheetData.data.values }, // Define novamente os dados
+      });
+
+      console.log(`Linha correspondente ao ID ${idExcluir} deletada com sucesso na planilha.`);
+    } else {
+      console.log(`ID ${idExcluir} não encontrado na planilha.`);
+    }
+  } catch (error) {
+    console.error('Erro ao deletar dados na planilha:', error);
+  }
+}
 
 // Função para comparar arrays
 function isEqual(array1, array2) {
@@ -683,6 +725,9 @@ app.post('/excluir', async (req, res) => {
   }
 
   try {
+
+    deletarDaGoogleSheets(idExcluir);
+
     const result = await collection.deleteOne({ id: idExcluir });
 
     if (result.deletedCount === 1) {
