@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="/PaginaADM/Estilos/EstiloADM.css">
 </head>
 <body>
+
+    <% if (error) { %>
+        <p style="color: red;" class="Erro"><%= error %></p>
+    <% } %>
+
     <div class="containerLog">
         <div class="quadradoLog">
             <img src="/Imagens/header.png" class="LogoLog" alt="Biopark Educação">

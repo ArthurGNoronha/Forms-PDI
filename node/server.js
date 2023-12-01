@@ -71,7 +71,7 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.set('views', [
   path.join(__dirname, '../PaginaADM', 'Html'),
-  path.join(__dirname, '../PaginaPrincipal', 'Html')
+  path.join(__dirname, '../PaginaPrincipal', 'Html'),
 ]);
 
 // Favicon
@@ -96,7 +96,7 @@ app.get('/Envio', (req, res) => {
 
 // Pagina de login
 app.get('/Login', (req, res) => {
-  res.sendFile(path.join(__dirname, '../PaginaAdm/Html/LoginPag.html'));
+  res.render('LoginPag', {error: null});
 });
 
 // Login para a pagina Adm
@@ -108,7 +108,7 @@ app.post('/Login', (req, res) => {
     req.session.user = username;
     res.redirect('/adm');
   } else {
-    res.send('Senha ou Login incorreto');
+    res.render('LoginPag', {error: 'Login ou senha incorretos! '});
   }
 });
 
@@ -290,7 +290,7 @@ async function deletarDaGoogleSheets(idExcluir) {
 
     if (existingRowIndex !== -1) {
       // Se o ID existir, remove completamente a linha correspondente
-      await sheets.spreadsheets.values.batchClear({
+      sheets.spreadsheets.values.batchClear({
         auth,
         spreadsheetId: SPREADSHEET_ID,
         resource: {
@@ -299,7 +299,7 @@ async function deletarDaGoogleSheets(idExcluir) {
       });
 
       // Força uma atualização da planilha definindo os dados novamente
-      await sheets.spreadsheets.values.update({
+      sheets.spreadsheets.values.update({
         auth,
         spreadsheetId: SPREADSHEET_ID,
         range: `${SHEET_NAME}!A1:G100`,  // Ajuste conforme necessário
