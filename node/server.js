@@ -118,9 +118,6 @@ app.post('/salvar', async (req, res) => {
 
     const opcoesValidas = (await collectionReag.find().toArray()).map(doc => `${doc.Codigo} - ${doc.Reagente}`.toLowerCase());
     const reagVal = req.body.valReag.toLowerCase().trim();
-
-    console.log(opcoesValidas);
-    console.log(reagVal);
     
     if (!opcoesValidas.includes(reagVal)) {
       res.json({ success: false, error: 'Opção inválida selecionada' });
@@ -148,7 +145,7 @@ app.post('/salvar', async (req, res) => {
     await collection.insertOne(novaResposta);
 
     // Enviar para a planilha
-    // enviarParaGoogleSheets(novaResposta);
+    enviarParaGoogleSheets(novaResposta);
 
     // Enviar e-mail
     // enviarEmail(novaResposta);
@@ -245,26 +242,37 @@ async function enviarParaGoogleSheets(novaResposta) {
 
     const row = dados.map(item => item.toString());
 
-    const exists = sheetData.data.values && sheetData.data.values.some(existingRow => isEqual(existingRow, row));
-
-    if (!exists) {
-      values.push(row);
-    }
-
-    // Adiciona os novos dados à planilha
-    await sheets.spreadsheets.values.append({
+    const existingRowIndex = sheetData.data.values
+    ? sheetData.data.values.findIndex(existingRow => existingRow[0] === novaResposta.id.toString())
+    : -1;
+  
+  if (existingRowIndex !== -1) {
+    // Se os dados já existirem, atualiza a linha correspondente
+    sheets.spreadsheets.values.update({
+      auth,
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${SHEET_NAME}!A${existingRowIndex + 1}:G${existingRowIndex + 1}`, // Atualiza a linha correspondente
+      valueInputOption: 'RAW',
+      resource: { values: [row] },
+    });
+  } else {
+    // Se os dados não existirem, adiciona a nova linha
+    sheets.spreadsheets.values.append({
       auth,
       spreadsheetId: SPREADSHEET_ID,
       range: SHEET_NAME,
       valueInputOption: 'RAW',
-      resource: { values },
+      resource: { values: [row] },
     });
+  }  
 
     console.log('Dados enviados para o Google Sheets com sucesso!');
   } catch (error) {
     console.error('Erro ao enviar dados para o Google Sheets:', error);
   }
 }
+
+
 
 // Função para comparar arrays
 function isEqual(array1, array2) {
@@ -543,6 +551,18 @@ app.post('/atualizar', async (req, res) => {
   }
 
   try {
+
+    await enviarParaGoogleSheets({
+      id: idAtualizar,
+      Responsavel: novosValores['Responsavel'],
+      CodigoReagente: novosValores['CodigoReagente'],
+      Reagente: novosValores['Reagente'],
+      Quantidade: novosValores['Quantidade'],
+      Medida: novosValores['Medida'],
+      Outros: novosValores['Outros'],
+      Observacao: novosValores['Observacao']
+    });
+
     const result = await collection.updateOne(
       { id: idAtualizar },
       { $set: novosValores }
