@@ -212,16 +212,28 @@ function enviarEmail(novaResposta) {
 
 async function editarNoGoogleSheets(auth, existingRowIndex, row) {
   try {
-    // Se os dados já existirem, atualiza a linha correspondente
+    const sheetData = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId: SPREADSHEET_ID,
+      range: SHEET_NAME,
+    });
+
+    const originalDateTime = sheetData.data.values[existingRowIndex] 
+      ? sheetData.data.values[existingRowIndex][6] // Assumindo que o horário está na 7ª coluna (índice 6)
+      : '';
+
+    row[6] = originalDateTime; // Substitui o horário atual pelo original
+
+    // Atualiza a linha correspondente
     sheets.spreadsheets.values.update({
       auth,
       spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A${existingRowIndex + 1}:G${existingRowIndex + 1}`, // Atualiza a linha correspondente
+      range: `${SHEET_NAME}!A${existingRowIndex + 1}:G${existingRowIndex + 1}`,
       valueInputOption: 'RAW',
       resource: { values: [row] },
     });
 
-    console.log('Dados atualizados no Google Sheets com sucesso!');
+    console.log('Dados editados no Google Sheets com sucesso!');
   } catch (error) {
     console.error('Erro ao editar dados no Google Sheets:', error);
   }
@@ -282,12 +294,12 @@ async function enviarParaGoogleSheets(novaResposta) {
 
     if (existingRowIndex !== -1) {
       // Se os dados já existirem, atualiza a linha correspondente
-      await editarNoGoogleSheets(auth, existingRowIndex, row);
+      editarNoGoogleSheets(auth, existingRowIndex, row);
     } else {
       // Se os dados não existirem, adiciona a nova linha
       if (values.length > 0) {
         // Adiciona os títulos das colunas
-        await sheets.spreadsheets.values.append({
+        sheets.spreadsheets.values.append({
           auth,
           spreadsheetId: SPREADSHEET_ID,
           range: SHEET_NAME,
@@ -604,7 +616,7 @@ app.post('/atualizar', async (req, res) => {
 
   try {
 
-    await enviarParaGoogleSheets({
+    enviarParaGoogleSheets({
       id: idAtualizar,
       Responsavel: novosValores['Responsavel'],
       CodigoReagente: novosValores['CodigoReagente'],
