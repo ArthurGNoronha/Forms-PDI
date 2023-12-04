@@ -509,6 +509,18 @@ a {
     outline: none;
 }
 
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.erro {
+    color: red;
+    font-size: 40px;
+}
+
 .Login {
     width: 60%;
     height: 50px;

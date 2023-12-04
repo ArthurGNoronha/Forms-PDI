@@ -8,27 +8,29 @@
 </head>
 <body>
 
-    <% if (error) { %>
-        <p style="color: red;" class="Erro"><%= error %></p>
-    <% } %>
-
+    
     <div class="containerLog">
         <div class="quadradoLog">
             <img src="/Imagens/header.png" class="LogoLog" alt="Biopark Educação">
             <div class="txtLog">Faça seu Login utilizando os campos abaixo</div>
-    <form action="/Login" method="post">
-        <div class="inputUser">
-        <img src="/Imagens/user.png" class="imgUser" alt="Usuário">
-        <input type="text" id="username" name="username" required placeholder="Digite seu Usuário..." autocomplete="off">
-        </div>
-        <br>
-        <div class="inputPass">
-        <img src="/Imagens//padlock.png" class="imgSenha" alt="Senha">
-        <input type="password" name="password" id="password" required placeholder="Digite sua Senha...">
-        </div>
-        <br>
-        <button type="submit" class="Login">Entrar</button>
-    </form>
+            <form action="/Login" method="post">
+                <div class="inputUser">
+                    <img src="/Imagens/user.png" class="imgUser" alt="Usuário">
+                    <input type="text" id="username" name="username" required placeholder="Digite seu Usuário..." autocomplete="off">
+                </div>
+                <br>
+                <div class="inputPass">
+                    <img src="/Imagens//padlock.png" class="imgSenha" alt="Senha">
+                    <input type="password" name="password" id="password" required placeholder="Digite sua Senha...">
+                </div>
+                <br>
+                <button type="submit" class="Login">Entrar</button>
+            </form>
+            <% if (error) { %>
+            <div class="error">
+                <p class="erro"><%= error %></p>
+            </div>
+            <% } %>
         </div>
     </div>
 </body>
