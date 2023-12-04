@@ -245,8 +245,34 @@ a {
     z-index: 10;
 }
 
+#sim {
+    border-radius: 20px;
+    width: 80px;
+    height: 30px;
+    background-color: #238623;
+    color: #FFFFFF;
+}
+
+#nao {
+    border-radius: 20px;
+    width: 80px;
+    height: 30px;
+    background-color: #3e4349;
+    color: #c9d1c9;
+}
+
+#sim:hover {
+    cursor: pointer;
+    background-color: #36a436;
+}
+
+#nao:hover {
+    cursor: pointer;
+    border: 1px solid lightgray;
+}
+
 #btnReag {
-    width: 120px;
+    width: 150px;
     height: 30px;
     border-radius: 10px;
     background-color:lightgrey;
@@ -293,6 +319,7 @@ a {
     height: 30px;
     background-color: #238623;
     color: #FFFFFF;
+    margin-top: 2%;
 }
 
 #naoEdit {
@@ -301,10 +328,17 @@ a {
     height: 30px;
     background-color: #3e4349;
     color: #c9d1c9;
+    margin-top: 2%;
 }
 
-#simEdit, #naoEdit:hover {
+#naoEdit:hover {
+    border: 1px solid lightgray;
     cursor: pointer;
+}
+
+#simEdit:hover {
+    cursor: pointer;
+    background-color: #36a436;
 }
 
 #divComment {
@@ -323,9 +357,57 @@ a {
 }
 
 #addComment {
+    width: 70%;
+    font-size: 16px;
     background-color: var(--azul);
     color: white;
-    border: 1px solid white;
+    border: 1px solid #888;
+    border-radius: 5px;
+    margin-bottom: 2%;
+}
+
+#addComment:focus {
+    outline: none;
+    border: 2px solid rgb(87, 87, 254);
+}
+
+#simComment {
+    border-radius: 20px;
+    width: 150px;
+    height: 30px;
+    background-color: #238623;
+    color: white;
+}
+
+#naoComment {
+    border-radius: 20px;
+    width: 100px;
+    height: 30px;
+    background-color: #3e4349;
+    color: #c9d1c9;
+}
+
+#simComment:hover {
+    cursor: pointer;
+    background-color: #36a436;
+}
+
+#naoComment:hover {
+    cursor: pointer;
+    border: 1px solid lightgray;
+}
+
+.deleteComment {
+    border-radius: 10px;
+    color: white;
+    background-color: rgb(179, 0, 0);
+    width: 150px;
+    height: 30px;
+}
+
+.deleteComment:hover {
+    cursor: pointer;
+    background-color: rgb(238, 65, 65);
 }
 
 .addExEdReag {
@@ -364,11 +446,11 @@ a {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: var(--azul);
-    /* background-color: white; */
     color: white;
     padding: 20px;
+    background-color: var(--azul);
     border: 1px solid red;
+    /* background-color: white; */
     /* border: 1px solid black; */
     z-index: 10;
 }
@@ -421,7 +503,6 @@ a {
 
 #dropdown {
     display:none;
-    border: 1px solid var(--preto);
     max-height: 150px;
     overflow-y: auto;
     padding: 0;
@@ -432,7 +513,6 @@ a {
 }
   
 #dropdown li {
-    color: var(--preto);
     font-family: Arial;
     font-size: 18px;
     font-style: normal;
@@ -440,8 +520,12 @@ a {
     line-height: normal;
     padding: 5px;
     cursor: pointer;
+    color: var(--preto);
     border: 1px solid var(--preto);
     background-color: var(--branco);
+    /* color: white; */
+    /* border: 1px solid white; */
+    /* background-color: var(--azul); */
 }
 
 /* Pagina para o Login */

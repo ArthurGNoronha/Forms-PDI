@@ -210,6 +210,40 @@ function enviarEmail(novaResposta) {
   }
 }
 
+async function editarNoGoogleSheets(auth, existingRowIndex, row) {
+  try {
+    // Se os dados já existirem, atualiza a linha correspondente
+    sheets.spreadsheets.values.update({
+      auth,
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${SHEET_NAME}!A${existingRowIndex + 1}:G${existingRowIndex + 1}`, // Atualiza a linha correspondente
+      valueInputOption: 'RAW',
+      resource: { values: [row] },
+    });
+
+    console.log('Dados atualizados no Google Sheets com sucesso!');
+  } catch (error) {
+    console.error('Erro ao editar dados no Google Sheets:', error);
+  }
+}
+
+async function adicionarNoGoogleSheets(auth, row) {
+  try {
+    // Se os dados não existirem, adiciona a nova linha
+    sheets.spreadsheets.values.append({
+      auth,
+      spreadsheetId: SPREADSHEET_ID,
+      range: SHEET_NAME,
+      valueInputOption: 'RAW',
+      resource: { values: [row] },
+    });
+
+    console.log('Dados adicionados ao Google Sheets com sucesso!');
+  } catch (error) {
+    console.error('Erro ao adicionar dados ao Google Sheets:', error);
+  }
+}
+
 async function enviarParaGoogleSheets(novaResposta) {
   try {
     const auth = sheetClient;
@@ -223,8 +257,8 @@ async function enviarParaGoogleSheets(novaResposta) {
 
     const values = [];
 
-    // Se não houver dados, adiciona os títulos das colunas
-    if (!sheetData.data.values) {
+    // Adiciona os títulos das colunas se não houver dados na planilha
+    if (!sheetData.data.values || sheetData.data.values.length === 0) {
       values.push(['ID', 'Responsavel', 'CodigoReagente', 'Reagente', 'Quantidade', 'Observacao', 'DataHora']);
     }
 
@@ -243,30 +277,29 @@ async function enviarParaGoogleSheets(novaResposta) {
     const row = dados.map(item => item.toString());
 
     const existingRowIndex = sheetData.data.values
-    ? sheetData.data.values.findIndex(existingRow => existingRow[0] === novaResposta.id.toString())
-    : -1;
-  
-  if (existingRowIndex !== -1) {
-    // Se os dados já existirem, atualiza a linha correspondente
-    sheets.spreadsheets.values.update({
-      auth,
-      spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A${existingRowIndex + 1}:G${existingRowIndex + 1}`, // Atualiza a linha correspondente
-      valueInputOption: 'RAW',
-      resource: { values: [row] },
-    });
-  } else {
-    // Se os dados não existirem, adiciona a nova linha
-    sheets.spreadsheets.values.append({
-      auth,
-      spreadsheetId: SPREADSHEET_ID,
-      range: SHEET_NAME,
-      valueInputOption: 'RAW',
-      resource: { values: [row] },
-    });
-  }  
+      ? sheetData.data.values.findIndex(existingRow => existingRow[0] === novaResposta.id.toString())
+      : -1;
 
-    console.log('Dados enviados para o Google Sheets com sucesso!');
+    if (existingRowIndex !== -1) {
+      // Se os dados já existirem, atualiza a linha correspondente
+      await editarNoGoogleSheets(auth, existingRowIndex, row);
+    } else {
+      // Se os dados não existirem, adiciona a nova linha
+      if (values.length > 0) {
+        // Adiciona os títulos das colunas
+        await sheets.spreadsheets.values.append({
+          auth,
+          spreadsheetId: SPREADSHEET_ID,
+          range: SHEET_NAME,
+          valueInputOption: 'RAW',
+          resource: { values },
+        });
+      }
+
+      // Adiciona os dados
+      await adicionarNoGoogleSheets(auth, row);
+    }
+
   } catch (error) {
     console.error('Erro ao enviar dados para o Google Sheets:', error);
   }
@@ -289,22 +322,14 @@ async function deletarDaGoogleSheets(idExcluir) {
       : -1;
 
     if (existingRowIndex !== -1) {
-      // Se o ID existir, remove completamente a linha correspondente
-      sheets.spreadsheets.values.batchClear({
-        auth,
-        spreadsheetId: SPREADSHEET_ID,
-        resource: {
-          ranges: [`${SHEET_NAME}!A${existingRowIndex + 1}:G${existingRowIndex + 1}`],
-        },
-      });
+      // Remove apenas a linha correspondente
+      sheetData.data.values.splice(existingRowIndex, 1);
 
-      // Força uma atualização da planilha definindo os dados novamente
-      sheets.spreadsheets.values.update({
+      // Atualiza a planilha com os novos dados
+      await sheets.spreadsheets.values.clear({
         auth,
         spreadsheetId: SPREADSHEET_ID,
-        range: `${SHEET_NAME}!A1:G100`,  // Ajuste conforme necessário
-        valueInputOption: 'RAW',
-        resource: { values: sheetData.data.values }, // Define novamente os dados
+        range: `${SHEET_NAME}!A${existingRowIndex + 1}:G${existingRowIndex + 1}`,
       });
 
       console.log(`Linha correspondente ao ID ${idExcluir} deletada com sucesso na planilha.`);
@@ -316,32 +341,17 @@ async function deletarDaGoogleSheets(idExcluir) {
   }
 }
 
-// Função para comparar arrays
-function isEqual(array1, array2) {
-  if (array1.length !== array2.length) {
-    return false;
-  }
-
-  for (let i = 0; i < array1.length; i++) {
-    if (array1[i] !== array2[i]) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
 // Salvar novo Reagente
 app.post('/addReag', async function(req, res) {
   try {
 
       const novoReag = {
-          Codigo: req.body.code,
-          Reagente: req.body.reagente
+          Codigo: req.body.code.toUpperCase(),
+          Reagente: req.body.reagente.toUpperCase()
       };
 
       if (!novoReag.Codigo || !novoReag.Reagente) {
-          throw new Error('Dados inválidos. Certifique-se de enviar um formulário válido.');
+          throw new Error('Dados inválidos.');
       }
 
       await collectionReag.insertOne(novoReag);

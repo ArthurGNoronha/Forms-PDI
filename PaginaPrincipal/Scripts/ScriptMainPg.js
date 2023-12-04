@@ -57,6 +57,7 @@ dropdownIcon.addEventListener('click', function() {
 
 options.forEach(option => {
   option.addEventListener('click', function() {
+    valorPesquisa.value = '';
     opcaoSelecionada = option.innerText;
     valorPesquisa.value = opcaoSelecionada;
     dropdown.style.display = 'none';
@@ -192,13 +193,13 @@ document.getElementById("btnEnviar").addEventListener("click", function () {
   var outrosCheckbox = document.getElementById("outros");
   var outrosValor = document.getElementById("outros-texto").value.trimStart();
   var observacao = document.getElementById("observacao").value;
-  const opcoesValidas = Array.from(options).map(option => option.innerText.toLowerCase().trim());
+  const opcoesValidas = Array.from(options).map(option => option.innerText.toUpperCase().trim());
 
   if (valorResp === "" || valorQtd === "" || medida === null || valorReagente === "") {
       alert(`Por favor, preencha todos os campos obrigatórios antes de enviar!`);
   } else if (outrosCheckbox.checked && outrosValor === '') {
       alert('A opção "Outros" é obrigatória!');
-  } else if(!opcoesValidas.includes(valorReagente.toLowerCase())) {
+  } else if(!opcoesValidas.includes(valorReagente.toUpperCase())) {
     mensagemErroReag.textContent = 'Por favor, selecione uma opção válida';
     mensagemErroReag.style.display = 'block';
     reagente.value = '';
@@ -240,7 +241,7 @@ document.getElementById("btnEnviar").addEventListener("click", function () {
           // Exibir mensagem de erro ao usuário
           if (data.error === 'Opção inválida selecionada') {
             alert('Opção inválida selecionada. Por favor, escolha uma opção válida.');
-            reagente.value='';
+            valorReagente = '';
             mensagemErroReag.textContent = 'Por favor, selecione uma opção válida!';
             mensagemErroReag.style.display = 'block';
             this.disabled = false;

@@ -573,6 +573,8 @@ function renderizarCometarios(comentarios) {
             comentariosContainer.appendChild(li);
         });
 
+        const br = document.createElement('br');
+        comentariosContainer.appendChild(br);
         const deleteButton = document.createElement('button');
         deleteButton.classList.add('deleteComment');
         deleteButton.textContent = 'Deletar Comentário';
