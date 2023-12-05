@@ -385,8 +385,8 @@ app.post('/addReag', async function(req, res) {
 });
 
 // Enviar para a pagina de ADM
-// app.get('/ADM', authenticate, async (req, res) => {
-app.get('/ADM', async (req, res) => {
+app.get('/ADM', authenticate, async (req, res) => {
+// app.get('/ADM', async (req, res) => {
   try {
 
     // Buscar todas as respostas
