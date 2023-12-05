@@ -279,7 +279,6 @@ document.getElementById('btnAnterior').addEventListener('click', function(){
 });
 
 // Deletar Dados
-
 // Obtem os botões
 const overlay = document.getElementById('overlay');
 const confirmar = document.getElementById('confirmar');
@@ -400,7 +399,6 @@ function excluirResposta() {
 }
 
 // Atualizar Respostas
-
 // Pegar os botões
 const divEdit = document.getElementById('divEdit');
 const confirmarEdit = document.getElementById('simEdit');
@@ -473,7 +471,6 @@ async function alterarDados(currentId) {
 }
 
 // Adicionar Comentários
-
 // Selecionar os botões
 const divComment = document.getElementById('divComment');
 const confirmarComment = document.getElementById('simComment');
@@ -535,7 +532,6 @@ overlay.addEventListener('click', () => {
 });
 
 // Exibir Comentários
-
 // Função para ver os Comentários
 async function verComentarios(currentId) {
     if (isNaN(currentId)) {
@@ -735,8 +731,12 @@ function adicionarReagente() {
     })
     .then(response => response.json())
     .then(data => {
-        alert(data.message);
-        location.reload();
+        if (data.success) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert(`${data.error}`);
+        }
     })
     .catch(error => {
         console.error(error);
@@ -750,8 +750,6 @@ function editarReagente() {
     const newCode = document.getElementById('newEdCode').value.trim();
     const newReag = document.getElementById('newEdReag').value.trim();
 
-    console.log('codeEdit:', codeEdit, 'newCode:', newCode, 'newReag:', newReag);
-
     fetch('/editarReagente', {
         method: 'POST',
         headers: {
@@ -761,9 +759,12 @@ function editarReagente() {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data);
-        alert(data.message);
-        location.reload();
+        if (data.success) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert (`${data.error}`);
+        }
     })
     .catch(error => {
         console.error(error);

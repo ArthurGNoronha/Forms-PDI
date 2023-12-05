@@ -101,14 +101,17 @@ app.get('/Login', (req, res) => {
 
 // Login para a pagina Adm
 app.post('/Login', (req, res) => {
-  const { username, password } = req.body;
-  const user = users[0];
+  const username = req.body.username.toUpperCase();
+  const password = req.body.password;
 
-  if(user && bcrypt.compareSync(password, user.passwordHash)) {
+  const envUsername = process.env.USERNAME_FORMS;
+  const envPasswordHash = process.env.PASSWORD_HASH;
+
+  if (username === envUsername && bcrypt.compareSync(password, envPasswordHash)) {
     req.session.user = username;
     res.redirect('/adm');
   } else {
-    res.render('LoginPag', {error: 'Login ou senha incorretos! '});
+    res.render('LoginPag', { error: 'Login ou senha incorretos! ' });
   }
 });
 
@@ -357,6 +360,12 @@ async function deletarDaGoogleSheets(idExcluir) {
 app.post('/addReag', async function(req, res) {
   try {
 
+    const codigoExistente = await collectionReag.findOne({ Codigo: req.body.code.toUpperCase() });
+
+    if (codigoExistente) {
+      throw new Error('Código já existe!');
+    }
+
       const novoReag = {
           Codigo: req.body.code.toUpperCase(),
           Reagente: req.body.reagente.toUpperCase()
@@ -371,8 +380,8 @@ app.post('/addReag', async function(req, res) {
       res.status(200).json({ success: true, message: 'Reagente inserido com sucesso' });
   } catch (error) {
       console.error('Erro ao salvar os dados', error);
-      res.status(500).json({ success: false, error: 'Erro interno no servidor' });
-  }
+      res.status(500).json({ success: false, error: error.message || 'Erro interno no servidor' });
+    }
 });
 
 // Enviar para a pagina de ADM
@@ -648,7 +657,15 @@ app.post('/editarReagente', async (req, res) => {
   const newCode = req.body.code;
   const newReag = req.body.reag;
 
+  const codigoExistente = await collectionReag.findOne({ Codigo: req.body.code.toUpperCase() });
+
   try {
+  
+  if (codigoExistente) {
+    throw new Error('Código já existe!');
+  }
+
+  
     if (!code || !newCode || !newReag) {
       res.status(400).json({ success: false, message: 'Parâmetros inválidos. Certifique-se de fornecer valores válidos.' });
       return;
@@ -671,7 +688,7 @@ app.post('/editarReagente', async (req, res) => {
     }
   } catch (error) {
     console.error('Erro ao editar Reagente ', error);
-    res.status(500).json({ success: false, message: 'Erro interno no servidor' });
+    res.status(500).json({ success: false, error: error.message || 'Erro interno no servidor' });
   }
 });
 

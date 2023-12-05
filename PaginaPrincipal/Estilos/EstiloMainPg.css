@@ -272,7 +272,7 @@ img {
 }
 
 .containerMedidaTexto {
-    width: 52%;
+    width: 57%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -310,7 +310,7 @@ img {
 }
 
 .escqntd {
-    width: 48%;
+    width: 43%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
