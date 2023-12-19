@@ -655,29 +655,37 @@ app.post('/atualizar', async (req, res) => {
 app.post('/editarReagente', async (req, res) => {
   const code = req.body.codeEdit;
   const newCode = req.body.code;
-  const newReag = req.body.reag;
+  const newReag = req.body.reag.toUpperCase();
 
   const codigoExistente = await collectionReag.findOne({ Codigo: req.body.code.toUpperCase() });
 
   try {
-  
-  if (codigoExistente) {
-    throw new Error('Código já existe!');
-  }
+    if (codigoExistente) {
+      throw new Error('Código já existente!');
+    }
 
-  
-    if (!code || !newCode || !newReag) {
-      res.status(400).json({ success: false, message: 'Parâmetros inválidos. Certifique-se de fornecer valores válidos.' });
-      return;
+    if (!code) {
+      throw new Error ('Por favor, insira um código válido!');
+    }
+
+    if(!newCode && !newReag) {
+      throw new Error ('Por favor, insira os campos corretamente.');
+    }
+
+    const updateFields = {};
+
+    if (newCode) {
+      updateFields.Codigo = newCode;
+    }
+
+    if (newReag) {
+      updateFields.Reagente = newReag;
     }
 
     const result = await collectionReag.updateOne(
       { Codigo: code },
       {
-        $set: {
-          Codigo: newCode,
-          Reagente: newReag
-        }
+        $set: updateFields
       }
     );
 
