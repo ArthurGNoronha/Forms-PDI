@@ -34,6 +34,9 @@ function adicionarDivsFiltros(respostas, limite = respostas.length) {
         const nomeFiltro = `Nome: ${data.Responsavel}`;
         const dataFiltro = dataFormatada.isValid() ? `Data: ${dataFormatada.format('DD/MM/YYYY HH:mm')}` : 'Data inválida';
 
+        // Verificar se a propriedade Comentarios está presente
+        const comentarios = Array.isArray(data.Comentarios) ? data.Comentarios : [];
+
         novaDiv.innerHTML = `
             <div class="containerTextos">
                 <div class="nomeFiltro">${nomeFiltro}</div>
@@ -49,16 +52,16 @@ function adicionarDivsFiltros(respostas, limite = respostas.length) {
                 data-Med="${data.Medida}"
                 data-Outros="${data.Outros}"
                 data-Obs="${data.Observacao}"
-                src="/Imagens/edit.png" alt="Editar">
+                src="/Imagens/edit.webp" alt="Editar">
             <img class="comentar" 
                 data-id="${data.id}"
                 data-Responsavel="${data.Responsavel}"
-                src="/Imagens/Comentario.png" alt="Comentar">
+                src="/Imagens/${(comentarios.length > 0) ? 'ComentarioWarnV.webp' : 'Comentario.webp'}" alt="Comentar">
             <img class="deletar"
                 data-id="${data.id}"
                 data-Responsavel="${data.Responsavel}"
                 data-DataHora="${dataFiltro}"
-                src="/Imagens/trash-2-512.png" alt="Deletar">
+                src="/Imagens/trash-2-512.webp" alt="Deletar">
         `;
 
         respFiltradas.appendChild(novaDiv);
@@ -81,7 +84,8 @@ function adicionarLinhasTabela(data) {
             <td class="respMongo">${item.Responsavel}</td>
             <td class="respMongo">${item.CodigoReagente}</td>
             <td class="respMongo">${item.Reagente}</td>
-            <td class="respMongo">${item.Quantidade + ' ' + item.Medida + ' ' + item.Outros}</td>
+            <td class="respMongo">${item.Quantidade}</td>
+            <td class="respMongo">${item.Medida + ' ' + item.Outros} </td>
             <td class="respMongo">${item.Observacao}</td>
             <td class="respMongo">${moment(item.DataHora, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY HH:mm')}</td>
         `;
@@ -233,37 +237,49 @@ document.getElementById('removeFiltro').addEventListener('click', function(){
 
     currentPage = 1;
 
-    fetch('/ADM/data')
-        .then(response => response.json())
-        .then(data => {
-            adicionarLinhasTabela(data.respostas);
-            atualizarVisibilidadeBotao(data);
-            adicionarDivsFiltros(data.respostas, 6);
-            document.getElementById('btnAnterior').style.display = 'block';
-            document.getElementById('btnProximo').style.display = 'block';
-        })
-        .catch(error => {
-            console.error('Erro na requisição: ', error);
-        });
+    fetch('/ADM/data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ page: currentPage })
+    })
+    .then(response => response.json())
+    .then(data => {
+        adicionarLinhasTabela(data.respostas);
+        atualizarVisibilidadeBotao(data);
+        adicionarDivsFiltros(data.respostas, 6);
+        document.getElementById('btnAnterior').style.display = 'block';
+        document.getElementById('btnProximo').style.display = 'block';
+    })
+    .catch(error => {
+        console.error('Erro na requisição: ', error);
+    });    
 });
-
 // Alterar Página de dados
 
 var currentPage = 1;
 
 // Função para Avançar ou retroceder as páginas
 function proximaPaginaDados() {
-    const urlPag = `/ADM/data?page=${currentPage}`;
+    const url = '/ADM/data'; 
+    const body = { page: currentPage }; 
 
-    fetch(urlPag)
-        .then(response => response.json())
-        .then(data => {
-            adicionarLinhasTabela(data.respostas);
-            atualizarVisibilidadeBotao(data);
-        })
-        .catch(error => {
-            console.error('Erro ao ir para próxima página: ', error);
-        });
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    })
+    .then(response => response.json())
+    .then(data => {
+        adicionarLinhasTabela(data.respostas);
+        atualizarVisibilidadeBotao(data);
+    })
+    .catch(error => {
+        console.error('Erro ao ir para próxima página: ', error);
+    });
 }
 
 // Avançar uma página
@@ -275,6 +291,9 @@ document.getElementById('btnProximo').addEventListener('click', function(){
 // Voltar uma página
 document.getElementById('btnAnterior').addEventListener('click', function(){
     currentPage --;
+    if(currentPage <= 0) {
+        currentPage = 1
+    }
     proximaPaginaDados();
 });
 

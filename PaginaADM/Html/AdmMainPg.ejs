@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Controle de Estoque - Biopark">
     <title>Controle de Estoque - LogBook - ADM</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/PaginaADM/Estilos/EstiloADM.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <link rel="stylesheet" href="/PaginaADM/Estilos/EstiloAdmCompactado.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 </head>
 <body>
     <div class="header">
-        <img class="bpk" src="/Imagens/bpklogo.png" alt="biopark">
+        <img class="bpk" src="/Imagens/bpklogo.webp" alt="biopark">
     </div>
     <div class="containerGeral">
     <div class="filtro">
@@ -47,16 +48,18 @@
                         data-Med="<%= data.Medida %>"
                         data-Outros="<%= data.Outros %>"
                         data-Obs="<%= data.Observacao %>"
-                        src="/Imagens/edit.png" alt="Editar">
-                    <img class="comentar" 
-                        data-id="<%= data.id %>"
-                        data-Responsavel="<%= data.Responsavel %>"
-                        src="/Imagens/Comentario.png" alt="Comentar">
+                        src="/Imagens/edit.webp" alt="Editar">
+                        <% const comentarios = Array.isArray(data.Comentarios) ? data.Comentarios : []; %>
+                        <img class="comentar" 
+                            data-id="<%= data.id %>"
+                            data-Responsavel="<%= data.Responsavel %>"
+                            src="<%= comentarios.length > 0 ? '/Imagens/ComentarioWarnV.webp' : '/Imagens/Comentario.webp' %>"
+                            alt="Comentar">
                     <img class="deletar"
                         data-id="<%= data.id %>"
                         data-Responsavel="<%= data.Responsavel %>"
                         data-DataHora="<%= moment(data.DataHora).format('DD/MM/YYYY HH:mm') %>"
-                        src="/Imagens/trash-2-512.png" alt="Deletar">
+                        src="/Imagens/trash-2-512.webp" alt="Deletar">
                 </div>
             <% }); %>            
         </div>        
@@ -70,6 +73,7 @@
                 <th class="thResp" id="thCodR">Cod Reag</th>
                 <th class="thResp" id="thReag">Reagente</th>
                 <th class="thResp" id="thQtd">Quantidade</th>
+                <th class="thResp" id="thMed">Medida</th>
                 <th class="thResp" id="thObs">Observação</th>
                 <th class="thResp" id="thData">Data</th>
             </tr>
@@ -79,7 +83,8 @@
                     <td class="respMongo"><%= data.Responsavel %></td>
                     <td class="respMongo"><%= data.CodigoReagente %></td>
                     <td class="respMongo"><%= data.Reagente %></td>
-                    <td class="respMongo"><%= data.Quantidade + ' ' + data.Medida + ' ' + data.Outros %></td>
+                    <td class="respMongo"><%= data.Quantidade %></td>
+                    <td class="respMongo"><%= data.Medida + ' ' + data.Outros %></td>
                     <td class="respMongo"><%= data.Observacao %></td>
                     <td class="respMongo"><%= moment(data.DataHora).format('DD/MM/YYYY HH:mm') %></td>
                 </tr>
@@ -206,6 +211,6 @@
       </div>
       </div>
 </div>
-    <script src="/PaginaADM/Scripts/ScriptADM.js"></script>
+    <script defer src="/PaginaADM/Scripts/ScriptADMCompactado.js"></script>
 </body>
 </html>

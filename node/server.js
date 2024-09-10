@@ -1,22 +1,20 @@
 // Bibliotecas Externas
-require('dotenv').config({path: __dirname + '/variaveis.env'});
+require('dotenv').config({ path: __dirname + '/variaveis.env' });
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
 const path = require('path');
 const moment = require('moment-timezone');
 const nodemailer = require('nodemailer');
 const { MongoClient } = require('mongodb');
-const ObjectId = require('mongodb').ObjectId;
-const ejs = require('ejs');
 const { google } = require('googleapis');
 const bcrypt = require('bcrypt');
-const session = require('express-session')
+const session = require('express-session');
+const compression = require('compression');
 
 const app = express();
 const port = 3000;
 
-const key = require('../FormsPDI.json');
+const key = require('../teste.json');
 
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
@@ -36,13 +34,6 @@ const sheets = google.sheets({ version: 'v4', auth: sheetClient });
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
 const SHEET_NAME = 'Controle';
 
-const users = [
-  {
-    username: process.env.USERNAME,
-    passwordHash: process.env.PASSWORD_HASH
-  },
-];
-
 // Configurar o middleware para servir arquivos estáticos (CSS, JavaScript, imagens)
 app.use('/PaginaPrincipal/Estilos', express.static(path.join(__dirname, '../PaginaPrincipal/Estilos')));
 app.use('/PaginaPrincipal/Scripts', express.static(path.join(__dirname, '../PaginaPrincipal/Scripts')));
@@ -50,22 +41,35 @@ app.use('/Imagens', express.static(path.join(__dirname, '../Imagens')));
 app.use('/PaginaADM/Estilos', express.static(path.join(__dirname, '../PaginaADM/Estilos')));
 app.use('/PaginaADM/Scripts', express.static(path.join(__dirname, '../PaginaADM/Scripts')));
 
-// Permite utilizar o "moment" em outros arquivod(EJS)
+// Permite utilizar o "moment" em outros arquivos (EJS)
 app.locals.moment = require('moment-timezone');
+
+// Manipular o compression
+app.use(compression({ filter: shouldCompress }));
 
 // Manipular arquivos JSON
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json())
+app.use(express.json());
 
 // Configura o middleware do express-session
 app.use(session({
   secret: process.env.SESSION_SECRET,
-  resave: true,
+  resave: false,
   saveUninitialized: true,
+  // Quantidade de tempo que o usuário pode permanecer logado na página de ADM (Em milissegundos)
+  cookie: { maxAge: 2 * 24 * 60 * 60 * 1000 }
+  // Horas - Minutos - Segundos - Milissegundos
 }));
+
+function shouldCompress(req, res) {
+  if (req.headers['x-no-compression']) {
+    return false;
+  }
+  return compression.filter(req, res);
+}
 
 // Manipular EJS
 app.set('view engine', 'ejs');
@@ -77,7 +81,7 @@ app.set('views', [
 // Favicon
 app.get('/favicon.ico', (req, res) => {
   res.sendFile(path.join(__dirname, '../Imagens/Icone.ico'));
-});  
+});
 
 app.get('/', async (req, res) => {
   try {
@@ -150,9 +154,6 @@ app.post('/salvar', async (req, res) => {
     // Enviar para a planilha
     enviarParaGoogleSheets(novaResposta);
 
-    // Enviar e-mail
-    // enviarEmail(novaResposta);
-
     console.log('Dados salvos com sucesso no MongoDB');
     res.status(200).json({ success: true, redirectUrl: '/envio' });
   } catch (error) {
@@ -160,58 +161,6 @@ app.post('/salvar', async (req, res) => {
     res.status(500).json({ success: false, error: 'Erro interno do servidor' });
   }
 });
-
-// Login do email
-function enviarEmail(novaResposta) {
-  try{
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-        console.error('Erro: As variáveis estão incorretas');
-        return;
-    }
-
-    const transporter = nodemailer.createTransport({
-        service: 'outlook',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
-
-    // Informações do Email
-    const emailHTML = `
-    <html>
-      <body>
-        <h1 style="color: #000; font-family: Arial;">Olá, uma nova resposta foi registrada!</h1>
-        <p style="color: black;"><b>ID:</b> ${novaResposta.id}</p>
-        <p style="color: black;"><b>Nome:</b> ${novaResposta.Responsavel}</p>
-        <p style="color: black;"><b>Código do reagente:</b> ${novaResposta.CodigoReagente}</p>
-        <p style="color: black;"><b>Reagente:</b> ${novaResposta.Reagente}</p>
-        <p style="color: black;"><b>Quantidade Utilizada:</b> ${novaResposta.Quantidade} - ${novaResposta.Medida} ${novaResposta.Outros}</p>
-        <p style="color: black;"><b>Observação:</b> ${novaResposta.Observacao}</p>
-        <p style="color: black;"><b>Data e Hora:</b> ${moment(novaResposta.DataHora).format('DD/MM/YYYY HH:mm')}</p>
-      </body>
-    </html>
-    `;
-
-    // Como o Email deve ser enviado
-    const mailOptions = {
-        from: 'Formulário PDI <' + process.env.EMAIL_USER + '>',
-        to: 'testeandoarthur@gmail.com',
-        subject: 'Novas respostas registradas no Formulário',
-        html: emailHTML,
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.error('Erro ao enviar o email',error);
-        } else {
-            console.log('Email enviado com sucesso! ' + info.response);
-        }
-    });
-  } catch(error){
-    console.error('Erro geral ao enviar o email', error);
-  }
-}
 
 async function editarNoGoogleSheets(auth, existingRowIndex, row) {
   try {
@@ -222,16 +171,16 @@ async function editarNoGoogleSheets(auth, existingRowIndex, row) {
     });
 
     const originalDateTime = sheetData.data.values[existingRowIndex] 
-      ? sheetData.data.values[existingRowIndex][6] // Assumindo que o horário está na 7ª coluna (índice 6)
+      ? sheetData.data.values[existingRowIndex][8]
       : '';
 
-    row[6] = originalDateTime; // Substitui o horário atual pelo original
+    row[7] = originalDateTime;
 
     // Atualiza a linha correspondente
     sheets.spreadsheets.values.update({
       auth,
       spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A${existingRowIndex + 1}:G${existingRowIndex + 1}`,
+      range: `${SHEET_NAME}!A${existingRowIndex + 1}:H${existingRowIndex + 1}`,
       valueInputOption: 'RAW',
       resource: { values: [row] },
     });
@@ -284,7 +233,8 @@ async function enviarParaGoogleSheets(novaResposta) {
       novaResposta.Responsavel,
       novaResposta.CodigoReagente,
       novaResposta.Reagente,
-      `${novaResposta.Quantidade} - ${novaResposta.Medida} ${novaResposta.Outros}`,
+      novaResposta.Quantidade,
+      `${novaResposta.Medida} ${novaResposta.Outros}`,
       novaResposta.Observacao,
       novaResposta.DataHora,
     ];
@@ -310,7 +260,6 @@ async function enviarParaGoogleSheets(novaResposta) {
           resource: { values },
         });
       }
-
       // Adiciona os dados
       await adicionarNoGoogleSheets(auth, row);
     }
@@ -344,7 +293,7 @@ async function deletarDaGoogleSheets(idExcluir) {
       await sheets.spreadsheets.values.clear({
         auth,
         spreadsheetId: SPREADSHEET_ID,
-        range: `${SHEET_NAME}!A${existingRowIndex + 1}:G${existingRowIndex + 1}`,
+        range: `${SHEET_NAME}!A${existingRowIndex + 1}:H${existingRowIndex + 1}`,
       });
 
       console.log(`Linha correspondente ao ID ${idExcluir} deletada com sucesso na planilha.`);
@@ -386,7 +335,7 @@ app.post('/addReag', async function(req, res) {
 
 // Enviar para a pagina de ADM
 app.get('/ADM', authenticate, async (req, res) => {
-// app.get('/ADM', async (req, res) => {
+
   try {
 
     // Buscar todas as respostas
@@ -395,7 +344,6 @@ app.get('/ADM', authenticate, async (req, res) => {
       .sort({id: -1})
       .limit(14)
       .toArray();
-
 
     const reagentes = await collectionReag.find({}).toArray()
     // Renderizar a página de respostas com os dados
@@ -406,9 +354,12 @@ app.get('/ADM', authenticate, async (req, res) => {
   }
 });
 
-app.get('/ADM/data', async (req, res) => {
+app.post('/ADM/data', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
+    const page = parseInt(req.body.page) || 1;
+    if(page <= 0) {
+      page = 1
+    }
     const itensPerPage = 14;
     const skip = (page - 1) * itensPerPage;
 
@@ -443,26 +394,31 @@ app.get('/buscarDadosID', async (req, res) => {
   try{
     const { id1, id2 } = req.query;
 
-    const result = await collection.find({
+    const result = await collection
+    .find({
       id: {
         $gte: parseInt(id1),
         $lte: parseInt(id2),
       },
-    }).toArray();
-
-    const resultadosFormatados = result.map(item => {
-      return {
-        id: item.id,
-        Responsavel: item.Responsavel,
-        CodigoReagente: item.CodigoReagente,
-        Reagente: item.Reagente,
-        Quantidade: item.Quantidade,
-        Medida: item.Medida,
-        Outros: item.Outros,
-        Observacao: item.Observacao,
-        DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
-      };
-    });
+    })
+    .toArray();
+  
+  // Formatar a data no formato desejado e incluir verificação de comentários
+  const resultadosFormatados = result.map(item => {
+    const comentarios = Array.isArray(item.Comentarios) ? item.Comentarios : [];
+    return {
+      id: item.id,
+      Responsavel: item.Responsavel,
+      CodigoReagente: item.CodigoReagente,
+      Reagente: item.Reagente,
+      Quantidade: item.Quantidade,
+      Medida: item.Medida,
+      Outros: item.Outros,
+      Observacao: item.Observacao,
+      DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
+      Comentarios: comentarios,
+    };
+  });
     res.json(resultadosFormatados);
   } catch (error) {
     console.error('Erro ao buscar os dados por Id: ', error);
@@ -489,6 +445,7 @@ app.get('/buscarDadosDT', async (req, res) => {
 
     // Array de Objetos com os dados encontrados (formatados)
     const resultadosFormatados = result.map(item => {
+      const comentarios = Array.isArray(item.Comentarios) ? item.Comentarios : [];
       return {
         id: item.id,
         Responsavel: item.Responsavel,
@@ -499,6 +456,7 @@ app.get('/buscarDadosDT', async (req, res) => {
         Outros: item.Outros,
         Observacao: item.Observacao,
         DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
+        Comentarios: comentarios,
       };
     });
     
@@ -519,6 +477,7 @@ app.get('/buscaNome', async (req, res) => {
     }).toArray();    
 
     const resultadosFormatados = result.map(item => {
+      const comentarios = Array.isArray(item.Comentarios) ? item.Comentarios : [];
       return {
         id: item.id,
         Responsavel: item.Responsavel,
@@ -529,6 +488,7 @@ app.get('/buscaNome', async (req, res) => {
         Outros: item.Outros,
         Observacao: item.Observacao,
         DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
+        Comentarios: comentarios,
       };
     });
 
@@ -549,6 +509,7 @@ app.get('/buscaCode', async (req,res) => {
     }).toArray();
 
     const resultadosFormatados = result.map(item => {
+      const comentarios = Array.isArray(item.Comentarios) ? item.Comentarios : [];
       return {
         id: item.id,
         Responsavel: item.Responsavel,
@@ -559,6 +520,7 @@ app.get('/buscaCode', async (req,res) => {
         Outros: item.Outros,
         Observacao: item.Observacao,
         DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
+        Comentarios: comentarios,
       };
     });
 
@@ -579,6 +541,7 @@ app.get('/buscaReag', async (req, res) => {
     }).toArray();
 
     const resultadosFormatados = result.map(item => {
+      const comentarios = Array.isArray(item.Comentarios) ? item.Comentarios : [];
       return {
         id: item.id,
         Responsavel: item.Responsavel,
@@ -589,6 +552,7 @@ app.get('/buscaReag', async (req, res) => {
         Outros: item.Outros,
         Observacao: item.Observacao,
         DataHora: moment(item.DataHora).format('DD/MM/YYYY HH:mm'),
+        Comentarios: comentarios,
       };
     });
 
@@ -655,29 +619,37 @@ app.post('/atualizar', async (req, res) => {
 app.post('/editarReagente', async (req, res) => {
   const code = req.body.codeEdit;
   const newCode = req.body.code;
-  const newReag = req.body.reag;
+  const newReag = req.body.reag.toUpperCase();
 
   const codigoExistente = await collectionReag.findOne({ Codigo: req.body.code.toUpperCase() });
 
   try {
-  
-  if (codigoExistente) {
-    throw new Error('Código já existe!');
-  }
+    if (codigoExistente) {
+      throw new Error('Código já existente!');
+    }
 
-  
-    if (!code || !newCode || !newReag) {
-      res.status(400).json({ success: false, message: 'Parâmetros inválidos. Certifique-se de fornecer valores válidos.' });
-      return;
+    if (!code) {
+      throw new Error ('Por favor, insira um código válido!');
+    }
+
+    if(!newCode && !newReag) {
+      throw new Error ('Por favor, insira os campos corretamente.');
+    }
+
+    const updateFields = {};
+
+    if (newCode) {
+      updateFields.Codigo = newCode;
+    }
+
+    if (newReag) {
+      updateFields.Reagente = newReag;
     }
 
     const result = await collectionReag.updateOne(
       { Codigo: code },
       {
-        $set: {
-          Codigo: newCode,
-          Reagente: newReag
-        }
+        $set: updateFields
       }
     );
 
@@ -833,6 +805,10 @@ function authenticate(req, res, next) {
     res.redirect('/Login');
   }
 }
+
+app.use((req, res, next) => {
+  res.status(404).send('A página que você está tentando acessar não existe ou está em manutenção!');
+});
 
 //Ligar o servidor
 app.listen(port, async () => {

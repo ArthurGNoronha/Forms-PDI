@@ -1,7 +1,12 @@
 @media only screen and (min-width: 320px) and (max-width: 871px) {
 
-  #header {
+  #header, #header2 {
     width: 95%;
+    margin-bottom: 3%;
+  }
+
+  #header2 {
+    height: 20vh;
   }
 
   #titulo, #titulo2 {
@@ -9,11 +14,12 @@
 }
 
   .subtitulo {
-    font-size: 12px;
+    font-size: 16px;
   }
 
   #pergunta1, #pergunta2 {
     width: 95%;
+    margin-bottom: 3%;
   }
 
   #pgt1, #pgt2 {
@@ -29,6 +35,7 @@
 
   .aviso, .aviso2 {
     width: 95%;
+    margin-bottom: 3%;
   }
 
   .sup {
@@ -41,6 +48,7 @@
 
   .codigo {
     width: 95%;
+    margin-bottom: 3%;
   }
 
   .CodTexto {
@@ -65,6 +73,7 @@
 
   .medida {
     width: 95%;
+    margin-bottom: 3%;
   }
 
   .qntd {
@@ -85,7 +94,7 @@
   }
 
   .labelEstilo {
-    font-size: 10px;
+    font-size: 16px;
   }
 
   .containerMedida {
@@ -97,8 +106,8 @@
   }
 
   .radioEstilo {
-    width: 10px;
-    height: 10px;
+    width: 17px;
+    height: 17px;
   }
 
   #outros-texto {
@@ -113,6 +122,7 @@
 
   .divEnviar {
     width: 95%;
+    margin-bottom: 3%;
   }
 
   #btnEnviar {
@@ -125,7 +135,7 @@
   }
 
   #mensagemErroOutros {
-    font-size: 12px;
+    font-size: 10px;
   }
 
   }

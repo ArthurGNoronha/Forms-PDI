@@ -101,27 +101,32 @@ numeroMedidaInput.addEventListener("blur", validarNumero);
 
 function validarNumero() {
   let numeroMedidaTexto = numeroMedidaInput.value.trim();
-  numeroMedidaTexto = numeroMedidaTexto.replace(/[^0-9,.]/g, '');
-  const numeroMedida = parseFloat(numeroMedidaTexto.replace(",", "."));
+  
+  numeroMedidaTexto = numeroMedidaTexto.replace(/\./g, ',');
+  
+  numeroMedidaTexto = numeroMedidaTexto.replace(/[^0-9,]/g, '');
+  
+  const numeroMedida = parseFloat(numeroMedidaTexto.replace(/,/g, '.'));
 
   mensagemErroQtd.textContent = "";
   mensagemErroQtd.style.display = 'none';
 
-  if (isNaN(numeroMedida) || numeroMedida < 0 || numeroMedida > 99999) {
+  if (isNaN(numeroMedida) || numeroMedida < 0 || numeroMedida > 9999999) {
     mensagemErroQtd.textContent = isNaN(numeroMedida)
       ? "Por favor, insira um número válido."
       : numeroMedida < 0
       ? "O número não pode ser negativo!"
-      : "Número é maior do que o permitido!"
-      setTimeout(() => {
-        numeroMedidaInput.value = "";
-        mensagemErroQtd.style.display = 'block';
-      }, 120);
-    } else {
-      numeroMedidaInput.value = numeroMedidaTexto;
-      mensagemErroQtd.style.display = 'none';
-    }
+      : "Número é maior do que o permitido!";
+      
+    setTimeout(() => {
+      numeroMedidaInput.value = "";
+      mensagemErroQtd.style.display = 'block';
+    }, 120);
+  } else {
+    numeroMedidaInput.value = numeroMedidaTexto;
+    mensagemErroQtd.style.display = 'none';
   }
+}
   
 //Validar Pesquisa
   

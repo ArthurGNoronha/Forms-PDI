@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Formulario Controle de Estoque - Biopark">
     <title>Controlde de Estoque - Log Book</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/PaginaPrincipal/Estilos/EstiloMainPg.css">
-    <link rel="stylesheet" href="/PaginaPrincipal/Estilos/mediaQMain.css">
+    <link rel="stylesheet" href="/PaginaPrincipal/Estilos/EstiloMainPgCompactado.css">
+    <link rel="stylesheet" href="/PaginaPrincipal/Estilos/MediaQMain.css">
 </head>
 <body>
     <form action="/salvar" method="post">
     <div class="containerGeral">
     <div id="header">
-        <img src="/Imagens/header.png" alt="Biopark">
+        <img src="/Imagens/header.webp" alt="Biopark">
         <p id="titulo">Controle de Estoque - Log Book</p>
         <p class="subtitulo">Este controle refere-se aos insumos e reagentes destinados ao desenvolvimento de análises e produtos desenvolvidos em técnicas práticas pelos Analistas, professores e alunos do Biopark Educação. O formulário deve ser preenchido adequadamente para que os produtos possam ser repostos mais rapidamente.</p>
     </div>
@@ -44,8 +45,8 @@
  <div class="medida">
     <div class="containerMedida">
     <div class="containerMedidaTexto">
-    <p class="qntd">3. Digite a quantidade que foi utilizada:</p>
-    <input type="text" maxlength="6" id="quantidade" placeholder="Digite aqui..." oninput="validarNumero(this)" autocomplete="off" required>
+    <p class="qntd">3. Digite a quantidade utilizada:</p>
+    <input type="text" maxlength="9" id="quantidade" placeholder="Digite aqui..." oninput="validarNumero(this)" autocomplete="off" required>
     <p id="mensagemErroQtd"></p>
     </div>
     <div class="escqntd">
@@ -69,7 +70,7 @@
                     
                 <div class="estiloMedBol">
                     <input type="radio" id="mililitros" name="medida" value="Mililitros" class="radioEstilo">
-                    <label for="mililitros" class="labelEstilo">ML- Mililitros</label>
+                    <label for="mililitros" class="labelEstilo">ML - Mililitros</label>
                     </div>
                 </div>
             <div class="medBolDir">
@@ -112,6 +113,6 @@
 </div>
 </form>
 </div>
-    <script src="/PaginaPrincipal/Scripts/ScriptMainPg.js"></script>
+    <script defer src="/PaginaPrincipal/Scripts/ScriptMainPg.js"></script>
 </body>
 </html>

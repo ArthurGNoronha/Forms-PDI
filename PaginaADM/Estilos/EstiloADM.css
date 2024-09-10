@@ -161,14 +161,15 @@ hr{
     width: 240px;
     height: 30px;
     border-radius: 10px;
-    background-color:lightgrey;
+    background-color:#19ff94;
+    color: black;
     margin-right: 2%;
     margin-top: 1%;
 }
 
 #baixar:hover {
-    border: none;
     cursor: pointer;
+    background-color: #a2ffd4;
 }
 
 a {
@@ -410,7 +411,6 @@ a {
     background-color: rgb(238, 65, 65);
 }
 
-
 #divReag {
     display: none;
     position: fixed;
@@ -488,7 +488,7 @@ a {
 }
 
 #simEdReag:hover {
-    background-color: #ffe44c;
+    background-color: #ffe75f;
 }
 
 #simExReag:hover {
@@ -581,6 +581,13 @@ a {
 }
 
 /* Pagina para o Login */
+
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .containerLog {
     display: flex;
     justify-content: center;
@@ -591,43 +598,42 @@ a {
 
 .quadradoLog {
     box-sizing: border-box;
-    margin-top: 2.5%;
-    margin-bottom: 2.5%;
     width: 50%;
-    height: 90vh;
+    height: 90%;
     background-color: white;
     border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .LogoLog {
-    width: 500px;
-    height: 180px;
-    margin-left: 18%;
+    width: 70%;
+    height: 30%;
+    margin-top: 5%;
 }
 
-.txtLog {
-    width: 90%;
-    font-size: 34px;
+.textoLog {
+    font-size: 32px;
     font-weight: bold;
-    margin-left: 9%;
-    margin-bottom: 4%;
-    margin-top: 4%;
-}
-
-.imgUser, .imgSenha {
-    height: 45px;
-    width: 45px;
-    margin-top: 1%;
-    margin-bottom: -1%;
-    margin-left: 1%;
-    user-select: none;
 }
 
 .inputUser, .inputPass {
-    width: 60%;
+    width: 90%;
     border: 2px solid black;
-    margin-left: 20%;
     border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    margin-left: 5%;
+    margin-bottom: 2%;
+}
+
+.imgUser, .imgSenha {
+    height: 10%;
+    width: 10%;
+    user-select: none;
+    margin-left: 1%;
 }
 
 #username, #password {
@@ -635,10 +641,6 @@ a {
     width: 85%;
     font-size: 28px;
     border: none;
-}
-
-.inputPass {
-    margin-top: 1%;
 }
 
 #username:focus, #password {
@@ -659,7 +661,7 @@ a {
 
 .Login {
     width: 60%;
-    height: 50px;
+    height: 20%;
     background-color: #65F473;
     border-radius: 20px;
     font-size: 30px;
