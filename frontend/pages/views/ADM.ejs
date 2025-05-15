@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Controle de Estoque - Biopark">
+    <title>Controle de Estoque - LogBook - ADM</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../styles/ADM.css">
+    <link rel="stylesheet" href="../styles/toastAlert.css">
+</head>
+<body>
+    <div class="containerGeral">
+    <div class="filtro">
+        <div class="topo"></div>
+        <p class="textoF">Filtrar Respostas </p>
+        <hr>
+        <input id="pesquisar" placeholder="Digite o ID da resposta" type="text">
+        <select name="filtro" id="tipoFiltro">
+            <option value="ID" selected>ID</option>
+            <option value="Nome">Nome do Responsável</option>
+            <option value="Code">Codigo do Reagente</option>
+            <option value="Reagente">Nome do Reagente</option>
+            <option value="Data">Data</option>
+        </select>
+        <div class="btnF">
+            <button id="botaoFiltrar">Filtrar</button>
+            <button id="removeFiltro">Remover Filtros</button>
+        </div>
+        <div class="linha"></div>
+        <div class="respfiltradas">
+        </div>
+    </div>
+    <div class="respostas">
+        <div class="tabela">
+        <table class="respostasEnv">
+            <tr>
+                <th class="thResp" id="thId">ID</th>
+                <th class="thResp" id="thNome">Nome</th>
+                <th class="thResp" id="thCodR">Cod Reag</th>
+                <th class="thResp" id="thReag">Reagente</th>
+                <th class="thResp" id="thQtd">Quantidade</th>
+                <th class="thResp" id="thMed">Medida</th>
+                <th class="thResp" id="thObs">Observação</th>
+                <th class="thResp" id="thData">Data</th>
+            </tr>
+        </table>
+        <div class="containerBtns">
+            <button id="btnAnterior">Página Anterior</button>
+            <button id="btnProximo">Próxima Página</button>
+        </div>
+    </div>
+    <hr>
+    <div class="googlesheet">
+        <button id="btnReag">Alterar Reagentes</button>
+        <button id="baixar">
+            <a href="https://docs.google.com/spreadsheets/d/1RNCNXsqR2xSqnosi33V9Uu2s_o0EbxjWB3CckXLKMBA/edit#gid=0" target="_blank">Abrir no aplicativo Google Planilhas</a>
+        </button>
+        </div>
+    </div>
+</div>
+    <div id="overlay"></div>
+    <div id="divDel">
+        <p id="msgDel">Tem certeza que deseja excluir essa resposta?</p>
+        <button class="btnsConfirm" id="confirmDelete">Deletar</button>
+        <button class="btnsCancel" id="cancelDelete">Cancelar</button>
+    </div>
+    <div id="divEdit">
+        <h1>Atualizar Informações </h1>
+        <label for="Responsavel">Atualizar o Nome do Responsavel</label>
+        <br>
+        <input type="text" class="att" id="Responsavel" placeholder="Digite aqui..."> 
+        <br>
+        <label for="Codigo">Atualizar o Código do Reagente</label>
+        <br>
+        <input type="text" class="att" id="Codigo" placeholder="Digite aqui...">
+        <br>
+        <label for="Reagente">Atualizar o Reagente</label>
+        <br>
+        <input type="text" class="att" id="Reagente" placeholder="Digite aqui..."> 
+        <br>
+        <label for="Quantidade">Atualizar a Quantidade</label>
+        <br>
+        <input type="text" class="att" id="Quantidade" placeholder="Digite aqui..."> 
+        <br>
+        <label for="Medida">Atualizar a Medida</label>
+        <br>
+        <input type="text" class="att" id="Medida" placeholder="Digite aqui..."> 
+        <br>
+        <label for="Outros">Atualizar Outros (medida)</label>
+        <br>
+        <input type="text" class="att" id="Outros" placeholder="Digite aqui..."> 
+        <br>
+        <label for="Observacao">Atualizar a Observação do Responsável</label>
+        <br>
+        <input type="text" class="att" id="Observacao" placeholder="Digite aqui...">
+        <br>
+        
+        <button class="btnsConfirm" id="simEdit">Confirmar Edição</button>
+        <button id="naoEdit" class="btnsCancel">Cancelar</button>
+    </div>
+    <div id="divReag">
+        <h2>Reagentes </h2>
+        <h3>Reagentes Atuais: </h3>
+        <div class="inputContainer">
+            <input type="text" id="pesquisarReag" placeholder="Pesquisar..." autocomplete="off">
+        </div>
+        <ul id="dropdown">           
+        </ul>
+        <div class="addExEdReag">
+            <div class="addReag">
+                <h2>Adicionar: </h2>
+                <label for="newCode">Código: </label>
+                <br>
+                <input type="text" class="inputReag" name="newCode" id="newCode">
+                <br>
+                <label for="newReag">Reagente: </label>
+                <br>
+                <input type="text" class="inputReag" name="newReag" id="newReag">
+                <br>
+                <button class="simReag btnsConfirm" id="simReag">Confirmar</button>
+                <button class="naoReag btnsCancel">Cancelar</button>
+            </div>
+            <div class="edReag">
+                <h2>Editar: </h2>
+                <label for="edCode">Código para editar: </label>
+                <br>
+                <input type="text" class="inputReag" name="edCode" id="edCode">
+                <br>
+                <label for="newEdCode">Novo Código: </label>
+                <br>
+                <input type="text" class="inputReag" name="newEdCode" id="newEdCode">
+                <br>
+                <label for="newEdReag">Novo Reagente: </label>
+                <br>
+                <input type="text" class="inputReag" name="newEdReag" id="newEdReag">
+                <br>
+                <button class="simReag btnsConfirm" id="simEdReag">Confirmar</button>
+                <button class="naoReag btnsCancel">Cancelar</button>
+            </div>
+            <div class="exReag">
+                <h2>Excluir: </h2>
+                <label for="exCode">Código para <b>excluir</b></label>
+                <br>
+                <input type="text" class="inputReag" name="exCode" id="exCode">
+                <br>
+                <button class="simReag btnsConfirm" id="simExReag">Deletar</button>
+                <button class="naoReag btnsCancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <script src="../scripts/toastAlert.js"></script>
+    <script src="../scripts/scriptADM.js"></script>
+</body>
+</html>

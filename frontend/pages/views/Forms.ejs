@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Formulario Controle de Estoque - Biopark">
+    <title>Controlde de Estoque - Log Book</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../styles/forms.css">
+    <link rel="stylesheet" href="../styles/toastAlert.css">
+    <link rel="stylesheet" href="../styles/mediaQForms.css">
+</head>
+<body>
+    <div class="containerGeral">
+    <div id="header">
+        <img src="./Imagens/header.webp" alt="Biopark">
+        <p id="titulo">Controle de Estoque - Log Book</p>
+        <p class="subtitulo">Este controle refere-se aos insumos e reagentes destinados ao desenvolvimento de análises e produtos desenvolvidos em técnicas práticas pelos Analistas, professores e alunos do Biopark Educação. O formulário deve ser preenchido adequadamente para que os produtos possam ser repostos mais rapidamente.</p>
+    </div>
+    <div id="pergunta1">
+        <p id="pgt1">1. Nome do responsável realizando a pesagem:</p>
+        <input type="text" id="responsavel" placeholder="Digite aqui..." oninput="validarResp()" required>
+        <p id="mensagemErroResp"></p>
+    </div>
+    <div class="aviso">
+        <div class="sup"></div>
+        <div class="inf"><p class="avisoTexto">Responda apenas um material por formulário!</p></div>
+    </div>
+    <div class="codigo">
+        <p class="CodTexto">2. Digite o código e/ou nome do Insumo/Reagente:</p>
+        <div class="inputContainer">
+          <div class="borda">
+            <input type="text" id="pesquisar" placeholder="Pesquisar..." autocomplete="off" oninput="validarReag()" required>
+            <div id="dropdown-icon">▼</div>
+          </div>
+        </div>
+        <ul id="dropdown">
+        </ul>
+        <p id="mensagemErroReag"></p>
+ </div>
+ <div class="medida">
+    <div class="containerMedida">
+    <div class="containerMedidaTexto">
+    <p class="qntd">3. Digite a quantidade utilizada:</p>
+    <input type="text" maxlength="9" id="quantidade" placeholder="Digite aqui..." oninput="validarNumero(this)" autocomplete="off" required>
+    <p id="mensagemErroQtd"></p>
+    </div>
+    <div class="escqntd">
+        <p class="selecMed">Selecione a medida utilizada:</p>
+        <div class="medidaBol">
+            <div class="medBolEsq">
+                <div class="estiloMedBol">
+                    <input type="radio" id="gramas" name="medida" value="Gramas" class="radioEstilo" required>
+                    <label for="gramas" class="labelEstilo">G - Gramas</label>
+                </div>
+
+                <div class="estiloMedBol">
+                    <input type="radio" id="kilogramas" name="medida" value="Kilogramas" class="radioEstilo">
+                    <label for="kilogramas" class="labelEstilo">KG - Kilogramas</label>
+                </div>
+
+                <div class="estiloMedBol">
+                    <input type="radio" id="miligramas" name="medida" value="Miligramas" class="radioEstilo">
+                    <label for="miligramas" class="labelEstilo">MG - Miligramas</label>
+                </div>
+                    
+                <div class="estiloMedBol">
+                    <input type="radio" id="mililitros" name="medida" value="Mililitros" class="radioEstilo">
+                    <label for="mililitros" class="labelEstilo">ML - Mililitros</label>
+                </div>
+            </div>
+            <div class="medBolDir">
+                <div class="estiloMedBol">
+                    <input type="radio" id="litros" name="medida" value="Litros" class="radioEstilo">
+                    <label for="litros" class="labelEstilo">L - Litros</label>
+                </div>
+
+                    <div class="estiloMedBol">
+                    <input type="radio" id="unidade" name="medida" value="Unidade" class="radioEstilo">
+                    <label for="unidade" class="labelEstilo">UN - Unidade</label>
+                </div>
+
+                    <div class="estiloMedBol">
+                    <input type="radio" id="caixa" name="medida" value="Caixas" class="radioEstilo">
+                    <label for="caixa" class="labelEstilo">CX - Caixas</label>
+                </div>
+
+                <div class="estiloMedBol">
+                    <input type="radio" id="outros" name="medida" value="Outros" class="radioEstilo">
+                    <label for="outros" class="labelEstilo" >Outros:</label>
+                    <input type="text" maxlength="15" id="outros-texto" name="outros-texto" hidden>
+                </div>
+                <p id="mensagemErroOutros"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="aviso">
+    <div class="sup"></div>
+    <div class="inf"><p class="avisoTexto2">Verifique suas respostas antes de enviar!</p></div>
+</div>
+    <div id="pergunta2">
+        <p id="pgt2">4. Deixe uma observação, caso necessário: </p>
+        <input type="text" id="observacao" placeholder="Digite aqui..." autocomplete="off">
+    </div>
+<div class="divEnviar">
+    <input type="submit" id="btnEnviar" value="Enviar">
+</div>
+</div>
+    <script src="../scripts/toastAlert.js"></script>
+    <script src="../scripts/scriptForms.js"></script>
+</body>
+</html>

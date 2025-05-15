@@ -1,2 +1,3 @@
 *.env
-teste.json
+keys.json
+backend/node_modules
