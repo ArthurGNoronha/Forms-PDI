@@ -20,7 +20,7 @@
     </div>
     <div id="pergunta1">
         <p id="pgt1">1. Nome do responsável realizando a pesagem:</p>
-        <input type="text" id="responsavel" placeholder="Digite aqui..." oninput="validarResp()" required>
+        <input type="text" id="responsavel" placeholder="Digite aqui..." required>
         <p id="mensagemErroResp"></p>
     </div>
     <div class="aviso">
@@ -31,8 +31,8 @@
         <p class="CodTexto">2. Digite o código e/ou nome do Insumo/Reagente:</p>
         <div class="inputContainer">
           <div class="borda">
-            <input type="text" id="pesquisar" placeholder="Pesquisar..." autocomplete="off" oninput="validarReag()" required>
-            <div id="dropdown-icon">▼</div>
+            <input type="text" id="pesquisar" placeholder="Pesquisar..." autocomplete="off" required>
+            <div id="dropdownIcon">▼</div>
           </div>
         </div>
         <ul id="dropdown">
@@ -43,7 +43,7 @@
     <div class="containerMedida">
     <div class="containerMedidaTexto">
     <p class="qntd">3. Digite a quantidade utilizada:</p>
-    <input type="text" maxlength="9" id="quantidade" placeholder="Digite aqui..." oninput="validarNumero(this)" autocomplete="off" required>
+    <input type="text" maxlength="9" id="quantidade" placeholder="Digite aqui..." autocomplete="off" required>
     <p id="mensagemErroQtd"></p>
     </div>
     <div class="escqntd">
