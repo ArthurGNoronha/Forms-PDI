@@ -32,7 +32,7 @@ export const verify = (req, res, next) => {
         "bearerAuth": {}
     }]
     */
-    if(req.originalUrl === '/api/reagentes/forms' && req.method === 'GET' || req.baseurl === '/api/answers' && req.method === 'POST') {
+    if(req.originalUrl === '/api/reagentes/forms' && req.method === 'GET' || req.originalUrl === '/api/answers/' && req.method === 'POST') {
         return next();
     }
     

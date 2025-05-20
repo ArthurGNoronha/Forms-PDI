@@ -590,6 +590,13 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "rest",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -663,39 +670,6 @@
             }
           }
         }
-      }
-    },
-    "/api/reagentes/forms": {
-      "get": {
-        "tags": [
-          "Reagente"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerError"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerError"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": {}
-          }
-        ]
       }
     },
     "/api/reagentes/{_id}": {
@@ -891,6 +865,39 @@
             }
           }
         }
+      }
+    },
+    "/api/reagentes/forms": {
+      "get": {
+        "tags": [
+          "Reagente"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ]
       }
     },
     "/api/reagentes/add": {

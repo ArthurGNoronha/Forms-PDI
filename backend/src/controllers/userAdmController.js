@@ -10,7 +10,7 @@ export const login = async (req, res, next) => {
         const { login, senha } = req.body;
 
         const user = await UserAdm.findOne({ login });
-        if(!user) {
+        if(!user || user.status === false) {
             return res.unauthorized();
         }
         const isValid = await user.verifyPass(senha);
