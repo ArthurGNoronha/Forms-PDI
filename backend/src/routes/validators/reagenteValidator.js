@@ -30,9 +30,6 @@ export default yup
         fornecedor: yup
             .string()
             .required('Fornecedor é obrigatório'),
-        solicitante: yup
-            .string()
-            .required('Solicitante é obrigatório'),
         limiteMin: yup
             .number()
             .typeError('Limite mínimo deve ser um número')

@@ -59,6 +59,34 @@
         }
       }
     },
+    "/login/logout": {
+      "get": {
+        "tags": [
+          "Login"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/answers/": {
       "get": {
         "tags": [
@@ -75,13 +103,6 @@
           },
           {
             "name": "_size",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
             "in": "query",
             "schema": {
               "type": "string"
@@ -556,6 +577,39 @@
         }
       }
     },
+    "/api/reagentes/forms": {
+      "get": {
+        "tags": [
+          "Reagente"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ]
+      }
+    },
     "/api/reagentes/": {
       "get": {
         "tags": [
@@ -578,21 +632,7 @@
             }
           },
           {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "filter",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "rest",
             "in": "query",
             "schema": {
               "type": "string"
@@ -867,39 +907,6 @@
         }
       }
     },
-    "/api/reagentes/forms": {
-      "get": {
-        "tags": [
-          "Reagente"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerError"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerError"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": {}
-          }
-        ]
-      }
-    },
     "/api/reagentes/add": {
       "post": {
         "tags": [
@@ -1137,10 +1144,6 @@
           "login": {
             "type": "string",
             "example": "abc"
-          },
-          "email": {
-            "type": "string",
-            "example": "abc@abc"
           },
           "senha": {
             "type": "string",

@@ -24,6 +24,19 @@ export const login = async (req, res, next) => {
    }
 }
 
+export const logOut = (req, res, next) => {
+    /*
+    #swagger.tags = ['Login']
+    #swagger.responses[200]
+    */
+   try {
+        res.clearCookie('token');
+        res.ok();
+   } catch(err) {
+    next(err);
+   }
+}
+
 export const createUserAdm = async (req, res, next) => {
     /*
     #swagger.tags = ['UserAdm']
@@ -34,12 +47,11 @@ export const createUserAdm = async (req, res, next) => {
     #swagger.responses[201]
     */
    try {
-    const { nome, login, email, senha } = req.body;
+    const { nome, login, senha } = req.body;
 
     await new UserAdm({
         nome,
         login,
-        email,
         senha,
     }).save();
 
@@ -101,12 +113,11 @@ export const updateUserAdm = async (req, res, next) => {
     */
 
     try {
-        const { nome, login, email, senha } = req.body;
+        const { nome, login, senha } = req.body;
 
         const user = await UserAdm.updateOne(req.params, {
             nome,
             login,
-            email,
             senha,
         }, {
             new: true,

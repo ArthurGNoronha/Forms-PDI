@@ -15,11 +15,6 @@ const userAdmSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    email: {
-        type: String,
-        required: false,
-        unique: true,
-    },
     status: {
         type: Boolean,
         default: true,

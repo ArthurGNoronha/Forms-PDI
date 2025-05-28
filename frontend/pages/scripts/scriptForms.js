@@ -54,7 +54,7 @@ function handleClick(){
   const reagentes = document.querySelectorAll('.reagentes');
   reagentes.forEach(reagente => {
     reagente.addEventListener('click', () => {
-      let reagenteValue = reagente.textContent.trim().toLowerCase();
+      let reagenteValue = reagente.textContent.trim();
       reagenteInput.value = reagenteValue;
       dropdown.style.display = 'none';
       document.getElementById('dropdownIcon').style.transform = 'rotate(0deg)';
@@ -125,7 +125,7 @@ document.getElementById('outros-texto').addEventListener('blur', validateOutros)
 document.getElementById('btnEnviar').addEventListener('click', () => {
   const responsavel = document.getElementById('responsavel').value.trim();
   const quantidade = document.getElementById('quantidade').value.trim();
-  let reagente = document.getElementById('pesquisar').value.trim().toLowerCase();
+  let reagente = document.getElementById('pesquisar').value.trim();
   const codigo = reagente.split(' - ')[0].trim();
   reagente = reagente.split(' - ')[1] ? reagente.split(' - ')[1].trim() : '';
   const medida = document.querySelector('input[name="medida"]:checked');
@@ -155,7 +155,7 @@ document.getElementById('btnEnviar').addEventListener('click', () => {
     if(response.ok && response.status === 201) {
       window.location.href = '/envio';
     } else {
-      toastAlert('Error', 'Erro ao enviar o formulário');
+      toastAlert('error', 'Erro ao enviar o formulário');
     }
   })
 });
@@ -171,7 +171,7 @@ function getReagentes() {
   .then((data) => {
     if(data.error) {
       console.error('Erro ao buscar os reagentes:', data.error);
-      toastAlert('Error', 'Erro ao buscar os reagentes');
+      toastAlert('error', 'Erro ao buscar os reagentes');
       return;
     }
     if(data) {

@@ -1,5 +1,5 @@
 import Answer from '../models/answerModel.js';
-import Reagente from '../models/ReagenteModel.js';
+import Reagente from '../models/reagenteModel.js';
 
 export const sendAnswer = async (req, res, next) => {
     /*
@@ -64,19 +64,50 @@ export const listAnswers = async (req, res, next) => {
     #swagger.responses[200]
     */
     try {
-        const {_page, _size, _order, ...filter } = req.query;
+        const {_page, _size, filter } = req.query;
+        const order = req.order;
         const page = parseInt(_page) || 1;
         const size = parseInt(_size) || 10;
 
         const offset = (page - 1) * size;
 
+        let filterObj = {};
+        if (filter) {
+            filter.split(',').forEach(pair => {
+                const [key, value] = pair.split('=');
+                if (key && value) filterObj[key] = value;
+            });
+        }
+        filterObj = { ...filterObj };
+
+        const fields = [
+            'responsavel', 'codigo', 'reagente'
+        ];
+        const dateFields = [
+            'data'
+        ];
+        Object.keys(filterObj).forEach(key => {
+            if (fields.includes(key)) {
+                filterObj[key] = { $regex: filterObj[key], $options: 'i' };
+            } else if( dateFields.includes(key)) {
+                const [day, month, year] = filterObj[key].split('/');
+                if(day && month && year) {
+                    const start = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
+                    const end = new Date(`${year}-${month}-${day}T23:59:59.999Z`);
+                    filterObj[key] = { $gte: start, $lte: end };
+                } else {
+                    filterObj[key] = '';
+                }
+            }
+        });
+
         const answers = await Answer
-            .find(filter)
+            .find(filterObj)
             .skip(offset)
             .limit(size)
-            .sort(_order)
+            .sort(order)
 
-        const totalData = await Answer.countDocuments();
+        const totalData = await Answer.countDocuments(filterObj);
         const totalPages = Math.ceil(totalData / size);
 
         res.hateoasList(answers, totalPages);

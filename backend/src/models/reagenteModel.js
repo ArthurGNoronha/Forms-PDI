@@ -53,18 +53,6 @@ const reagenteSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    armario: {
-        type: String,
-        required: false,
-    },
-    prateleira: {
-        type: String,
-        required: false,
-    },
-    solicitante: {
-        type: String,
-        required: true,
-    },
     limiteMin: {
         type: Number,
         required: true,
@@ -83,6 +71,6 @@ const reagenteSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-const Reagente = mongoose.model('Reagente', reagenteSchema);
+const Reagente = mongoose.models.Reagente || mongoose.model('Reagente', reagenteSchema);
 
 export default Reagente;

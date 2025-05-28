@@ -8,147 +8,231 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="../styles/ADM.css">
     <link rel="stylesheet" href="../styles/toastAlert.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="containerGeral">
-    <div class="filtro">
-        <div class="topo"></div>
-        <p class="textoF">Filtrar Respostas </p>
-        <hr>
-        <input id="pesquisar" placeholder="Digite o ID da resposta" type="text">
-        <select name="filtro" id="tipoFiltro">
-            <option value="ID" selected>ID</option>
-            <option value="Nome">Nome do Responsável</option>
-            <option value="Code">Codigo do Reagente</option>
-            <option value="Reagente">Nome do Reagente</option>
-            <option value="Data">Data</option>
-        </select>
-        <div class="btnF">
-            <button id="botaoFiltrar">Filtrar</button>
-            <button id="removeFiltro">Remover Filtros</button>
-        </div>
-        <div class="linha"></div>
-        <div class="respfiltradas">
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>LogBook ADM</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><button class="nav-btn active" id="navRespostas"><i class="fa fa-list"></i> Respostas</button></li>
+                    <li><button class="nav-btn" id="navReagentes"><i class="fa fa-flask"></i> Reagentes</button></li>
+                </ul>
+            </nav>
+            <div class="sidebar-content sidebar-filtros">
+                <h3>Filtros de Respostas</h3>
+                <div class="input-group">
+                    <input class="input" placeholder="Buscar por Nome, Código..." type="text">
+                    <span class="input-icon"><i class="fa fa-search"></i></span>
+                </div>
+                <select name="filtro" class="select">
+                    <option value="responsavel">Nome do Responsável</option>
+                    <option value="codigo">Código do Reagente</option>
+                    <option value="reagente">Nome do Reagente</option>
+                    <option value="data">Data</option>
+                </select>
+                <div class="btn-group">
+                    <button class="btn btn-filter"><i class="fa fa-filter"></i> Filtrar</button>
+                    <button class="btn btn-clear"><i class="fa fa-times"></i> Limpar</button>
+                </div>
+            </div>
+            <div class="sidebar-content sidebar-reagentes" style="display:none">
+                <h3>Buscar Reagente</h3>
+                <div class="input-group">
+                    <input class="input" placeholder="Buscar por código, nome..." type="text">
+                    <span class="input-icon"><i class="fa fa-search"></i></span>
+                </div>
+                <select name="filtroReagente" class="select">
+                    <option value="codigo">Código</option>
+                    <option value="reagente">Nome do Reagente</option>
+                    <option value="localizacao">Localização</option>
+                    <option value="situacao">Situação</option>
+                    <option value="validade">Validade</option>
+                </select>
+                <div class="btn-group">
+                    <button class="btn btn-filter"><i class="fa fa-filter"></i> Filtrar</button>
+                    <button class="btn btn-clear"><i class="fa fa-times"></i> Limpar</button>
+                </div>
+                <button class="btn btn-confirm"><i class="fa fa-plus"></i> Novo Reagente</button>
+                <button class="btn btn-confirm"><i class="fa fa-arrow-up"></i> Entrada de Estoque</button>
+                <button class="btn btn-cancel"><i class="fa fa-arrow-down"></i> Saída de Estoque</button>
+            </div>
+        </aside>
+        <main class="main-content">
+            <section id="secRespostas">
+                <div class="header-main">
+                    <h1>Respostas Registradas</h1>
+                </div>
+                <div class="tabela">
+                    <table class="respostasEnv">
+                        <thead>
+                            <tr>
+                                <th>Responsável</th>
+                                <th>Código</th>
+                                <th>Reagente</th>
+                                <th>Quantidade</th>
+                                <th>Medida</th>
+                                <th>Observação</th>
+                                <th>Data</th>
+                                <th style="user-select: none;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyRespostas">
+                        </tbody>
+                    </table>
+                    <div class="containerBtns">
+                        <div id="paginationInfoRespostas" class="pagination-info"></div>
+                        <button id="btnAnteriorRespostas" class="btnsPages"><i class="fa fa-chevron-left"></i> Anterior</button>
+                        <button id="btnProximoRespostas" class="btnsPages">Próxima <i class="fa fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </section>
+            <section id="secReagentes" style="display:none">
+                <div class="header-main">
+                    <h1>Gerenciamento de Reagentes</h1>
+                </div>
+                <div class="tabela">
+                    <table class="reagentesTable">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Reagente</th>
+                                <th>Quantidade</th>
+                                <th>Unidade</th>
+                                <th>Localização</th>
+                                <th>Situação</th>
+                                <th>Validade</th>
+                                <th style="user-select: none;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyReagentes">
+                        </tbody>
+                    </table>
+                    <div class="containerBtns">
+                        <div id="paginationInfoReagentes" class="pagination-info"></div>
+                        <button id="btnAnteriorReagentes" class="btnsPages"><i class="fa fa-chevron-left"></i> Anterior</button>
+                        <button id="btnProximoReagentes" class="btnsPages">Próxima <i class="fa fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <div id="modalReagente" class="modal">
+        <span class="close-modal" id="closeReagente"><i class="fa fa-times"></i></span>
+        <h2 id="modalReagenteTitulo">Novo Reagente</h2>
+        <form id="formDetalhesReagente">
+            <div class="form-group">
+                <label for="codigo">Código</label>
+                <input type="text" id="codigo" name="codigo" class="inputReag" required>
+            </div>
+            <div class="form-group">
+                <label for="reagente">Reagente</label>
+                <input type="text" id="reagente" name="reagente" class="inputReag" required>
+            </div>
+            <div class="form-group">
+                <label for="quantidade">Quantidade</label>
+                <input type="number" id="quantidade" name="quantidade" class="inputReag" required>
+            </div>
+            <div class="form-group">
+                <label for="unidadeMedida">Unidade de Medida</label>
+                <input type="text" id="unidadeMedida" name="unidadeMedida" class="inputReag" required>
+            </div>
+            <div class="form-group">
+                <label for="dataRecebido">Data Recebido</label>
+                <input type="date" id="dataRecebido" name="dataRecebido" class="inputReag" required>
+            </div>
+            <div class="form-group">
+                <label for="situacao">Situação</label>
+                <select id="situacao" name="situacao" class="inputReag" required>
+                    <option value="RECEBIDO">Recebido</option>
+                    <option value="PENDENTE">Pendente</option>
+                    <option value="DOACAO">Doação</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="valorUnitario">Valor Unitário</label>
+                <input type="number" id="valorUnitario" name="valorUnunitario" class="inputReag" required>
+            </div>
+            <div class="form-group">
+                <label for="fornecedor">Fornecedor</label>
+                <input type="text" id="fornecedor" name="fornecedor" class="inputReag" required>
+            </div>
+            <div class="form-group">
+                <label for="lote">Lote</label>
+                <input type="text" id="lote" name="lote" class="inputReag">
+            </div>
+            <div class="form-group">
+                <label for="validade">Validade</label>
+                <input type="date" id="validade" name="validade" class="inputReag">
+            </div>
+            <div class="form-group">
+                <label for="localizacao">Localização</label>
+                <input type="text" id="localizacao" name="localizacao" class="inputReag" required>
+            </div>
+            <div class="form-group">
+                <label for="limiteMin">Limite Mínimo</label>
+                <input type="number" id="limiteMin" name="limiteMin" class="inputReag" required>
+            </div>
+            <div class="form-group">
+                <label for="limiteMax">Limite Máximo</label>
+                <input type="number" id="limiteMax" name="limiteMax" class="inputReag" required>
+            </div>
+            <div class="modal-btns">
+                <button type="button" class="btnsConfirm" id="salvarReagente">Salvar</button>
+                <button type="button" class="btnsCancel" id="cancelarReagente">Cancelar</button>
+                <button type="button" class="btnsClose" id="fecharDetalhesReagente" style="display:none">Fechar</button>
+            </div>
+        </form>
+    </div>
+    <div id="modalEntradaReagente" class="modal">
+        <span class="close-modal" id="closeEntradaReagente"><i class="fa fa-times"></i></span>
+        <h2>Entrada de Reagente no Estoque</h2>
+        <form id="formEntradaReagente">
+            <div class="form-group">
+                <label for="codigoEntrada">Código do Reagente</label>
+                <input type="text" id="codigoEntrada" name="codigoEntrada" class="inputReag" required>
+            </div>
+            <div class="form-group">
+                <label for="quantidadeEntrada">Quantidade a Adicionar</label>
+                <input type="number" id="quantidadeEntrada" name="quantidadeEntrada" class="inputReag" required>
+            </div>
+            <div class="modal-btns">
+                <button type="submit" class="btnsConfirm">Adicionar</button>
+                <button type="button" class="btnsCancel" id="cancelarEntradaReagente">Cancelar</button>
+            </div>
+        </form>
+    </div>
+    <div id="modalSaidaReagente" class="modal">
+        <span class="close-modal" id="closeSaidaReagente"><i class="fa fa-times"></i></span>
+        <h2>Saída de Reagente do Estoque</h2>
+        <form id="formSaidaReagente">
+            <div class="form-group">
+                <label for="codigoSaida">Código do Reagente</label>
+                <input type="text" id="codigoSaida" name="codigoSaida" class="inputReag" required>
+            </div>
+            <div class="form-group">
+                <label for="quantidadeSaida">Quantidade a Remover</label>
+                <input type="number" id="quantidadeSaida" name="quantidadeSaida" class="inputReag" required>
+            </div>
+            <div class="modal-btns">
+                <button type="submit" class="btnsConfirm">Remover</button>
+                <button type="button" class="btnsCancel" id="cancelarSaidaReagente">Cancelar</button>
+            </div>
+        </form>
+    </div>
+    <div id="modalDelete" class="modal">
+        <span class="close-modal" id="closeConfirmDelete"><i class="fa fa-times"></i></span>
+        <h2 id="modalDeleteTitulo"></h2>
+        <p id="modalDeleteTexto"></p>
+        <div class="modal-btns">
+            <button type="button" class="btnsConfirm" id="confirmDelete">Excluir</button>
+            <button type="button" class="btnsCancel" id="cancelarDelete">Cancelar</button>
         </div>
     </div>
-    <div class="respostas">
-        <div class="tabela">
-        <table class="respostasEnv">
-            <tr>
-                <th class="thResp" id="thId">ID</th>
-                <th class="thResp" id="thNome">Nome</th>
-                <th class="thResp" id="thCodR">Cod Reag</th>
-                <th class="thResp" id="thReag">Reagente</th>
-                <th class="thResp" id="thQtd">Quantidade</th>
-                <th class="thResp" id="thMed">Medida</th>
-                <th class="thResp" id="thObs">Observação</th>
-                <th class="thResp" id="thData">Data</th>
-            </tr>
-        </table>
-        <div class="containerBtns">
-            <button id="btnAnterior">Página Anterior</button>
-            <button id="btnProximo">Próxima Página</button>
-        </div>
-    </div>
-    <hr>
-    <div class="googlesheet">
-        <button id="btnReag">Alterar Reagentes</button>
-        <button id="baixar">
-            <a href="https://docs.google.com/spreadsheets/d/1RNCNXsqR2xSqnosi33V9Uu2s_o0EbxjWB3CckXLKMBA/edit#gid=0" target="_blank">Abrir no aplicativo Google Planilhas</a>
-        </button>
-        </div>
-    </div>
-</div>
     <div id="overlay"></div>
-    <div id="divDel">
-        <p id="msgDel">Tem certeza que deseja excluir essa resposta?</p>
-        <button class="btnsConfirm" id="confirmDelete">Deletar</button>
-        <button class="btnsCancel" id="cancelDelete">Cancelar</button>
-    </div>
-    <div id="divEdit">
-        <h1>Atualizar Informações </h1>
-        <label for="Responsavel">Atualizar o Nome do Responsavel</label>
-        <br>
-        <input type="text" class="att" id="Responsavel" placeholder="Digite aqui..."> 
-        <br>
-        <label for="Codigo">Atualizar o Código do Reagente</label>
-        <br>
-        <input type="text" class="att" id="Codigo" placeholder="Digite aqui...">
-        <br>
-        <label for="Reagente">Atualizar o Reagente</label>
-        <br>
-        <input type="text" class="att" id="Reagente" placeholder="Digite aqui..."> 
-        <br>
-        <label for="Quantidade">Atualizar a Quantidade</label>
-        <br>
-        <input type="text" class="att" id="Quantidade" placeholder="Digite aqui..."> 
-        <br>
-        <label for="Medida">Atualizar a Medida</label>
-        <br>
-        <input type="text" class="att" id="Medida" placeholder="Digite aqui..."> 
-        <br>
-        <label for="Outros">Atualizar Outros (medida)</label>
-        <br>
-        <input type="text" class="att" id="Outros" placeholder="Digite aqui..."> 
-        <br>
-        <label for="Observacao">Atualizar a Observação do Responsável</label>
-        <br>
-        <input type="text" class="att" id="Observacao" placeholder="Digite aqui...">
-        <br>
-        
-        <button class="btnsConfirm" id="simEdit">Confirmar Edição</button>
-        <button id="naoEdit" class="btnsCancel">Cancelar</button>
-    </div>
-    <div id="divReag">
-        <h2>Reagentes </h2>
-        <h3>Reagentes Atuais: </h3>
-        <div class="inputContainer">
-            <input type="text" id="pesquisarReag" placeholder="Pesquisar..." autocomplete="off">
-        </div>
-        <ul id="dropdown">           
-        </ul>
-        <div class="addExEdReag">
-            <div class="addReag">
-                <h2>Adicionar: </h2>
-                <label for="newCode">Código: </label>
-                <br>
-                <input type="text" class="inputReag" name="newCode" id="newCode">
-                <br>
-                <label for="newReag">Reagente: </label>
-                <br>
-                <input type="text" class="inputReag" name="newReag" id="newReag">
-                <br>
-                <button class="simReag btnsConfirm" id="simReag">Confirmar</button>
-                <button class="naoReag btnsCancel">Cancelar</button>
-            </div>
-            <div class="edReag">
-                <h2>Editar: </h2>
-                <label for="edCode">Código para editar: </label>
-                <br>
-                <input type="text" class="inputReag" name="edCode" id="edCode">
-                <br>
-                <label for="newEdCode">Novo Código: </label>
-                <br>
-                <input type="text" class="inputReag" name="newEdCode" id="newEdCode">
-                <br>
-                <label for="newEdReag">Novo Reagente: </label>
-                <br>
-                <input type="text" class="inputReag" name="newEdReag" id="newEdReag">
-                <br>
-                <button class="simReag btnsConfirm" id="simEdReag">Confirmar</button>
-                <button class="naoReag btnsCancel">Cancelar</button>
-            </div>
-            <div class="exReag">
-                <h2>Excluir: </h2>
-                <label for="exCode">Código para <b>excluir</b></label>
-                <br>
-                <input type="text" class="inputReag" name="exCode" id="exCode">
-                <br>
-                <button class="simReag btnsConfirm" id="simExReag">Deletar</button>
-                <button class="naoReag btnsCancel">Cancelar</button>
-            </div>
-        </div>
-    </div>
     <script src="../scripts/toastAlert.js"></script>
     <script src="../scripts/scriptADM.js"></script>
 </body>

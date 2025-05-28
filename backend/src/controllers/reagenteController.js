@@ -1,4 +1,4 @@
-import Reagente from '../models/ReagenteModel.js';
+import Reagente from '../models/reagenteModel.js';
 
 export const createReagente = async (req, res, next) => {
     /*
@@ -10,7 +10,7 @@ export const createReagente = async (req, res, next) => {
     #swagger.responses[201]
     */
     try {
-        const { codigo, reagente, quantidade, dataRecebido, unidadeMedida, valorUnitario, fornecedor, lote, validade, situacao, localizacao, armario, prateleira, solicitante, limiteMin, limiteMax } = req.body;
+        const { codigo, reagente, quantidade, dataRecebido, unidadeMedida, valorUnitario, fornecedor, lote, validade, situacao, localizacao, limiteMin, limiteMax } = req.body;
 
         const valorTotal = valorUnitario * quantidade;
 
@@ -26,9 +26,6 @@ export const createReagente = async (req, res, next) => {
             lote,
             validade,
             localizacao,
-            armario,
-            prateleira,
-            solicitante,
             limiteMin,
             limiteMax,
             situacao
@@ -62,7 +59,8 @@ export const listReagentes = async (req, res, next) => {
     #swagger.responses[200]
     */
     try {
-        let { _page, _size, _order, filter, ...rest } = req.query;
+        let { _page, _size, filter } = req.query;
+        const order = req.order;
         const page = parseInt(_page) || 1;
         const size = parseInt(_size) || 10;
 
@@ -75,14 +73,26 @@ export const listReagentes = async (req, res, next) => {
                 if (key && value) filterObj[key] = value;
             });
         }
-        filterObj = { ...filterObj, ...rest };
+        filterObj = { ...filterObj };
 
         const fields = [
             'codigo', 'reagente', 'unidadeMedida', 'situacao', 'fornecedor', 'localizacao'
         ];
+        const dateFields = [
+            'dataRecebido', 'validade'
+        ];
         Object.keys(filterObj).forEach(key => {
             if (fields.includes(key)) {
                 filterObj[key] = { $regex: filterObj[key], $options: 'i' };
+            } else if( dateFields.includes(key)) {
+                const [day, month, year] = filterObj[key].split('/');
+                if(day && month && year) {
+                    const start = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
+                    const end = new Date(`${year}-${month}-${day}T23:59:59.999Z`);
+                    filterObj[key] = { $gte: start, $lte: end };
+                } else {
+                    filterObj[key] = '';
+                }
             }
         });
 
@@ -90,7 +100,7 @@ export const listReagentes = async (req, res, next) => {
             .find(filterObj)
             .skip(offset)
             .limit(size)
-            .sort(_order);
+            .sort(order);
 
         reagentes = reagentes.map(reagente => {
             reagente._doc.nearLimit = reagente.quantidade <= (reagente.limiteMin * 1.2);
@@ -116,7 +126,7 @@ export const updateReagente = async (req, res, next) => {
     #swagger.responses[200]
     */
    try {
-        const { codigo, reagente, quantidade, dataRecebido, unidadeMedida, valorUnitario, fornecedor, lote, validade, situacao, localizacao, armario, prateleira, solicitante, limiteMin, limiteMax } = req.body;
+        const { codigo, reagente, quantidade, dataRecebido, unidadeMedida, valorUnitario, fornecedor, lote, validade, situacao, localizacao, limiteMin, limiteMax } = req.body;
 
         const valorTotal = valorUnitario * quantidade || await Reagente.findOne(req.params).valorTotal;
 
@@ -132,9 +142,6 @@ export const updateReagente = async (req, res, next) => {
             lote,
             validade,
             localizacao,
-            armario,
-            prateleira,
-            solicitante,
             limiteMin,
             limiteMax,
             situacao

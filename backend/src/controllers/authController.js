@@ -16,6 +16,7 @@ export const generate = (req, res, next) => {
         expiresIn: JWTEXPIRE,
     });
 
+    // Cookie apenas para realizar o controle do frontend, não permitindo o acesso de qualquer um pela rota /adm.
     res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.JWTSECRET,

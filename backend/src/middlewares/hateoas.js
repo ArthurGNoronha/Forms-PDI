@@ -19,8 +19,8 @@ export default (req, res, next) => {
     /*
     #swagger.ignore = true
     */
-    const page = parseInt(req.query.page) || 1;
-    const size = parseInt(req.query.size) || 10;
+    const page = parseInt(req.query._page) || 1;
+    const size = parseInt(req.query._size) || 10;
 
     res.ok({
         data: data.map((item) => ({

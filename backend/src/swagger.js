@@ -47,7 +47,6 @@ const doc = {
       userAdm: {
         nome: "Abc",
         login: "abc",
-        email: "abc@abc",
         senha: "abc123",
       },
     },

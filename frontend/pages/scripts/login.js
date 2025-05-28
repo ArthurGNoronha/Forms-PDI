@@ -16,15 +16,21 @@ function sendLogin() {
     })
     .then(res => {
         if (res.ok) {
-            window.location.href = '/adm';
+            return res.json();
+        } else if (res.status === 401) {
+            toastAlert('warn', 'Senha ou login incorretos!');
+            document.getElementById('password').value = '';
+            return;
         } else {
             toastAlert('error', 'Erro ao fazer login!');
         }
     })
-    .catch(err => {
-        toastAlert('error', 'Erro ao fazer login!');
-        console.error(err);
-    });
+    .then(data => {
+        if (data && data.token) {
+            localStorage.setItem('token', data.token);
+            window.location.href = '/adm';
+        }
+    })
 }
 
 document.querySelector('.btnLogin').addEventListener('click', sendLogin);
