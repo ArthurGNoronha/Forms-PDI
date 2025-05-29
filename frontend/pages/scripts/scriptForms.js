@@ -50,7 +50,7 @@ function handleInput() {
   });
 }
 
-function handleClick(){
+function handleClick() {
   const reagentes = document.querySelectorAll('.reagentes');
   reagentes.forEach(reagente => {
     reagente.addEventListener('click', () => {
@@ -128,6 +128,7 @@ document.getElementById('btnEnviar').addEventListener('click', () => {
   let reagente = document.getElementById('pesquisar').value.trim();
   const codigo = reagente.split(' - ')[0].trim();
   reagente = reagente.split(' - ')[1] ? reagente.split(' - ')[1].trim() : '';
+  const lote = document.getElementById('lote').value.trim();
   const medida = document.querySelector('input[name="medida"]:checked');
   const outros = document.getElementById('outros-texto').value.trim();
   const observacao = document.getElementById('observacao').value.trim();
@@ -146,6 +147,7 @@ document.getElementById('btnEnviar').addEventListener('click', () => {
       responsavel,
       codigo,
       reagente,
+      lote,
       quantidade,
       medida: medida.value === 'Outros' ? medida.value + ' - ' + outros : medida.value,
       observacao

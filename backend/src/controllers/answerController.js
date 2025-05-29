@@ -11,7 +11,7 @@ export const sendAnswer = async (req, res, next) => {
     #swagger.responses[201]
     */
     try {
-        const { responsavel, codigo, reagente, medida, observacao } = req.body;
+        const { responsavel, codigo, reagente, lote, medida, observacao } = req.body;
         let { quantidade } = req.body;
         const data = new Date();
 
@@ -22,6 +22,7 @@ export const sendAnswer = async (req, res, next) => {
             responsavel,
             codigo,
             reagente,
+            lote,
             quantidade,
             medida,
             observacao,

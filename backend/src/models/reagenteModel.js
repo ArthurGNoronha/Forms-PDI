@@ -43,7 +43,7 @@ const reagenteSchema = new mongoose.Schema({
     },
     lote: {
         type: String,
-        required: false,
+        required: true,
     },
     validade: {
         type: Date,

@@ -74,6 +74,7 @@
                                 <th>Código</th>
                                 <th>Reagente</th>
                                 <th>Quantidade</th>
+                                <th>Lote</th>
                                 <th>Medida</th>
                                 <th>Observação</th>
                                 <th>Data</th>
@@ -104,6 +105,7 @@
                                 <th>Unidade</th>
                                 <th>Localização</th>
                                 <th>Situação</th>
+                                <th>Valor Total</th>
                                 <th>Validade</th>
                                 <th style="user-select: none;">Ações</th>
                             </tr>
@@ -155,6 +157,10 @@
             <div class="form-group">
                 <label for="valorUnitario">Valor Unitário</label>
                 <input type="number" id="valorUnitario" name="valorUnunitario" class="inputReag" required>
+            </div>
+            <div class="form-group" id="totalValueGroup" style="display: none;">
+                <label for="valorTotal">Valor Total</label>
+                <input type="text" id="valorTotal" name="valorTotal" class="inputReag">
             </div>
             <div class="form-group">
                 <label for="fornecedor">Fornecedor</label>

@@ -68,7 +68,7 @@ img {
     line-height: normal;
 }
 
-#pergunta1, #pergunta2{
+#pergunta1, #pergunta2, .lote {
     width: 70%;
     border-radius: 10px;
     background: var(--branco);
@@ -95,7 +95,7 @@ img {
     color: red;
 }
 
-#responsavel, #observacao {
+#responsavel, #observacao, #lote {
     width: 32%;
     border: none;
     border-bottom: 2px solid black;
@@ -107,7 +107,7 @@ img {
     margin-bottom: 2%;
 }
 
-#responsavel,#observacao:focus {
+#lote,#responsavel,#observacao:focus {
     outline: none;
     border-bottom: 2px solid black;
 }
@@ -178,7 +178,7 @@ img {
     justify-content: center;
 }
 
-.CodTexto{
+.CodTexto, .loteTexto {
     margin-left: 5%;
     color: var(--preto);
     font-family: Arial; 
@@ -188,7 +188,7 @@ img {
     line-height: normal;
 }
 
-.CodTexto::after{
+.CodTexto::after, .loteTexto::after {
     content: " *";
     color: red;
 }

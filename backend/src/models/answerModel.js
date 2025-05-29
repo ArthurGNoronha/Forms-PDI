@@ -21,6 +21,10 @@ const answerSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    lote: {
+        type: String,
+        required: true,
+    },
     observacao: {
         type: String,
         required: false,

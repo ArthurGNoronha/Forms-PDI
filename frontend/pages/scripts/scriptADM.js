@@ -316,6 +316,7 @@ function addDataToTable(data, url) {
                 <td>${answer.codigo || '-'}</td>
                 <td>${answer.reagente || '-'}</td>
                 <td>${answer.quantidade ?? '-'}</td>
+                <td>${answer.lote || '-'}</td>
                 <td>${answer.medida || '-'}</td>
                 <td>${answer.observacao || '-'}</td>
                 <td>${answer.data ? ajustDate(answer.data) : '-'}</td>
@@ -345,6 +346,7 @@ function addDataToTable(data, url) {
                 <td>${reagente.unidadeMedida || '-'}</td>
                 <td>${reagente.localizacao || '-'}</td>
                 <td>${reagente.situacao || '-'}</td>
+                <td>${reagente.valorTotal ? `R$ ${parseFloat(reagente.valorTotal).toFixed(2)}` : '-'}</td>
                 <td>${reagente.validade ? ajustDate(reagente.validade) : '-'}</td>
                 <td style="user-select: none;">
                     <button class="acao-btn" title="Detalhes" data-id="${reagente._id}"><i class="fa fa-eye"></i></button>
@@ -369,7 +371,7 @@ function showDetails(id) {
 function setReagenteFieldsReadOnly(isReadOnly) {
     const fields = [
         'codigo', 'reagente', 'quantidade', 'unidadeMedida', 'dataRecebido',
-        'situacao', 'valorUnitario', 'fornecedor', 'lote', 'validade',
+        'situacao', 'valorUnitario', 'valorTotal', 'fornecedor', 'lote', 'validade',
         'localizacao', 'limiteMin', 'limiteMax'
     ];
     fields.forEach(id => {
@@ -377,10 +379,12 @@ function setReagenteFieldsReadOnly(isReadOnly) {
         if (el) {
             if (isReadOnly) {
                 document.getElementById('salvarReagente').style.display = 'none';
+                document.getElementById('totalValueGroup').style.display = 'block';
                 el.setAttribute('readonly', 'readonly');
             } else {
                 clearFields();
                 document.getElementById('salvarReagente').style.display = 'block';
+                document.getElementById('totalValueGroup').style.display = 'none';
                 el.removeAttribute('readonly');
             }
         }
@@ -419,6 +423,7 @@ function viewDetails(data) {
     document.getElementById('dataRecebido').value = reagente.dataRecebido ? new Date(reagente.dataRecebido).toISOString().split('T')[0] : '';
     document.getElementById('situacao').value = reagente.situacao || '';
     document.getElementById('valorUnitario').value = reagente.valorUnitario || '';
+    document.getElementById('valorTotal').value = `R$${reagente.valorTotal}` || '';
     document.getElementById('fornecedor').value = reagente.fornecedor || '';
     document.getElementById('lote').value = reagente.lote || '';
     document.getElementById('validade').value = reagente.validade ? new Date(reagente.validade).toISOString().split('T')[0] : '';
