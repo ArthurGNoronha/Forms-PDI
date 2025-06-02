@@ -83,7 +83,7 @@ document.querySelectorAll('.btn-filter').forEach(btn => {
 });
 
 document.querySelectorAll('.btn-clear').forEach(btn => {
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', () => {
         this.closest('.sidebar-content').querySelectorAll('input').forEach(input => input.value = '');
         filters.respostas = '';
         filters.reagentes = '';
@@ -210,14 +210,14 @@ document.getElementById('btnProximoReagentes').addEventListener('click', () => {
 });
 
 document.querySelectorAll('.close-modal').forEach(btn => {
-    btn.addEventListener('click', closeModalReagente());
+    btn.addEventListener('click', closeModalReagente);
 });
 
 document.querySelectorAll('.btnsCancel').forEach(btn => {
-    btn.addEventListener('click', closeModalReagente());
+    btn.addEventListener('click', closeModalReagente);
 });
 
-overlay.addEventListener('click', closeModalReagente());
+overlay.addEventListener('click', closeModalReagente)
 
 function deleteData(url, id, name) {
     document.getElementById('modalDelete').style.display = 'block';
@@ -289,7 +289,7 @@ function createExportButton(tabela) {
     btn.className = 'export-excel-btn';
     btn.innerHTML = `<i class="fa fa-file-excel"></i> Exportar ${tabela} para Excel`;
     btn.type = 'button';
-    // btn.addEventListener('click', createExcel(tabela));
+    btn.addEventListener('click', () => createExcel(tabela));
     return btn;
 }
 
@@ -306,7 +306,7 @@ function addDataToTable(data, url) {
         const tbody = document.getElementById('tbodyRespostas');
         tbody.innerHTML = '';
         if (!data || data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" class="no-data">Nenhum dado encontrado</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" class="no-data">Nenhum dado encontrado</td></tr>';
             return;
         }
         data.forEach(answer => {
@@ -346,7 +346,6 @@ function addDataToTable(data, url) {
                 <td>${reagente.unidadeMedida || '-'}</td>
                 <td>${reagente.localizacao || '-'}</td>
                 <td>${reagente.situacao || '-'}</td>
-                <td>${reagente.valorTotal ? `R$ ${parseFloat(reagente.valorTotal).toFixed(2)}` : '-'}</td>
                 <td>${reagente.validade ? ajustDate(reagente.validade) : '-'}</td>
                 <td style="user-select: none;">
                     <button class="acao-btn" title="Detalhes" data-id="${reagente._id}"><i class="fa fa-eye"></i></button>
@@ -423,7 +422,7 @@ function viewDetails(data) {
     document.getElementById('dataRecebido').value = reagente.dataRecebido ? new Date(reagente.dataRecebido).toISOString().split('T')[0] : '';
     document.getElementById('situacao').value = reagente.situacao || '';
     document.getElementById('valorUnitario').value = reagente.valorUnitario || '';
-    document.getElementById('valorTotal').value = `R$${reagente.valorTotal}` || '';
+    document.getElementById('valorTotal').value = `R$:${parseFloat(reagente.valorTotal).toFixed(2)}` || '';
     document.getElementById('fornecedor').value = reagente.fornecedor || '';
     document.getElementById('lote').value = reagente.lote || '';
     document.getElementById('validade').value = reagente.validade ? new Date(reagente.validade).toISOString().split('T')[0] : '';
