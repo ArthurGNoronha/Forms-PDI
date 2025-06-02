@@ -17,7 +17,7 @@
     font-size: 16px;
   }
 
-  #pergunta1, #pergunta2 {
+  #pergunta1, #pergunta2, .lote {
     width: 95%;
     margin-bottom: 3%;
   }
@@ -27,7 +27,7 @@
     margin-left: 3.5%;
   }
 
-  #responsavel, #observacao {
+  #responsavel, #observacao, #lote {
     font-size: 12px;
     margin-left: 3.5%;
     width: 40%;
@@ -51,7 +51,7 @@
     margin-bottom: 3%;
   }
 
-  .CodTexto {
+  .CodTexto, .loteTexto {
     font-size: 14px;
     margin-left: 3.5%;
   }
