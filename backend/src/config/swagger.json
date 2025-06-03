@@ -11,31 +11,6 @@
     }
   ],
   "paths": {
-    "/aaaaa": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerError"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/login/": {
       "post": {
         "tags": [
@@ -602,39 +577,6 @@
         }
       }
     },
-    "/api/reagentes/forms": {
-      "get": {
-        "tags": [
-          "Reagente"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerError"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalServerError"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": {}
-          }
-        ]
-      }
-    },
     "/api/reagentes/": {
       "get": {
         "tags": [
@@ -735,6 +677,39 @@
             }
           }
         }
+      }
+    },
+    "/api/reagentes/forms": {
+      "get": {
+        "tags": [
+          "Reagente"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ]
       }
     },
     "/api/reagentes/{_id}": {

@@ -1,4 +1,5 @@
 import Reagente from '../models/reagenteModel.js';
+import exceljs from 'exceljs';
 
 export const createReagente = async (req, res, next) => {
     /*
@@ -253,6 +254,104 @@ export const removeStock = async (req, res, next) => {
 
         res.hateoasItem(newReagente);
     } catch(err) {
+        next(err);
+    }
+}
+
+export const createExcel = async (req, res, next) => {
+    /*
+    #swagger.ignore = true
+    */
+    try {
+        const reagentes = await Reagente.find().sort({ reagente: 1 });
+
+        const workbook = new exceljs.Workbook();
+        const worksheet = workbook.addWorksheet('Reagentes');
+
+        worksheet.columns = [
+            { header: 'Código', key: 'codigo', width: 15 },
+            { header: 'Reagente', key: 'reagente', width: 25 },
+            { header: 'Quantidade', key: 'quantidade', width: 15 },
+            { header: 'Unidade', key: 'unidadeMedida', width: 10 },
+            { header: 'Valor Unitário', key: 'valorUnitario', width: 15 },
+            { header: 'Valor Total', key: 'valorTotal', width: 15 },
+            { header: 'Fornecedor', key: 'fornecedor', width: 20 },
+            { header: 'Lote', key: 'lote', width: 15 },
+            { header: 'Validade', key: 'validade', width: 15 },
+            { header: 'Data Recebido', key: 'dataRecebido', width: 15 },
+            { header: 'Situação', key: 'situacao', width: 15 },
+            { header: 'Localização', key: 'localizacao', width: 20 },
+            { header: 'Limite Mínimo', key: 'limiteMin', width: 15 },
+            { header: 'Limite Máximo', key: 'limiteMax', width: 15 }
+        ];
+
+        reagentes.forEach(item => {
+            worksheet.addRow({
+                codigo: item.codigo,
+                reagente: item.reagente,
+                quantidade: item.quantidade,
+                unidadeMedida: item.unidadeMedida,
+                valorUnitario: item.valorUnitario,
+                valorTotal: item.valorTotal,
+                fornecedor: item.fornecedor,
+                lote: item.lote,
+                validade: item.validade ? new Date(item.validade).toLocaleDateString('pt-BR') : '',
+                dataRecebido: item.dataRecebido ? new Date(item.dataRecebido).toLocaleDateString('pt-BR') : '',
+                situacao: item.situacao,
+                localizacao: item.localizacao,
+                limiteMin: item.limiteMin,
+                limiteMax: item.limiteMax
+            });
+        });
+
+        worksheet.views = [{ state: 'frozen', ySplit: 1 }];
+
+        worksheet.getRow(1).eachCell(cell => {
+            cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FF4472C4' }
+            };
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+            cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+            };
+        });
+
+        worksheet.eachRow((row, rowNumber) => {
+            if (rowNumber === 1) return;
+            row.eachCell(cell => {
+                cell.border = {
+                    top: { style: 'thin' },
+                    left: { style: 'thin' },
+                    bottom: { style: 'thin' },
+                    right: { style: 'thin' }
+                };
+                cell.alignment = { vertical: 'middle', horizontal: 'left' };
+            });
+        });
+
+        worksheet.columns.forEach(column => {
+            let maxLength = 0;
+            column.eachCell({ includeEmpty: true }, cell => {
+                const columnLength = cell.value ? cell.value.toString().length : 10;
+                if (columnLength > maxLength) {
+                    maxLength = columnLength;
+                }
+            });
+            column.width = maxLength < 15 ? 15 : maxLength + 2;
+        });
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=reagentes.xlsx');
+
+        await workbook.xlsx.write(res);
+        res.end();
+    } catch (err) {
         next(err);
     }
 }
