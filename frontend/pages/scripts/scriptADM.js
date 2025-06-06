@@ -83,7 +83,7 @@ document.querySelectorAll('.btn-filter').forEach(btn => {
 });
 
 document.querySelectorAll('.btn-clear').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', function() {
         this.closest('.sidebar-content').querySelectorAll('input').forEach(input => input.value = '');
         filters.respostas = '';
         filters.reagentes = '';
