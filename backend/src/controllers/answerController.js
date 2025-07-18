@@ -30,15 +30,15 @@ export const sendAnswer = async (req, res, next) => {
             data
         }).save();
 
-        quantidade = parseFloat(quantidade);
+        // quantidade = parseFloat(quantidade);
 
-        await reagenteModel.updateOne(
-            { 
-                $inc: { quantidade: -quantidade },
-                $set: { valorTotal: reagenteModel.valorUnitario * (reagenteModel.quantidade - quantidade) }
-            },
-            { new: true }
-        );
+        // await reagenteModel.updateOne(
+        //     { 
+        //         $inc: { quantidade: -quantidade },
+        //         $set: { valorTotal: reagenteModel.valorUnitario * (reagenteModel.quantidade - quantidade) }
+        //     },
+        //     { new: true }
+        // );
 
         res.created();
     } catch(err) {

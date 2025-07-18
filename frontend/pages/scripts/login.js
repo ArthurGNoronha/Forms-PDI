@@ -1,5 +1,5 @@
 function sendLogin() {
-    const login = document.getElementById('username').value;
+    const login = document.getElementById('username').value.toLowerCase();
     const senha = document.getElementById('password').value;
 
     if (login === '' || senha === '') {

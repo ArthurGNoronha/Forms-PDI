@@ -51,7 +51,7 @@ export const createUserAdm = async (req, res, next) => {
 
     await new UserAdm({
         nome,
-        login,
+        login: login.toLowerCase(),
         senha,
     }).save();
 
@@ -117,7 +117,7 @@ export const updateUserAdm = async (req, res, next) => {
 
         const user = await UserAdm.updateOne(req.params, {
             nome,
-            login,
+            login: login.toLowerCase(),
             senha,
         }, {
             new: true,

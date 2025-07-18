@@ -19,7 +19,8 @@ export const generate = (req, res, next) => {
     // Cookie apenas para realizar o controle do frontend, não permitindo o acesso de qualquer um pela rota /adm.
     res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.JWTSECRET,
+        secure: false,
+        sameSite: 'strict',
         maxAge: 24 * 60 * 60 * 1000,
     });
 

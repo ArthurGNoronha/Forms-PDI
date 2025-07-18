@@ -126,8 +126,15 @@ document.getElementById('btnEnviar').addEventListener('click', () => {
   const responsavel = document.getElementById('responsavel').value.trim();
   const quantidade = document.getElementById('quantidade').value.trim();
   let reagente = document.getElementById('pesquisar').value.trim();
-  const codigo = reagente.split(' - ')[0].trim();
-  reagente = reagente.split(' - ')[1] ? reagente.split(' - ')[1].trim() : '';
+  const indexSplit = reagente.indexOf(' - ');
+  let codigo = '';
+  if (indexSplit !== -1) {
+    codigo = reagente.substring(0, indexSplit).trim();
+    reagente = reagente.substring(indexSplit + 3).trim();
+  } else {
+    codigo = reagente;
+    reagente = '';
+  }
   const lote = document.getElementById('lote').value.trim();
   const medida = document.querySelector('input[name="medida"]:checked');
   const outros = document.getElementById('outros-texto').value.trim();
